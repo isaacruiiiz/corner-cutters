@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Corner Cutters · Panel admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jersey+15&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0E2221;--deep:#0A1A19;--panel:#17302F;--in:#102726;--line:#050B0B;--soft:#2C4B48;--ink:#ECE4D0;--mut:#8FB0A8;--dim:#5D7D76;--acc:#E3A93B;--acchi:#F2C25F;--ok:#4FC08D;--bad:#E2675B;--info:#5AA6D6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif;font-size:14px}
+a{color:var(--acc)}a:hover{color:var(--acchi)}
+h1,h2,.num{font-family:'Jersey 15',monospace;font-weight:400;margin:0}
+h1{font-size:40px;line-height:1}h2{font-size:26px;line-height:1.1}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 60px}
+.top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.top .sp{flex:1}
+.cap{font-size:10px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:var(--mut)}
+.panel{background:var(--panel);border:2px solid var(--line);border-radius:16px;box-shadow:0 3px 0 rgba(0,0,0,.5);padding:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.stat{background:var(--in);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+.stat .num{font-size:30px;line-height:1;margin-top:4px}
+button,.btn{font-family:Manrope,sans-serif;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase;border:2px solid var(--line);border-radius:10px;padding:0 14px;height:38px;cursor:pointer;color:var(--onacc,#1A1304);background:linear-gradient(#F2C25F,#E3A93B);box-shadow:0 3px 0 #6D4D0C}
+button.sec{background:#17302F;color:var(--ink);box-shadow:0 3px 0 var(--line)}
+button.ghost{background:transparent;color:var(--mut);box-shadow:none;border-color:var(--soft)}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+input,select,textarea{font-family:Manrope,sans-serif;font-size:14px;color:var(--ink);background:var(--deep);border:2px solid var(--line);border-radius:10px;padding:9px 12px}
+input:focus,select:focus,textarea:focus{border-color:var(--acc);outline:none}
+label{display:flex;flex-direction:column;gap:6px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tabs{display:flex;gap:8px;margin:18px 0 12px}
+.tabs button{background:#17302F;color:var(--mut);box-shadow:0 3px 0 var(--line)}
+.tabs button[aria-selected=true]{background:linear-gradient(#F2C25F,#E3A93B);color:#1A1304;box-shadow:0 3px 0 #6D4D0C}
+table{width:100%;border-collapse:separate;border-spacing:0 6px}
+th{text-align:left;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);padding:0 10px}
+td{background:var(--in);padding:9px 10px;border-top:2px solid var(--line);border-bottom:2px solid var(--line);vertical-align:middle}
+td:first-child{border-left:2px solid var(--line);border-radius:10px 0 0 10px}
+td:last-child{border-right:2px solid var(--line);border-radius:0 10px 10px 0}
+.tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border:1.5px solid currentColor;border-radius:7px;background:var(--in)}
+.small{font-size:12px;color:var(--mut)}
+.err{color:var(--bad);font-weight:700}
+.ok{color:var(--ok)}
+.switch{position:relative;width:46px;height:26px;border-radius:13px;border:2px solid var(--line);background:#24403E;cursor:pointer;padding:0;box-shadow:none}
+.switch[aria-checked=true]{background:var(--ok)}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--ink);border:2px solid var(--line);transition:left .15s}
+.switch[aria-checked=true]::after{left:22px}
+.hidden{display:none!important}
+.login{max-width:380px;margin:12vh auto 0;display:flex;flex-direction:column;gap:12px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:10px 16px;box-shadow:0 3px 0 rgba(0,0,0,.5);font-weight:700}
+@media (max-width:760px){.hide-m{display:none}}
+</style>
+</head>
+<body>
+<div id="login" class="login hidden">
+  <div><div class="cap">Corner Cutters</div><h1>Panel admin</h1></div>
+  <p class="small">Entra con la misma cuenta (correo y contraseña) que usas en el juego. Solo funciona si tu cuenta es admin.</p>
+  <form id="loginForm" class="panel" style="display:flex;flex-direction:column;gap:12px">
+    <label><span class="cap">Correo</span><input id="email" type="email" autocomplete="username" required></label>
+    <label><span class="cap">Contraseña</span><input id="pass" type="password" autocomplete="current-password" required></label>
+    <button type="submit">Entrar</button>
+    <div id="loginErr" class="err" role="alert"></div>
+  </form>
+</div>
+
+<div id="app" class="wrap hidden">
+  <div class="top">
+    <div><div class="cap">Corner Cutters</div><h1>Panel admin</h1></div>
+    <div class="sp"></div>
+    <span id="me" class="small"></span>
+    <button class="sec" id="logout" type="button">Salir</button>
+  </div>
+  <div id="notAdmin" class="panel hidden"><span class="err">Esta cuenta no es admin.</span> <span class="small">Si acabas de ejecutar cuentas.sql, vuelve a entrar.</span></div>
+  <div id="summary" class="grid"></div>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="users" type="button">Usuarios</button>
+    <button role="tab" aria-selected="false" data-tab="buys" type="button">Compras</button>
+    <button role="tab" aria-selected="false" data-tab="news" type="button">Titulares</button>
+  </div>
+
+  <section id="tab-users" class="panel">
+    <div class="row" style="margin-bottom:8px">
+      <input id="q" type="search" placeholder="Buscar correo, alias o id" aria-label="Buscar usuarios" style="flex:1;min-width:220px">
+      <label class="row" style="flex-direction:row;gap:8px"><button class="switch" id="soloCorreo" role="switch" aria-checked="true" type="button" aria-label="Solo cuentas con correo"></button><span class="small">Solo con correo</span></label>
+    </div>
+    <table><thead><tr><th>Cuenta</th><th class="hide-m">Alias</th><th>Tipo</th><th>Pack regalado</th><th class="hide-m">Compras</th><th class="hide-m">Visto</th><th></th></tr></thead><tbody id="users"></tbody></table>
+    <div class="row" style="justify-content:center;margin-top:8px"><button class="sec" id="more" type="button">Cargar más</button></div>
+  </section>
+
+  <section id="tab-buys" class="panel hidden">
+    <p class="small">Compras anotadas desde la app. Las valida Google Play o App Store en el móvil de cada jugador.</p>
+    <table><thead><tr><th>Fecha</th><th>Cuenta</th><th>Producto</th><th class="hide-m">Plataforma</th><th class="hide-m">Id</th></tr></thead><tbody id="buys"></tbody></table>
+  </section>
+
+  <section id="tab-news" class="panel hidden">
+    <form id="newsForm" class="row" style="margin-bottom:8px">
+      <input id="newsText" placeholder="Nuevo titular del mercado" aria-label="Nuevo titular" style="flex:1;min-width:240px" maxlength="140" required>
+      <button type="submit">Añadir</button>
+    </form>
+    <table><thead><tr><th>Titular</th><th>Activo</th><th></th></tr></thead><tbody id="news"></tbody></table>
+  </section>
+</div>
+<div id="toast" class="toast hidden" role="status"></div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cfg = await fetch('../assets/assets/config.json').then((r) => r.json()).catch(() => ({}));
+if (!cfg.supabaseUrl) { document.body.innerHTML = '<p class="wrap err">Falta assets/config.json con las claves de Supabase.</p>'; throw 0; }
+const db = createClient(cfg.supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, ''), cfg.supabaseKey);
+const ROLES = { usuario: 'Normal', pro: 'Pro', admin: 'Admin' };
+const ROLE_COLOR = { usuario: 'var(--mut)', pro: 'var(--info)', admin: 'var(--acc)' };
+let soloCorreo = true, offset = 0, myId = null;
+
+function toast(t, bad) { const el = $('toast'); el.textContent = t; el.style.color = bad ? 'var(--bad)' : 'var(--ink)'; el.classList.remove('hidden'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.add('hidden'), 2600); }
+function ago(t) { if (!t) return '—'; const m = (Date.now() - new Date(t)) / 60000; if (m < 2) return 'ahora'; if (m < 60) return `hace ${Math.round(m)} min`; if (m < 1440) return `hace ${Math.round(m / 60)} h`; return `hace ${Math.round(m / 1440)} d`; }
+function errText(e) { const m = e?.message || String(e); if (m.includes('Solo para administradores')) return 'Tu cuenta no es admin'; if (m.includes('quitarte el admin')) return 'No puedes quitarte el admin a ti mismo'; if (m.includes('Could not find the function')) return 'Falta ejecutar supabase/cuentas.sql'; return m; }
+
+async function show() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session || session.user.is_anonymous) { $('login').classList.remove('hidden'); $('app').classList.add('hidden'); return; }
+  myId = session.user.id;
+  $('login').classList.add('hidden'); $('app').classList.remove('hidden');
+  $('me').textContent = session.user.email || '';
+  const { data: me } = await db.rpc('mi_perfil');
+  $('notAdmin').classList.toggle('hidden', me?.rol === 'admin');
+  if (me?.rol !== 'admin') return;
+  await Promise.all([summary(), users(true)]);
+}
+
+async function summary() {
+  const { data, error } = await db.rpc('admin_resumen');
+  if (error) return toast(errText(error), true);
+  const cells = [['Usuarios', data.usuarios], ['Con correo', data.con_correo], ['Activos 7 días', data.activos_7d, 'var(--ok)'], ['Nuevos 7 días', data.nuevos_7d], ['Pro', data.pro, 'var(--info)'], ['Admin', data.admin, 'var(--acc)'], ['Pack regalado', data.dlc_regalado, 'var(--acc)'], ['Compras pack', data.compras_epocas, 'var(--ok)'], ['Compras Pro', data.compras_pro, 'var(--ok)']];
+  $('summary').innerHTML = cells.map(([k, v, c]) => `<div class="stat"><div class="cap">${k}</div><div class="num" style="color:${c || 'var(--ink)'}">${v ?? 0}</div></div>`).join('');
+}
+
+async function users(reset) {
+  if (reset) { offset = 0; $('users').innerHTML = ''; }
+  const { data, error } = await db.rpc('admin_usuarios', { buscar: $('q').value.trim(), solo_correo: soloCorreo, limite: 50, desde: offset });
+  if (error) return toast(errText(error), true);
+  offset += data.length;
+  $('more').classList.toggle('hidden', data.length < 50);
+  $('users').insertAdjacentHTML('beforeend', data.map((u) => `
+    <tr data-id="${u.id}">
+      <td><div style="font-weight:700">${esc(u.email || 'Invitado')}</div><div class="small">${u.id.slice(0, 8)}${u.nota ? ' · ' + esc(u.nota) : ''}</div></td>
+      <td class="hide-m">${esc(u.alias || '—')}</td>
+      <td><select data-act="rol" aria-label="Tipo de usuario" ${u.id === myId ? 'disabled' : ''} style="color:${ROLE_COLOR[u.rol]}">${Object.entries(ROLES).map(([k, v]) => `<option value="${k}" ${k === u.rol ? 'selected' : ''}>${v}</option>`).join('')}</select></td>
+      <td><button class="switch" data-act="dlc" role="switch" aria-checked="${u.dlc_epocas}" aria-label="Regalar el pack de épocas" type="button"></button></td>
+      <td class="hide-m">${[u.compro_epocas && '<span class="tag" style="color:var(--ok)">Pack</span>', u.compro_pro && '<span class="tag" style="color:var(--info)">Pro</span>'].filter(Boolean).join(' ') || '<span class="small">—</span>'}</td>
+      <td class="hide-m small">${ago(u.visto)}</td>
+      <td><button class="ghost" data-act="nota" type="button">Nota</button></td>
+    </tr>`).join(''));
+}
+
+$('users').addEventListener('change', async (ev) => {
+  const sel = ev.target.closest('select[data-act=rol]'); if (!sel) return;
+  const id = sel.closest('tr').dataset.id;
+  const { error } = await db.rpc('admin_set_rol', { usuario: id, nuevo_rol: sel.value });
+  if (error) { toast(errText(error), true); users(true); return; }
+  sel.style.color = ROLE_COLOR[sel.value]; toast(`Ahora es ${ROLES[sel.value]}`); summary();
+});
+$('users').addEventListener('click', async (ev) => {
+  const b = ev.target.closest('button[data-act]'); if (!b) return;
+  const id = b.closest('tr').dataset.id;
+  if (b.dataset.act === 'dlc') {
+    const v = b.getAttribute('aria-checked') !== 'true';
+    b.disabled = true;
+    const { error } = await db.rpc('admin_regalar_dlc', { usuario: id, regalar: v });
+    b.disabled = false;
+    if (error) return toast(errText(error), true);
+    b.setAttribute('aria-checked', String(v)); toast(v ? 'Pack regalado' : 'Regalo retirado'); summary();
+  } else if (b.dataset.act === 'nota') {
+    const t = prompt('Nota interna (solo la ves tú):', '');
+    if (t === null) return;
+    const { error } = await db.rpc('admin_nota', { usuario: id, texto: t });
+    if (error) return toast(errText(error), true);
+    toast('Nota guardada'); users(true);
+  }
+});
+
+async function buys() {
+  const { data, error } = await db.rpc('admin_compras', { limite: 100 });
+  if (error) return toast(errText(error), true);
+  $('buys').innerHTML = data.map((c) => `<tr><td class="small">${new Date(c.creado).toLocaleString('es-ES')}</td><td>${esc(c.email || c.user_id.slice(0, 8))}</td><td><span class="tag" style="color:${c.producto === 'cc_pro' ? 'var(--info)' : 'var(--ok)'}">${c.producto === 'cc_pro' ? 'Pro' : 'Pack de épocas'}</span></td><td class="hide-m small">${esc(c.plataforma || '—')}</td><td class="hide-m small">${esc(c.compra_id || '')}</td></tr>`).join('') || '<tr><td colspan="5" class="small">Todavía no hay compras</td></tr>';
+}
+
+async function news() {
+  const { data, error } = await db.from('titulares').select('id, texto, activo').order('id', { ascending: false });
+  if (error) return toast(errText(error), true);
+  $('news').innerHTML = data.map((n) => `<tr data-id="${n.id}"><td>${esc(n.texto)}</td><td><button class="switch" data-act="on" role="switch" aria-checked="${n.activo}" aria-label="Activo" type="button"></button></td><td><button class="ghost" data-act="del" type="button">Borrar</button></td></tr>`).join('');
+}
+$('news').addEventListener('click', async (ev) => {
+  const b = ev.target.closest('button[data-act]'); if (!b) return;
+  const id = Number(b.closest('tr').dataset.id);
+  if (b.dataset.act === 'on') {
+    const v = b.getAttribute('aria-checked') !== 'true';
+    const { error } = await db.from('titulares').update({ activo: v }).eq('id', id);
+    if (error) return toast(errText(error), true);
+    b.setAttribute('aria-checked', String(v));
+  } else if (confirm('¿Borrar este titular?')) {
+    const { error } = await db.from('titulares').delete().eq('id', id);
+    if (error) return toast(errText(error), true);
+    news();
+  }
+});
+$('newsForm').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const t = $('newsText').value.trim(); if (!t) return;
+  const { error } = await db.from('titulares').insert({ texto: t });
+  if (error) return toast(errText(error), true);
+  $('newsText').value = ''; news();
+});
+
+document.querySelectorAll('[role=tab]').forEach((t) => t.addEventListener('click', () => {
+  document.querySelectorAll('[role=tab]').forEach((x) => x.setAttribute('aria-selected', String(x === t)));
+  for (const k of ['users', 'buys', 'news']) $('tab-' + k).classList.toggle('hidden', k !== t.dataset.tab);
+  if (t.dataset.tab === 'buys') buys();
+  if (t.dataset.tab === 'news') news();
+}));
+let qt; $('q').addEventListener('input', () => { clearTimeout(qt); qt = setTimeout(() => users(true), 350); });
+$('soloCorreo').addEventListener('click', (ev) => { soloCorreo = !soloCorreo; ev.currentTarget.setAttribute('aria-checked', String(soloCorreo)); users(true); });
+$('more').addEventListener('click', () => users(false));
+$('logout').addEventListener('click', async () => { await db.auth.signOut(); show(); });
+$('loginForm').addEventListener('submit', async (ev) => {
+  ev.preventDefault(); $('loginErr').textContent = '';
+  const { error } = await db.auth.signInWithPassword({ email: $('email').value.trim(), password: $('pass').value });
+  if (error) { $('loginErr').textContent = error.message.includes('Invalid login') ? 'Correo o contraseña incorrectos' : error.message; return; }
+  show();
+});
+show();
+</script>
+</body>
+</html>

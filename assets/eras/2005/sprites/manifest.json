@@ -1,0 +1,560 @@
+{
+ "tile": {
+  "w": 40,
+  "h": 20
+ },
+ "era": "2005",
+ "note": "Sprites v2 de la época 2005. anchor = píxel del vértice superior de la casilla (0,0) de la huella.",
+ "sprites": {
+  "adosados_normal.png": {
+   "w": 65,
+   "h": 54,
+   "anchor_x": 22,
+   "anchor_y": 21,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "adosados_ruina.png": {
+   "w": 65,
+   "h": 54,
+   "anchor_x": 22,
+   "anchor_y": 21,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "adosados_obra.png": {
+   "w": 65,
+   "h": 54,
+   "anchor_x": 22,
+   "anchor_y": 21,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "adosados_reformada.png": {
+   "w": 65,
+   "h": 54,
+   "anchor_x": 22,
+   "anchor_y": 21,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "adosados_alquilada.png": {
+   "w": 65,
+   "h": 54,
+   "anchor_x": 22,
+   "anchor_y": 21,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "torre_cristal_normal.png": {
+   "w": 45,
+   "h": 129,
+   "anchor_x": 22,
+   "anchor_y": 106,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_cristal_ruina.png": {
+   "w": 45,
+   "h": 129,
+   "anchor_x": 22,
+   "anchor_y": 106,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_cristal_obra.png": {
+   "w": 45,
+   "h": 129,
+   "anchor_x": 22,
+   "anchor_y": 106,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_cristal_reformada.png": {
+   "w": 45,
+   "h": 129,
+   "anchor_x": 22,
+   "anchor_y": 106,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_cristal_alquilada.png": {
+   "w": 45,
+   "h": 133,
+   "anchor_x": 22,
+   "anchor_y": 110,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "centro_comercial_normal.png": {
+   "w": 85,
+   "h": 65,
+   "anchor_x": 42,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "centro_comercial_ruina.png": {
+   "w": 85,
+   "h": 65,
+   "anchor_x": 42,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "centro_comercial_obra.png": {
+   "w": 85,
+   "h": 65,
+   "anchor_x": 42,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "centro_comercial_reformada.png": {
+   "w": 85,
+   "h": 65,
+   "anchor_x": 42,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "centro_comercial_alquilada.png": {
+   "w": 85,
+   "h": 65,
+   "anchor_x": 42,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "obra_nueva_normal.png": {
+   "w": 45,
+   "h": 75,
+   "anchor_x": 22,
+   "anchor_y": 52,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "obra_nueva_ruina.png": {
+   "w": 46,
+   "h": 75,
+   "anchor_x": 23,
+   "anchor_y": 52,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "obra_nueva_obra.png": {
+   "w": 45,
+   "h": 75,
+   "anchor_x": 22,
+   "anchor_y": 52,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "obra_nueva_reformada.png": {
+   "w": 45,
+   "h": 75,
+   "anchor_x": 22,
+   "anchor_y": 52,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "obra_nueva_alquilada.png": {
+   "w": 45,
+   "h": 79,
+   "anchor_x": 22,
+   "anchor_y": 56,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "urbanizacion_normal.png": {
+   "w": 85,
+   "h": 72,
+   "anchor_x": 42,
+   "anchor_y": 29,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "urbanizacion_ruina.png": {
+   "w": 85,
+   "h": 72,
+   "anchor_x": 42,
+   "anchor_y": 29,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "urbanizacion_obra.png": {
+   "w": 85,
+   "h": 72,
+   "anchor_x": 42,
+   "anchor_y": 29,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "urbanizacion_reformada.png": {
+   "w": 85,
+   "h": 72,
+   "anchor_x": 42,
+   "anchor_y": 29,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "urbanizacion_alquilada.png": {
+   "w": 85,
+   "h": 72,
+   "anchor_x": 42,
+   "anchor_y": 29,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "torre_bala_normal.png": {
+   "w": 45,
+   "h": 123,
+   "anchor_x": 22,
+   "anchor_y": 100,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_bala_ruina.png": {
+   "w": 45,
+   "h": 123,
+   "anchor_x": 22,
+   "anchor_y": 100,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_bala_obra.png": {
+   "w": 45,
+   "h": 123,
+   "anchor_x": 22,
+   "anchor_y": 100,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_bala_reformada.png": {
+   "w": 45,
+   "h": 123,
+   "anchor_x": 22,
+   "anchor_y": 100,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_bala_alquilada.png": {
+   "w": 45,
+   "h": 129,
+   "anchor_x": 22,
+   "anchor_y": 106,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "museo_titanio_normal.png": {
+   "w": 85,
+   "h": 67,
+   "anchor_x": 42,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "museo_titanio_ruina.png": {
+   "w": 85,
+   "h": 69,
+   "anchor_x": 42,
+   "anchor_y": 26,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "museo_titanio_obra.png": {
+   "w": 85,
+   "h": 68,
+   "anchor_x": 42,
+   "anchor_y": 25,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "museo_titanio_reformada.png": {
+   "w": 85,
+   "h": 67,
+   "anchor_x": 42,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "museo_titanio_alquilada.png": {
+   "w": 85,
+   "h": 79,
+   "anchor_x": 42,
+   "anchor_y": 36,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "multicines_normal.png": {
+   "w": 85,
+   "h": 68,
+   "anchor_x": 42,
+   "anchor_y": 25,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "multicines_ruina.png": {
+   "w": 85,
+   "h": 68,
+   "anchor_x": 42,
+   "anchor_y": 25,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "multicines_obra.png": {
+   "w": 85,
+   "h": 68,
+   "anchor_x": 42,
+   "anchor_y": 25,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "multicines_reformada.png": {
+   "w": 85,
+   "h": 68,
+   "anchor_x": 42,
+   "anchor_y": 25,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "multicines_alquilada.png": {
+   "w": 85,
+   "h": 68,
+   "anchor_x": 42,
+   "anchor_y": 25,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "chalet_piscina_normal.png": {
+   "w": 45,
+   "h": 45,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "chalet_piscina_ruina.png": {
+   "w": 45,
+   "h": 45,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "chalet_piscina_obra.png": {
+   "w": 45,
+   "h": 45,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "chalet_piscina_reformada.png": {
+   "w": 45,
+   "h": 45,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "chalet_piscina_alquilada.png": {
+   "w": 45,
+   "h": 50,
+   "anchor_x": 22,
+   "anchor_y": 27,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "grua_obra_normal.png": {
+   "w": 49,
+   "h": 118,
+   "anchor_x": 26,
+   "anchor_y": 95,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "grua_obra_ruina.png": {
+   "w": 49,
+   "h": 118,
+   "anchor_x": 26,
+   "anchor_y": 95,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "grua_obra_obra.png": {
+   "w": 49,
+   "h": 118,
+   "anchor_x": 26,
+   "anchor_y": 95,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "grua_obra_reformada.png": {
+   "w": 49,
+   "h": 118,
+   "anchor_x": 26,
+   "anchor_y": 95,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "grua_obra_alquilada.png": {
+   "w": 49,
+   "h": 118,
+   "anchor_x": 26,
+   "anchor_y": 95,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "rotonda_normal.png": {
+   "w": 45,
+   "h": 48,
+   "anchor_x": 22,
+   "anchor_y": 25,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "rotonda_ruina.png": {
+   "w": 45,
+   "h": 48,
+   "anchor_x": 22,
+   "anchor_y": 25,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "rotonda_obra.png": {
+   "w": 45,
+   "h": 48,
+   "anchor_x": 22,
+   "anchor_y": 25,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "rotonda_reformada.png": {
+   "w": 45,
+   "h": 48,
+   "anchor_x": 22,
+   "anchor_y": 25,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "rotonda_alquilada.png": {
+   "w": 45,
+   "h": 48,
+   "anchor_x": 22,
+   "anchor_y": 25,
+   "footprint": [
+    1,
+    1
+   ]
+  }
+ }
+}

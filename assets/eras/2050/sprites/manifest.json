@@ -1,0 +1,560 @@
+{
+ "tile": {
+  "w": 40,
+  "h": 20
+ },
+ "era": "2050",
+ "note": "Sprites v2 de la época 2050. anchor = píxel del vértice superior de la casilla (0,0) de la huella.",
+ "sprites": {
+  "torre_madera_normal.png": {
+   "w": 45,
+   "h": 124,
+   "anchor_x": 22,
+   "anchor_y": 101,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_madera_ruina.png": {
+   "w": 45,
+   "h": 124,
+   "anchor_x": 22,
+   "anchor_y": 101,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_madera_obra.png": {
+   "w": 45,
+   "h": 124,
+   "anchor_x": 22,
+   "anchor_y": 101,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_madera_reformada.png": {
+   "w": 45,
+   "h": 124,
+   "anchor_x": 22,
+   "anchor_y": 101,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_madera_alquilada.png": {
+   "w": 45,
+   "h": 125,
+   "anchor_x": 22,
+   "anchor_y": 102,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "anfibio_normal.png": {
+   "w": 46,
+   "h": 55,
+   "anchor_x": 23,
+   "anchor_y": 32,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "anfibio_ruina.png": {
+   "w": 46,
+   "h": 55,
+   "anchor_x": 23,
+   "anchor_y": 32,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "anfibio_obra.png": {
+   "w": 46,
+   "h": 55,
+   "anchor_x": 23,
+   "anchor_y": 32,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "anfibio_reformada.png": {
+   "w": 46,
+   "h": 55,
+   "anchor_x": 23,
+   "anchor_y": 32,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "anfibio_alquilada.png": {
+   "w": 46,
+   "h": 61,
+   "anchor_x": 23,
+   "anchor_y": 38,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "granja_vertical_normal.png": {
+   "w": 85,
+   "h": 113,
+   "anchor_x": 42,
+   "anchor_y": 70,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "granja_vertical_ruina.png": {
+   "w": 85,
+   "h": 113,
+   "anchor_x": 42,
+   "anchor_y": 70,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "granja_vertical_obra.png": {
+   "w": 85,
+   "h": 113,
+   "anchor_x": 42,
+   "anchor_y": 70,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "granja_vertical_reformada.png": {
+   "w": 85,
+   "h": 113,
+   "anchor_x": 42,
+   "anchor_y": 70,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "granja_vertical_alquilada.png": {
+   "w": 85,
+   "h": 113,
+   "anchor_x": 42,
+   "anchor_y": 70,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "hub_drones_normal.png": {
+   "w": 45,
+   "h": 130,
+   "anchor_x": 22,
+   "anchor_y": 107,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "hub_drones_ruina.png": {
+   "w": 45,
+   "h": 103,
+   "anchor_x": 22,
+   "anchor_y": 80,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "hub_drones_obra.png": {
+   "w": 45,
+   "h": 103,
+   "anchor_x": 22,
+   "anchor_y": 80,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "hub_drones_reformada.png": {
+   "w": 45,
+   "h": 130,
+   "anchor_x": 22,
+   "anchor_y": 107,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "hub_drones_alquilada.png": {
+   "w": 45,
+   "h": 130,
+   "anchor_x": 22,
+   "anchor_y": 107,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "bloque_muro_normal.png": {
+   "w": 65,
+   "h": 76,
+   "anchor_x": 22,
+   "anchor_y": 43,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "bloque_muro_ruina.png": {
+   "w": 65,
+   "h": 76,
+   "anchor_x": 22,
+   "anchor_y": 43,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "bloque_muro_obra.png": {
+   "w": 65,
+   "h": 76,
+   "anchor_x": 22,
+   "anchor_y": 43,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "bloque_muro_reformada.png": {
+   "w": 65,
+   "h": 76,
+   "anchor_x": 22,
+   "anchor_y": 43,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "bloque_muro_alquilada.png": {
+   "w": 65,
+   "h": 77,
+   "anchor_x": 22,
+   "anchor_y": 44,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "arcologia_normal.png": {
+   "w": 85,
+   "h": 132,
+   "anchor_x": 42,
+   "anchor_y": 89,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "arcologia_ruina.png": {
+   "w": 85,
+   "h": 132,
+   "anchor_x": 42,
+   "anchor_y": 89,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "arcologia_obra.png": {
+   "w": 85,
+   "h": 132,
+   "anchor_x": 42,
+   "anchor_y": 89,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "arcologia_reformada.png": {
+   "w": 85,
+   "h": 132,
+   "anchor_x": 42,
+   "anchor_y": 89,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "arcologia_alquilada.png": {
+   "w": 85,
+   "h": 132,
+   "anchor_x": 42,
+   "anchor_y": 89,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "biodomo_normal.png": {
+   "w": 85,
+   "h": 70,
+   "anchor_x": 42,
+   "anchor_y": 27,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "biodomo_ruina.png": {
+   "w": 85,
+   "h": 70,
+   "anchor_x": 42,
+   "anchor_y": 27,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "biodomo_obra.png": {
+   "w": 85,
+   "h": 70,
+   "anchor_x": 42,
+   "anchor_y": 27,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "biodomo_reformada.png": {
+   "w": 85,
+   "h": 70,
+   "anchor_x": 42,
+   "anchor_y": 27,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "biodomo_alquilada.png": {
+   "w": 85,
+   "h": 79,
+   "anchor_x": 42,
+   "anchor_y": 36,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "hyperloop_normal.png": {
+   "w": 65,
+   "h": 50,
+   "anchor_x": 22,
+   "anchor_y": 17,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "hyperloop_ruina.png": {
+   "w": 65,
+   "h": 50,
+   "anchor_x": 22,
+   "anchor_y": 17,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "hyperloop_obra.png": {
+   "w": 65,
+   "h": 50,
+   "anchor_x": 22,
+   "anchor_y": 17,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "hyperloop_reformada.png": {
+   "w": 65,
+   "h": 50,
+   "anchor_x": 22,
+   "anchor_y": 17,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "hyperloop_alquilada.png": {
+   "w": 65,
+   "h": 50,
+   "anchor_x": 22,
+   "anchor_y": 17,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "escuela_solar_normal.png": {
+   "w": 65,
+   "h": 51,
+   "anchor_x": 22,
+   "anchor_y": 18,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "escuela_solar_ruina.png": {
+   "w": 65,
+   "h": 51,
+   "anchor_x": 22,
+   "anchor_y": 18,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "escuela_solar_obra.png": {
+   "w": 65,
+   "h": 51,
+   "anchor_x": 22,
+   "anchor_y": 18,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "escuela_solar_reformada.png": {
+   "w": 65,
+   "h": 51,
+   "anchor_x": 22,
+   "anchor_y": 18,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "escuela_solar_alquilada.png": {
+   "w": 65,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "torre_eolica_normal.png": {
+   "w": 45,
+   "h": 123,
+   "anchor_x": 22,
+   "anchor_y": 100,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_eolica_ruina.png": {
+   "w": 45,
+   "h": 123,
+   "anchor_x": 22,
+   "anchor_y": 100,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_eolica_obra.png": {
+   "w": 45,
+   "h": 123,
+   "anchor_x": 22,
+   "anchor_y": 100,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_eolica_reformada.png": {
+   "w": 45,
+   "h": 123,
+   "anchor_x": 22,
+   "anchor_y": 100,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_eolica_alquilada.png": {
+   "w": 45,
+   "h": 123,
+   "anchor_x": 22,
+   "anchor_y": 100,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "plaza_flotante_normal.png": {
+   "w": 45,
+   "h": 31,
+   "anchor_x": 22,
+   "anchor_y": 8,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "plaza_flotante_ruina.png": {
+   "w": 45,
+   "h": 31,
+   "anchor_x": 22,
+   "anchor_y": 8,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "plaza_flotante_obra.png": {
+   "w": 45,
+   "h": 33,
+   "anchor_x": 22,
+   "anchor_y": 10,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "plaza_flotante_reformada.png": {
+   "w": 45,
+   "h": 31,
+   "anchor_x": 22,
+   "anchor_y": 8,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "plaza_flotante_alquilada.png": {
+   "w": 45,
+   "h": 33,
+   "anchor_x": 22,
+   "anchor_y": 10,
+   "footprint": [
+    1,
+    1
+   ]
+  }
+ }
+}

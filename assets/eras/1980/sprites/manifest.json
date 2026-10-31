@@ -1,0 +1,560 @@
+{
+ "tile": {
+  "w": 40,
+  "h": 20
+ },
+ "era": "1980",
+ "note": "Sprites v2 de la época 1980. anchor = píxel del vértice superior de la casilla (0,0) de la huella.",
+ "sprites": {
+  "bloque_ladrillo_normal.png": {
+   "w": 45,
+   "h": 106,
+   "anchor_x": 22,
+   "anchor_y": 83,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "bloque_ladrillo_ruina.png": {
+   "w": 45,
+   "h": 106,
+   "anchor_x": 22,
+   "anchor_y": 83,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "bloque_ladrillo_obra.png": {
+   "w": 45,
+   "h": 106,
+   "anchor_x": 22,
+   "anchor_y": 83,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "bloque_ladrillo_reformada.png": {
+   "w": 45,
+   "h": 106,
+   "anchor_x": 22,
+   "anchor_y": 83,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "bloque_ladrillo_alquilada.png": {
+   "w": 45,
+   "h": 106,
+   "anchor_x": 22,
+   "anchor_y": 83,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_brutalista_normal.png": {
+   "w": 85,
+   "h": 129,
+   "anchor_x": 42,
+   "anchor_y": 86,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "torre_brutalista_ruina.png": {
+   "w": 85,
+   "h": 129,
+   "anchor_x": 42,
+   "anchor_y": 86,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "torre_brutalista_obra.png": {
+   "w": 85,
+   "h": 129,
+   "anchor_x": 42,
+   "anchor_y": 86,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "torre_brutalista_reformada.png": {
+   "w": 85,
+   "h": 129,
+   "anchor_x": 42,
+   "anchor_y": 86,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "torre_brutalista_alquilada.png": {
+   "w": 85,
+   "h": 129,
+   "anchor_x": 42,
+   "anchor_y": 86,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "local_persiana_normal.png": {
+   "w": 45,
+   "h": 52,
+   "anchor_x": 22,
+   "anchor_y": 29,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "local_persiana_ruina.png": {
+   "w": 45,
+   "h": 52,
+   "anchor_x": 22,
+   "anchor_y": 29,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "local_persiana_obra.png": {
+   "w": 45,
+   "h": 52,
+   "anchor_x": 22,
+   "anchor_y": 29,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "local_persiana_reformada.png": {
+   "w": 45,
+   "h": 52,
+   "anchor_x": 22,
+   "anchor_y": 29,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "local_persiana_alquilada.png": {
+   "w": 45,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 32,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "nave_abandonada_normal.png": {
+   "w": 85,
+   "h": 65,
+   "anchor_x": 42,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "nave_abandonada_ruina.png": {
+   "w": 85,
+   "h": 65,
+   "anchor_x": 42,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "nave_abandonada_obra.png": {
+   "w": 85,
+   "h": 65,
+   "anchor_x": 42,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "nave_abandonada_reformada.png": {
+   "w": 85,
+   "h": 65,
+   "anchor_x": 42,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "nave_abandonada_alquilada.png": {
+   "w": 85,
+   "h": 65,
+   "anchor_x": 42,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "oficinas_70_normal.png": {
+   "w": 45,
+   "h": 83,
+   "anchor_x": 22,
+   "anchor_y": 60,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "oficinas_70_ruina.png": {
+   "w": 45,
+   "h": 83,
+   "anchor_x": 22,
+   "anchor_y": 60,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "oficinas_70_obra.png": {
+   "w": 45,
+   "h": 83,
+   "anchor_x": 22,
+   "anchor_y": 60,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "oficinas_70_reformada.png": {
+   "w": 45,
+   "h": 83,
+   "anchor_x": 22,
+   "anchor_y": 60,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "oficinas_70_alquilada.png": {
+   "w": 45,
+   "h": 85,
+   "anchor_x": 22,
+   "anchor_y": 62,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_telefonica_normal.png": {
+   "w": 45,
+   "h": 127,
+   "anchor_x": 22,
+   "anchor_y": 104,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_telefonica_ruina.png": {
+   "w": 45,
+   "h": 127,
+   "anchor_x": 22,
+   "anchor_y": 104,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_telefonica_obra.png": {
+   "w": 45,
+   "h": 127,
+   "anchor_x": 22,
+   "anchor_y": 104,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_telefonica_reformada.png": {
+   "w": 45,
+   "h": 127,
+   "anchor_x": 22,
+   "anchor_y": 104,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_telefonica_alquilada.png": {
+   "w": 45,
+   "h": 127,
+   "anchor_x": 22,
+   "anchor_y": 104,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "polideportivo_normal.png": {
+   "w": 85,
+   "h": 63,
+   "anchor_x": 42,
+   "anchor_y": 20,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "polideportivo_ruina.png": {
+   "w": 85,
+   "h": 63,
+   "anchor_x": 42,
+   "anchor_y": 20,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "polideportivo_obra.png": {
+   "w": 85,
+   "h": 63,
+   "anchor_x": 42,
+   "anchor_y": 20,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "polideportivo_reformada.png": {
+   "w": 85,
+   "h": 63,
+   "anchor_x": 42,
+   "anchor_y": 20,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "polideportivo_alquilada.png": {
+   "w": 85,
+   "h": 63,
+   "anchor_x": 42,
+   "anchor_y": 20,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "colmena_normal.png": {
+   "w": 65,
+   "h": 121,
+   "anchor_x": 22,
+   "anchor_y": 88,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "colmena_ruina.png": {
+   "w": 65,
+   "h": 121,
+   "anchor_x": 22,
+   "anchor_y": 88,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "colmena_obra.png": {
+   "w": 65,
+   "h": 121,
+   "anchor_x": 22,
+   "anchor_y": 88,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "colmena_reformada.png": {
+   "w": 65,
+   "h": 121,
+   "anchor_x": 22,
+   "anchor_y": 88,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "colmena_alquilada.png": {
+   "w": 65,
+   "h": 121,
+   "anchor_x": 22,
+   "anchor_y": 88,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "mercado_barrio_normal.png": {
+   "w": 65,
+   "h": 50,
+   "anchor_x": 22,
+   "anchor_y": 17,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "mercado_barrio_ruina.png": {
+   "w": 65,
+   "h": 50,
+   "anchor_x": 22,
+   "anchor_y": 17,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "mercado_barrio_obra.png": {
+   "w": 65,
+   "h": 50,
+   "anchor_x": 22,
+   "anchor_y": 17,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "mercado_barrio_reformada.png": {
+   "w": 65,
+   "h": 50,
+   "anchor_x": 22,
+   "anchor_y": 17,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "mercado_barrio_alquilada.png": {
+   "w": 65,
+   "h": 50,
+   "anchor_x": 22,
+   "anchor_y": 17,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "recreativos_normal.png": {
+   "w": 45,
+   "h": 43,
+   "anchor_x": 22,
+   "anchor_y": 20,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "recreativos_ruina.png": {
+   "w": 45,
+   "h": 43,
+   "anchor_x": 22,
+   "anchor_y": 20,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "recreativos_obra.png": {
+   "w": 45,
+   "h": 43,
+   "anchor_x": 22,
+   "anchor_y": 20,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "recreativos_reformada.png": {
+   "w": 45,
+   "h": 43,
+   "anchor_x": 22,
+   "anchor_y": 20,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "recreativos_alquilada.png": {
+   "w": 45,
+   "h": 47,
+   "anchor_x": 22,
+   "anchor_y": 24,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "gasolinera_80_normal.png": {
+   "w": 45,
+   "h": 45,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "gasolinera_80_ruina.png": {
+   "w": 45,
+   "h": 45,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "gasolinera_80_obra.png": {
+   "w": 45,
+   "h": 45,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "gasolinera_80_reformada.png": {
+   "w": 45,
+   "h": 45,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "gasolinera_80_alquilada.png": {
+   "w": 45,
+   "h": 45,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    1,
+    1
+   ]
+  }
+ }
+}

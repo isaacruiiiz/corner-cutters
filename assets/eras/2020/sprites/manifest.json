@@ -1,0 +1,560 @@
+{
+ "tile": {
+  "w": 40,
+  "h": 20
+ },
+ "era": "2020",
+ "note": "Sprites v2 de la época 2020. anchor = píxel del vértice superior de la casilla (0,0) de la huella.",
+ "sprites": {
+  "bloque_terrazas_normal.png": {
+   "w": 45,
+   "h": 82,
+   "anchor_x": 22,
+   "anchor_y": 59,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "bloque_terrazas_ruina.png": {
+   "w": 45,
+   "h": 82,
+   "anchor_x": 22,
+   "anchor_y": 59,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "bloque_terrazas_obra.png": {
+   "w": 45,
+   "h": 82,
+   "anchor_x": 22,
+   "anchor_y": 59,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "bloque_terrazas_reformada.png": {
+   "w": 45,
+   "h": 82,
+   "anchor_x": 22,
+   "anchor_y": 59,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "bloque_terrazas_alquilada.png": {
+   "w": 45,
+   "h": 87,
+   "anchor_x": 22,
+   "anchor_y": 64,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "piso_turistico_normal.png": {
+   "w": 45,
+   "h": 59,
+   "anchor_x": 22,
+   "anchor_y": 36,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "piso_turistico_ruina.png": {
+   "w": 45,
+   "h": 59,
+   "anchor_x": 22,
+   "anchor_y": 36,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "piso_turistico_obra.png": {
+   "w": 45,
+   "h": 59,
+   "anchor_x": 22,
+   "anchor_y": 36,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "piso_turistico_reformada.png": {
+   "w": 45,
+   "h": 59,
+   "anchor_x": 22,
+   "anchor_y": 36,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "piso_turistico_alquilada.png": {
+   "w": 45,
+   "h": 63,
+   "anchor_x": 22,
+   "anchor_y": 40,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "coworking_normal.png": {
+   "w": 85,
+   "h": 67,
+   "anchor_x": 42,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "coworking_ruina.png": {
+   "w": 85,
+   "h": 67,
+   "anchor_x": 42,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "coworking_obra.png": {
+   "w": 85,
+   "h": 67,
+   "anchor_x": 42,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "coworking_reformada.png": {
+   "w": 85,
+   "h": 67,
+   "anchor_x": 42,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "coworking_alquilada.png": {
+   "w": 85,
+   "h": 67,
+   "anchor_x": 42,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "dark_kitchen_normal.png": {
+   "w": 45,
+   "h": 38,
+   "anchor_x": 22,
+   "anchor_y": 15,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "dark_kitchen_ruina.png": {
+   "w": 45,
+   "h": 38,
+   "anchor_x": 22,
+   "anchor_y": 15,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "dark_kitchen_obra.png": {
+   "w": 45,
+   "h": 38,
+   "anchor_x": 22,
+   "anchor_y": 15,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "dark_kitchen_reformada.png": {
+   "w": 45,
+   "h": 38,
+   "anchor_x": 22,
+   "anchor_y": 15,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "dark_kitchen_alquilada.png": {
+   "w": 45,
+   "h": 43,
+   "anchor_x": 22,
+   "anchor_y": 20,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "rehabilitado_normal.png": {
+   "w": 65,
+   "h": 73,
+   "anchor_x": 22,
+   "anchor_y": 40,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "rehabilitado_ruina.png": {
+   "w": 65,
+   "h": 73,
+   "anchor_x": 22,
+   "anchor_y": 40,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "rehabilitado_obra.png": {
+   "w": 65,
+   "h": 73,
+   "anchor_x": 22,
+   "anchor_y": 40,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "rehabilitado_reformada.png": {
+   "w": 65,
+   "h": 73,
+   "anchor_x": 22,
+   "anchor_y": 40,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "rehabilitado_alquilada.png": {
+   "w": 65,
+   "h": 74,
+   "anchor_x": 22,
+   "anchor_y": 41,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "torre_jardines_normal.png": {
+   "w": 45,
+   "h": 130,
+   "anchor_x": 22,
+   "anchor_y": 107,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_jardines_ruina.png": {
+   "w": 45,
+   "h": 130,
+   "anchor_x": 22,
+   "anchor_y": 107,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_jardines_obra.png": {
+   "w": 45,
+   "h": 130,
+   "anchor_x": 22,
+   "anchor_y": 107,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_jardines_reformada.png": {
+   "w": 45,
+   "h": 130,
+   "anchor_x": 22,
+   "anchor_y": 107,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "torre_jardines_alquilada.png": {
+   "w": 45,
+   "h": 133,
+   "anchor_x": 22,
+   "anchor_y": 110,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "coliving_normal.png": {
+   "w": 65,
+   "h": 79,
+   "anchor_x": 22,
+   "anchor_y": 46,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "coliving_ruina.png": {
+   "w": 65,
+   "h": 79,
+   "anchor_x": 22,
+   "anchor_y": 46,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "coliving_obra.png": {
+   "w": 65,
+   "h": 79,
+   "anchor_x": 22,
+   "anchor_y": 46,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "coliving_reformada.png": {
+   "w": 65,
+   "h": 79,
+   "anchor_x": 22,
+   "anchor_y": 46,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "coliving_alquilada.png": {
+   "w": 65,
+   "h": 79,
+   "anchor_x": 22,
+   "anchor_y": 46,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "mercado_gourmet_normal.png": {
+   "w": 65,
+   "h": 57,
+   "anchor_x": 22,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "mercado_gourmet_ruina.png": {
+   "w": 65,
+   "h": 57,
+   "anchor_x": 22,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "mercado_gourmet_obra.png": {
+   "w": 65,
+   "h": 57,
+   "anchor_x": 22,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "mercado_gourmet_reformada.png": {
+   "w": 65,
+   "h": 57,
+   "anchor_x": 22,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "mercado_gourmet_alquilada.png": {
+   "w": 65,
+   "h": 57,
+   "anchor_x": 22,
+   "anchor_y": 24,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "hotel_boutique_normal.png": {
+   "w": 45,
+   "h": 77,
+   "anchor_x": 22,
+   "anchor_y": 54,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "hotel_boutique_ruina.png": {
+   "w": 45,
+   "h": 77,
+   "anchor_x": 22,
+   "anchor_y": 54,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "hotel_boutique_obra.png": {
+   "w": 45,
+   "h": 77,
+   "anchor_x": 22,
+   "anchor_y": 54,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "hotel_boutique_reformada.png": {
+   "w": 45,
+   "h": 77,
+   "anchor_x": 22,
+   "anchor_y": 54,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "hotel_boutique_alquilada.png": {
+   "w": 45,
+   "h": 79,
+   "anchor_x": 22,
+   "anchor_y": 56,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "fachada_verde_normal.png": {
+   "w": 45,
+   "h": 91,
+   "anchor_x": 22,
+   "anchor_y": 68,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "fachada_verde_ruina.png": {
+   "w": 45,
+   "h": 91,
+   "anchor_x": 22,
+   "anchor_y": 68,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "fachada_verde_obra.png": {
+   "w": 45,
+   "h": 91,
+   "anchor_x": 22,
+   "anchor_y": 68,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "fachada_verde_reformada.png": {
+   "w": 45,
+   "h": 91,
+   "anchor_x": 22,
+   "anchor_y": 68,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "fachada_verde_alquilada.png": {
+   "w": 45,
+   "h": 95,
+   "anchor_x": 22,
+   "anchor_y": 72,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "electrolinera_normal.png": {
+   "w": 45,
+   "h": 39,
+   "anchor_x": 22,
+   "anchor_y": 16,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "electrolinera_ruina.png": {
+   "w": 45,
+   "h": 39,
+   "anchor_x": 22,
+   "anchor_y": 16,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "electrolinera_obra.png": {
+   "w": 45,
+   "h": 39,
+   "anchor_x": 22,
+   "anchor_y": 16,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "electrolinera_reformada.png": {
+   "w": 45,
+   "h": 39,
+   "anchor_x": 22,
+   "anchor_y": 16,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "electrolinera_alquilada.png": {
+   "w": 45,
+   "h": 44,
+   "anchor_x": 22,
+   "anchor_y": 21,
+   "footprint": [
+    1,
+    1
+   ]
+  }
+ }
+}

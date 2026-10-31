@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corner Cutters · Borrar cuenta</title>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+15&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0E2221;--panel:#17302F;--deep:#0A1A19;--line:#050B0B;--ink:#ECE4D0;--mut:#8FB0A8;--acc:#E3A93B;--bad:#E2675B;--ok:#4FC08D}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Manrope,system-ui,sans-serif}
+.wrap{max-width:520px;margin:0 auto;padding:32px 20px 64px}
+h1{font-family:'Jersey 15',monospace;font-weight:400;font-size:44px;line-height:1;margin:0}
+.cap{font-size:10px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:var(--mut)}
+.panel{background:var(--panel);border:2px solid var(--line);border-radius:16px;box-shadow:0 3px 0 rgba(0,0,0,.5);padding:18px;margin-top:18px;display:flex;flex-direction:column;gap:12px}
+label{display:flex;flex-direction:column;gap:6px}
+input{font:15px Manrope,sans-serif;color:var(--ink);background:var(--deep);border:2px solid var(--line);border-radius:10px;padding:10px 12px}
+input:focus{border-color:var(--acc);outline:none}
+button{font:800 12px Manrope,sans-serif;letter-spacing:1px;text-transform:uppercase;border:2px solid var(--line);border-radius:10px;height:42px;cursor:pointer;color:#1A1304;background:linear-gradient(#F2C25F,#E3A93B);box-shadow:0 3px 0 #6D4D0C}
+button.sec{background:#17302F;color:var(--ink);box-shadow:0 3px 0 var(--line)}
+button.bad{background:var(--bad);color:#1A0605;box-shadow:0 3px 0 #6B241D}
+button:disabled{opacity:.5}
+button:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.small{color:var(--mut);font-size:13px}.err{color:var(--bad);font-weight:700}.ok{color:var(--ok);font-weight:700}
+.hidden{display:none!important}a{color:var(--acc)}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="cap">Corner Cutters</div>
+<h1>Borrar cuenta</h1>
+<p>Al borrar tu cuenta se eliminan para siempre: la cuenta y su correo, la partida guardada en la nube, tu puesto en el ranking, el pack regalado y el registro de compras. Las compras hechas en Google Play o App Store siguen siendo tuyas y se recuperan con «Restaurar compras».</p>
+<p class="small">También puedes hacerlo dentro del juego: <b>Cuenta → Borrar cuenta</b>. Si no puedes entrar, escribe a <a id="mail" href="#">el correo de contacto</a> desde el correo de tu cuenta y la borramos en un máximo de 30 días.</p>
+
+<form id="login" class="panel">
+  <label><span class="cap">Correo de tu cuenta</span><input id="email" type="email" autocomplete="username" required></label>
+  <label><span class="cap">Contraseña</span><input id="pass" type="password" autocomplete="current-password"></label>
+  <button type="submit">Entrar</button>
+  <button type="button" class="sec" id="link">No tengo contraseña: enviarme un enlace</button>
+  <div id="msg" role="status"></div>
+</form>
+
+<div id="zona" class="panel hidden">
+  <div><span class="cap">Cuenta</span><div id="quien" style="font-weight:700"></div></div>
+  <button type="button" class="bad" id="borrar">Borrar mi cuenta para siempre</button>
+  <button type="button" class="sec" id="salir">Salir sin borrar</button>
+  <div id="msg2" role="status"></div>
+</div>
+</main>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const $ = (id) => document.getElementById(id);
+const cfg = await fetch('../assets/assets/config.json').then((r) => r.json()).catch(() => ({}));
+const m = (cfg.contacto || '').trim();
+if (m) { $('mail').href = 'mailto:' + m; $('mail').textContent = m; }
+const db = createClient((cfg.supabaseUrl || '').replace(/\/rest\/v1\/?$/, '').replace(/\/$/, ''), cfg.supabaseKey || 'x');
+const say = (el, t, cls) => { el.textContent = t; el.className = cls || ''; };
+
+async function show() {
+  const { data: { session } } = await db.auth.getSession();
+  const ok = session && !session.user.is_anonymous;
+  $('login').classList.toggle('hidden', !!ok);
+  $('zona').classList.toggle('hidden', !ok);
+  if (ok) $('quien').textContent = session.user.email;
+}
+db.auth.onAuthStateChange(() => show());
+
+$('login').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  if (!$('pass').value) return say($('msg'), 'Escribe la contraseña o pide un enlace.', 'err');
+  const { error } = await db.auth.signInWithPassword({ email: $('email').value.trim(), password: $('pass').value });
+  if (error) return say($('msg'), error.message.includes('Invalid login') ? 'Correo o contraseña incorrectos' : error.message, 'err');
+  show();
+});
+$('link').addEventListener('click', async () => {
+  const email = $('email').value.trim();
+  if (!email) return say($('msg'), 'Escribe primero el correo.', 'err');
+  const { error } = await db.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo: location.origin + location.pathname } });
+  say($('msg'), error ? error.message : 'Te hemos enviado un enlace. Ábrelo en este mismo navegador.', error ? 'err' : 'ok');
+});
+$('salir').addEventListener('click', async () => { await db.auth.signOut(); show(); });
+$('borrar').addEventListener('click', async () => {
+  if (!confirm('Se borrará todo y no se puede deshacer. ¿Seguro?')) return;
+  $('borrar').disabled = true;
+  const { error } = await db.rpc('borrar_mi_cuenta');
+  if (error) { $('borrar').disabled = false; return say($('msg2'), error.message, 'err'); }
+  await db.auth.signOut().catch(() => {});
+  $('zona').classList.add('hidden'); $('login').classList.add('hidden');
+  document.querySelector('main').insertAdjacentHTML('beforeend', '<div class="panel"><span class="ok">Cuenta borrada.</span><span class="small">Si tenías el juego instalado, ábrelo y empezará de cero como invitado.</span></div>');
+});
+show();
+</script>
+</body>
+</html>

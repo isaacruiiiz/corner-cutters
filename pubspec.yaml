@@ -1,0 +1,81 @@
+name: corner_cutters
+description: "Corner Cutters: property idle game. Compra ruinas, reforma, alquila o vende."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.6.1
+  shared_preferences: ^2.5.3
+  supabase_flutter: ^2.10.0
+  audioplayers: ^6.1.0
+  google_mobile_ads: ^9.2.0
+  in_app_purchase: ^3.2.3
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/config.json
+    - assets/sprites/A/
+    - assets/branding/logo/
+    - assets/audio/sfx/
+    - assets/audio/music/
+    - assets/eras/1888/sprites/
+    - assets/eras/1929/sprites/
+    - assets/eras/1980/sprites/
+    - assets/eras/2005/sprites/
+    - assets/eras/2020/sprites/
+    - assets/eras/2050/sprites/
+    - assets/eras/portadas/
+  fonts:
+    - family: Jersey
+      fonts:
+        - asset: assets/fonts/Jersey15-Regular.ttf
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/Manrope-500.ttf
+          weight: 500
+        - asset: assets/fonts/Manrope-600.ttf
+          weight: 600
+        - asset: assets/fonts/Manrope-700.ttf
+          weight: 700
+        - asset: assets/fonts/Manrope-800.ttf
+          weight: 800
+    # DLC de épocas: tipografías de las portadas de la hemeroteca (OFL, licencias en assets/fonts/epocas/licencias).
+    - family: Fraktur
+      fonts:
+        - asset: assets/fonts/epocas/UnifrakturMaguntia-Book.ttf
+    - family: OldStandard
+      fonts:
+        - asset: assets/fonts/epocas/OldStandard-Regular.ttf
+        - asset: assets/fonts/epocas/OldStandard-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/epocas/OldStandard-Italic.ttf
+          style: italic
+    - family: Anton
+      fonts:
+        - asset: assets/fonts/epocas/Anton-Regular.ttf
+    - family: CourierPrime
+      fonts:
+        - asset: assets/fonts/epocas/CourierPrime-Regular.ttf
+        - asset: assets/fonts/epocas/CourierPrime-Bold.ttf
+          weight: 700
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/epocas/Nunito-Variable.ttf
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/epocas/Inter-Variable.ttf
+    - family: JetBrainsMono
+      fonts:
+        - asset: assets/fonts/epocas/JetBrainsMono-Variable.ttf

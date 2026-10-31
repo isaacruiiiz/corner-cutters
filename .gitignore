@@ -1,0 +1,29 @@
+# Flutter
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+*.iml
+.idea/
+.DS_Store
+tool/ultimo.log
+tool/hecho
+.flutter-plugins-dependencies
+
+# Firma de Android: nunca al repo
+android/key.properties
+*.jks
+*.keystore
+
+# Restos locales
+_backup/
+tool/*.tgz
+tool/*.log
+tool/*hecho
+tool/_borrar/
+tool/capturas/log.txt
+tool/capturas/hecho
+ios/Flutter/ephemeral/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh

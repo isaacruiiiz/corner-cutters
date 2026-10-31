@@ -1,0 +1,560 @@
+{
+ "tile": {
+  "w": 40,
+  "h": 20
+ },
+ "era": "1888",
+ "note": "Sprites v2 de la época 1888. anchor = píxel del vértice superior de la casilla (0,0) de la huella.",
+ "sprites": {
+  "casa_cos_normal.png": {
+   "w": 45,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 32,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "casa_cos_ruina.png": {
+   "w": 45,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 32,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "casa_cos_obra.png": {
+   "w": 45,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 32,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "casa_cos_reformada.png": {
+   "w": 45,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 32,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "casa_cos_alquilada.png": {
+   "w": 45,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 32,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "finca_ensanche_normal.png": {
+   "w": 85,
+   "h": 100,
+   "anchor_x": 42,
+   "anchor_y": 57,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "finca_ensanche_ruina.png": {
+   "w": 85,
+   "h": 100,
+   "anchor_x": 42,
+   "anchor_y": 57,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "finca_ensanche_obra.png": {
+   "w": 85,
+   "h": 100,
+   "anchor_x": 42,
+   "anchor_y": 57,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "finca_ensanche_reformada.png": {
+   "w": 85,
+   "h": 100,
+   "anchor_x": 42,
+   "anchor_y": 57,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "finca_ensanche_alquilada.png": {
+   "w": 85,
+   "h": 100,
+   "anchor_x": 42,
+   "anchor_y": 57,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "fabrica_vapor_normal.png": {
+   "w": 85,
+   "h": 105,
+   "anchor_x": 42,
+   "anchor_y": 62,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "fabrica_vapor_ruina.png": {
+   "w": 85,
+   "h": 80,
+   "anchor_x": 42,
+   "anchor_y": 37,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "fabrica_vapor_obra.png": {
+   "w": 85,
+   "h": 105,
+   "anchor_x": 42,
+   "anchor_y": 62,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "fabrica_vapor_reformada.png": {
+   "w": 85,
+   "h": 105,
+   "anchor_x": 42,
+   "anchor_y": 62,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "fabrica_vapor_alquilada.png": {
+   "w": 85,
+   "h": 105,
+   "anchor_x": 42,
+   "anchor_y": 62,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "colmado_normal.png": {
+   "w": 45,
+   "h": 47,
+   "anchor_x": 22,
+   "anchor_y": 24,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "colmado_ruina.png": {
+   "w": 45,
+   "h": 47,
+   "anchor_x": 22,
+   "anchor_y": 24,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "colmado_obra.png": {
+   "w": 45,
+   "h": 47,
+   "anchor_x": 22,
+   "anchor_y": 24,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "colmado_reformada.png": {
+   "w": 45,
+   "h": 47,
+   "anchor_x": 22,
+   "anchor_y": 24,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "colmado_alquilada.png": {
+   "w": 45,
+   "h": 47,
+   "anchor_x": 22,
+   "anchor_y": 24,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "mercado_hierro_normal.png": {
+   "w": 85,
+   "h": 69,
+   "anchor_x": 42,
+   "anchor_y": 26,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "mercado_hierro_ruina.png": {
+   "w": 85,
+   "h": 69,
+   "anchor_x": 42,
+   "anchor_y": 26,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "mercado_hierro_obra.png": {
+   "w": 85,
+   "h": 69,
+   "anchor_x": 42,
+   "anchor_y": 26,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "mercado_hierro_reformada.png": {
+   "w": 85,
+   "h": 69,
+   "anchor_x": 42,
+   "anchor_y": 26,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "mercado_hierro_alquilada.png": {
+   "w": 85,
+   "h": 69,
+   "anchor_x": 42,
+   "anchor_y": 26,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "estacion_hierro_normal.png": {
+   "w": 85,
+   "h": 89,
+   "anchor_x": 42,
+   "anchor_y": 46,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "estacion_hierro_ruina.png": {
+   "w": 85,
+   "h": 89,
+   "anchor_x": 42,
+   "anchor_y": 46,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "estacion_hierro_obra.png": {
+   "w": 85,
+   "h": 89,
+   "anchor_x": 42,
+   "anchor_y": 46,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "estacion_hierro_reformada.png": {
+   "w": 85,
+   "h": 89,
+   "anchor_x": 42,
+   "anchor_y": 46,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "estacion_hierro_alquilada.png": {
+   "w": 85,
+   "h": 89,
+   "anchor_x": 42,
+   "anchor_y": 46,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "teatro_normal.png": {
+   "w": 85,
+   "h": 94,
+   "anchor_x": 42,
+   "anchor_y": 51,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "teatro_ruina.png": {
+   "w": 85,
+   "h": 94,
+   "anchor_x": 42,
+   "anchor_y": 51,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "teatro_obra.png": {
+   "w": 85,
+   "h": 94,
+   "anchor_x": 42,
+   "anchor_y": 51,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "teatro_reformada.png": {
+   "w": 85,
+   "h": 94,
+   "anchor_x": 42,
+   "anchor_y": 51,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "teatro_alquilada.png": {
+   "w": 85,
+   "h": 94,
+   "anchor_x": 42,
+   "anchor_y": 51,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "palacete_normal.png": {
+   "w": 85,
+   "h": 81,
+   "anchor_x": 42,
+   "anchor_y": 38,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "palacete_ruina.png": {
+   "w": 85,
+   "h": 81,
+   "anchor_x": 42,
+   "anchor_y": 38,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "palacete_obra.png": {
+   "w": 85,
+   "h": 81,
+   "anchor_x": 42,
+   "anchor_y": 38,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "palacete_reformada.png": {
+   "w": 85,
+   "h": 81,
+   "anchor_x": 42,
+   "anchor_y": 38,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "palacete_alquilada.png": {
+   "w": 85,
+   "h": 81,
+   "anchor_x": 42,
+   "anchor_y": 38,
+   "footprint": [
+    2,
+    2
+   ]
+  },
+  "iglesia_neogotica_normal.png": {
+   "w": 65,
+   "h": 107,
+   "anchor_x": 22,
+   "anchor_y": 74,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "iglesia_neogotica_ruina.png": {
+   "w": 65,
+   "h": 107,
+   "anchor_x": 22,
+   "anchor_y": 74,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "iglesia_neogotica_obra.png": {
+   "w": 65,
+   "h": 107,
+   "anchor_x": 22,
+   "anchor_y": 74,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "iglesia_neogotica_reformada.png": {
+   "w": 65,
+   "h": 107,
+   "anchor_x": 22,
+   "anchor_y": 74,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "iglesia_neogotica_alquilada.png": {
+   "w": 65,
+   "h": 107,
+   "anchor_x": 22,
+   "anchor_y": 74,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "cuadras_normal.png": {
+   "w": 65,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "cuadras_ruina.png": {
+   "w": 65,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "cuadras_obra.png": {
+   "w": 65,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "cuadras_reformada.png": {
+   "w": 65,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "cuadras_alquilada.png": {
+   "w": 65,
+   "h": 55,
+   "anchor_x": 22,
+   "anchor_y": 22,
+   "footprint": [
+    2,
+    1
+   ]
+  },
+  "kiosco_musica_normal.png": {
+   "w": 47,
+   "h": 44,
+   "anchor_x": 23,
+   "anchor_y": 21,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "kiosco_musica_ruina.png": {
+   "w": 47,
+   "h": 44,
+   "anchor_x": 23,
+   "anchor_y": 21,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "kiosco_musica_obra.png": {
+   "w": 47,
+   "h": 44,
+   "anchor_x": 23,
+   "anchor_y": 21,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "kiosco_musica_reformada.png": {
+   "w": 47,
+   "h": 44,
+   "anchor_x": 23,
+   "anchor_y": 21,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  "kiosco_musica_alquilada.png": {
+   "w": 47,
+   "h": 45,
+   "anchor_x": 23,
+   "anchor_y": 22,
+   "footprint": [
+    1,
+    1
+   ]
+  }
+ }
+}
