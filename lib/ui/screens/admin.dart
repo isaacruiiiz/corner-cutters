@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -11,6 +11,8 @@ import '../common.dart';
 import '../widgets/atoms.dart';
 import '../widgets/overlays.dart';
 
+import '../../core/texto.dart';
+import '../../core/i18n.dart';
 /// Panel admin dentro de la app: resumen, usuarios, roles y regalos del pack de épocas.
 /// El servidor comprueba el rol en cada llamada (no basta con ver esta pantalla).
 class AdminScreen extends ConsumerStatefulWidget {
@@ -114,7 +116,7 @@ class _AdminScreenState extends ConsumerState<AdminScreen> {
                 controller: _q,
                 style: Ht.bodyB,
                 decoration: InputDecoration(
-                  hintText: 'Buscar correo, alias o id',
+                  hintText: tr('Buscar correo, alias o id'),
                   hintStyle: Ht.body.copyWith(color: Hc.dim),
                   prefixIcon: const Icon(Icons.search_rounded, color: Hc.mut),
                   filled: true,
@@ -239,7 +241,7 @@ class _UserSheetState extends State<_UserSheet> {
       ].join(' · '), style: Ht.mini, maxLines: 2),
       const SizedBox(height: 10),
       StatGrid([
-        Stat('Alta', u.creado == null ? '—' : _ago(u.creado!)),
+        Stat('Registro', u.creado == null ? '—' : _ago(u.creado!)),
         Stat('Visto', u.visto == null ? '—' : _ago(u.visto!)),
         Stat('Patrimonio', money(u.patrimonio, compact: true), color: Hc.acc),
         Stat('Compras', [if (u.comproEpocas) 'Pack', if (u.comproPro) 'Pro'].join(' + ').ifEmpty('Ninguna')),
@@ -285,7 +287,7 @@ class _UserSheetState extends State<_UserSheet> {
         maxLength: 500,
         style: Ht.body,
         decoration: InputDecoration(
-          hintText: 'Solo la ves tú',
+          hintText: tr('Solo la ves tú'),
           hintStyle: Ht.body.copyWith(color: Hc.dim),
           filled: true,
           fillColor: Hc.bgDeep,

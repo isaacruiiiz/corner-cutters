@@ -8,6 +8,7 @@ import '../../core/gfx.dart';
 import '../../core/theme.dart';
 import '../../services/audio.dart';
 
+import '../../core/i18n.dart';
 /// Épocas antiguas (1888 y 1929): latón, tela y hierro galvanizado en los tableros.
 bool _oldEra(String? era) => era == '1929' || era == '1888';
 
@@ -63,7 +64,7 @@ void _block(Canvas c, Rect r, Color col, {double d = 4, double radius = 2}) {
 
 void _label(Canvas c, String text, Offset at, {Color bg = const Color(0xCC0A1A19), Color fg = Hc.ink, double size = 11, bool center = false}) {
   final tp = TextPainter(
-    text: TextSpan(text: text, style: TextStyle(fontFamily: Hf.body, fontWeight: FontWeight.w800, fontSize: size, color: fg, letterSpacing: 0.4)),
+    text: TextSpan(text: tr(text), style: TextStyle(fontFamily: Hf.body, fontWeight: FontWeight.w800, fontSize: size, color: fg, letterSpacing: 0.4)),
     textDirection: TextDirection.ltr,
   )..layout();
   final o = center ? at - Offset(tp.width / 2 + 6, tp.height / 2 + 3) : at;

@@ -14,6 +14,7 @@ import 'services/entitlements.dart';
 import 'services/tienda.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show AuthChangeEvent;
 
+import 'core/i18n.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -22,6 +23,7 @@ Future<void> main() async {
     systemNavigationBarColor: Color(0xFF0A1A19),
   ));
   await AppConfig.load();
+  await I18n.init();
   await Backend.init();
   // Tipo de usuario y compras: lo guardado sirve sin conexión; luego se actualiza.
   await Entitlements.instance.loadCache();

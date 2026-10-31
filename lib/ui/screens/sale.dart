@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -13,6 +13,7 @@ import '../widgets/atoms.dart';
 import '../widgets/overlays.dart';
 import 'buy.dart';
 
+import '../../core/texto.dart';
 /// Tarjeta de oferta con aceptar/rechazar (offer_row).
 class OfferCard extends ConsumerWidget {
   final Offer offer;

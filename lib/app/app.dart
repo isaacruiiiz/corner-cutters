@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/format.dart';
+import '../core/i18n.dart';
 import '../core/gfx.dart';
 import '../core/theme.dart';
 import '../services/audio.dart';
@@ -17,8 +19,18 @@ class CornerCuttersApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GameRunner(
-      child: MaterialApp(
+      child: I18nScope(
+        child: ValueListenableBuilder<String>(
+          valueListenable: I18n.actual,
+          builder: (context, idioma, _) => MaterialApp(
         title: 'Corner Cutters',
+        locale: I18n.locale,
+        supportedLocales: [for (final c in I18n.idiomas.keys) Locale(c)],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         debugShowCheckedModeBanner: false,
         theme: buildTheme(),
         navigatorKey: navKey,
@@ -33,6 +45,8 @@ class CornerCuttersApp extends StatelessWidget {
             child: MediaQuery(data: mq.copyWith(textScaler: scale), child: child!),
           );
         },
+          ),
+        ),
       ),
     );
   }

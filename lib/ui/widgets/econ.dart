@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 
 import '../../core/format.dart';
 import '../../core/theme.dart';
@@ -9,6 +9,7 @@ import '../../game/model.dart';
 import '../common.dart';
 import 'atoms.dart';
 
+import '../../core/texto.dart';
 /// Etiqueta del origen de un anuncio o vivienda.
 Widget originTag(Origin o) => switch (o) {
       Origin.ruina => const Tag('Ruina', color: Hc.bad),

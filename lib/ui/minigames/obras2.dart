@@ -7,6 +7,7 @@ import '../../core/theme.dart';
 import '../../services/audio.dart';
 import 'boards.dart' show WorkFn;
 
+import '../../core/i18n.dart';
 // =====================================================================
 // Carpintería «Montar»: cada obra saca un mueble al azar de una bolsa
 // (sin repetir hasta que salen todos los desbloqueados). Se coloca cada
@@ -517,7 +518,7 @@ class _AssemblePainter extends CustomPainter {
 
 TextPainter _tp(String text, double size, Color color, {bool body = false}) => TextPainter(
       text: TextSpan(
-          text: text,
+          text: tr(text),
           style: TextStyle(
               fontFamily: body ? Hf.body : Hf.display,
               fontWeight: body ? FontWeight.w800 : FontWeight.normal,

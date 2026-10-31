@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -10,6 +10,7 @@ import 'dialogs.dart';
 import 'more.dart';
 import 'sale.dart';
 
+import '../../core/texto.dart';
 /// Pendiente hoy: eventos, ofertas y objetivos del día.
 class PendingScreen extends ConsumerWidget {
   const PendingScreen({super.key});

@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app/providers.dart';
@@ -14,6 +14,8 @@ import 'map/map_view.dart';
 import 'map/sprites.dart';
 import 'widgets/atoms.dart';
 
+import '../core/texto.dart';
+import '../core/i18n.dart';
 /// Ruta transparente: la pantalla se apila sobre el mapa con un fundido corto.
 PageRouteBuilder<T> glassRoute<T>(Widget page) => PageRouteBuilder<T>(
       // El nombre (tipo de pantalla) sirve para no apilar la misma pantalla dos veces seguidas.
@@ -434,7 +436,7 @@ class SideQuote extends StatelessWidget {
 }
 
 
-String plural(int n, String one, String many) => '$n ${n == 1 ? one : many}';
+String plural(int n, String one, String many) => '${intg(n)} ${tr(n == 1 ? one : many)}';
 
 /// Historial de pagos de los últimos 12 meses en una sola línea (estilo gráfico de contribuciones):
 /// verde = pagó, rojo = no pagó, apagado = sin datos (antes de entrar el inquilino).

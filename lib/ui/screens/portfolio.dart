@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -10,6 +10,7 @@ import '../widgets/atoms.dart';
 import 'property.dart';
 import 'selector.dart';
 
+import '../../core/texto.dart';
 /// Cartera: todas las viviendas con su estado.
 class PortfolioScreen extends ConsumerStatefulWidget {
   final int? lotId;

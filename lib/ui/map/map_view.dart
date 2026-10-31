@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,6 +19,7 @@ import 'ambient.dart';
 import 'city_render.dart';
 import 'sprites.dart';
 
+import '../../core/texto.dart';
 /// Escala base: un píxel del arte = 1 punto; la cámara arranca a ×2 (escala entera).
 const kMapScale = 1.0;
 const kMapStartZoom = 2.0;

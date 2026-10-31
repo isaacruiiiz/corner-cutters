@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,6 +19,7 @@ import 'premium.dart';
 import 'title_screen.dart';
 import '../shell.dart';
 
+import '../../core/texto.dart';
 // =====================================================================
 // DLC de épocas: hemeroteca (selector), ficha previa, banda del periódico
 // en el mapa y resultado final. Solo se usa cuando el jugador entra en una época.

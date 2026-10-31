@@ -1,9 +1,11 @@
+import 'i18n.dart';
+
 /// Formato de cifras en español: $48.250 · ×1,10 · 23 % · 4,3 min.
 String _group(int v) {
   final s = v.abs().toString();
   final b = StringBuffer();
   for (var i = 0; i < s.length; i++) {
-    if (i > 0 && (s.length - i) % 3 == 0) b.write('.');
+    if (i > 0 && (s.length - i) % 3 == 0) b.write(I18n.puntoMiles ? '.' : ',');
     b.write(s[i]);
   }
   return b.toString();
@@ -40,11 +42,11 @@ String dec(num v, int d) {
   final parts = s.split('.');
   final ip = int.parse(parts[0].replaceAll('-', ''));
   final neg = v < 0 && (ip != 0 || parts[1].replaceAll('0', '').isNotEmpty);
-  return '${neg ? '−' : ''}${_group(ip)},${parts[1]}';
+  return '${neg ? '−' : ''}${_group(ip)}${I18n.puntoMiles ? ',' : '.'}${parts[1]}';
 }
 
 String mult(num v) => '×${dec(v, 2)}';
-String pct(num v, {int d = 0}) => '${dec(v * 100, d)} %';
+String pct(num v, {int d = 0}) => '${dec(v * 100, d)}${I18n.puntoMiles ? ' ' : ''}%';
 String intg(num v) => _group(v.round());
 
 /// Duración legible: 45 s · 4,3 min · 1 h 12 min · 2 d.

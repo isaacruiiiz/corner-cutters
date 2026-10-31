@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -14,6 +14,7 @@ import '../widgets/overlays.dart';
 import '../widgets/boosts.dart';
 import 'selector.dart';
 
+import '../../core/texto.dart';
 final companyTradeSel = StateProvider<Trade>((ref) => Trade.ele);
 
 /// Empresa: resumen, una fila por oficio (nivel, cuadrillas, herramienta y mejora) y plantillas.

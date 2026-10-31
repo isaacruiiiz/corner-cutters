@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show AuthChangeEvent;
@@ -20,6 +20,8 @@ import '../widgets/overlays.dart';
 import 'title_screen.dart';
 import 'premium.dart' show AccountRights;
 
+import '../../core/texto.dart';
+import '../../core/i18n.dart';
 enum AuthMode { entrar, crear, enlace }
 
 // =====================================================================
@@ -287,7 +289,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   InputDecoration _dec(String hint, {Widget? suffix}) => InputDecoration(
-        hintText: hint,
+        hintText: tr(hint),
         hintStyle: Ht.body.copyWith(color: Hc.dim),
         filled: true,
         fillColor: Hc.bgDeep,
@@ -452,7 +454,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
   }
 
   InputDecoration _dec(String h) => InputDecoration(
-        hintText: h,
+        hintText: tr(h),
         hintStyle: Ht.body.copyWith(color: Hc.dim),
         filled: true,
         fillColor: Hc.panelIn,

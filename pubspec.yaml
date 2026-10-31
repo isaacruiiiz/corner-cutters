@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_riverpod: ^2.6.1
   shared_preferences: ^2.5.3
   supabase_flutter: ^2.10.0
@@ -26,6 +28,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/config.json
+    - assets/i18n/
     - assets/sprites/A/
     - assets/branding/logo/
     - assets/audio/sfx/

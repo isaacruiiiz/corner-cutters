@@ -1,12 +1,14 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter/services.dart';
 
 import '../../core/gfx.dart';
 import '../../core/theme.dart';
 
+import '../../core/texto.dart';
+import '../../core/i18n.dart';
 // =====================================================================
 // Superficies
 // =====================================================================
@@ -422,7 +424,7 @@ class _HsButtonState extends State<HsButton> {
       child: Semantics(
         button: true,
         enabled: !disabled,
-        label: widget.label,
+        label: tr(widget.label),
         child: Shake(
           trigger: _shakes == 0 ? null : _shakes,
           amount: 5,
@@ -483,7 +485,7 @@ class SqButton extends StatelessWidget {
       depth: 2,
       child: Semantics(
         button: true,
-        label: tooltip,
+        label: tooltip == null ? null : tr(tooltip!),
         child: Stack(clipBehavior: Clip.none, children: [
           box,
           if (badge > 0 && !dot) Positioned(right: -6, top: -6, child: CountBadge(badge)),

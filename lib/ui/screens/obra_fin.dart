@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -12,6 +12,7 @@ import '../map/map_view.dart';
 import '../widgets/atoms.dart';
 import 'property.dart';
 
+import '../../core/texto.dart';
 /// Obra terminada: calidad, coste y beneficio. Siguiente decisión: alquilar o vender.
 class ObraFinScreen extends ConsumerWidget {
   final Notice notice;

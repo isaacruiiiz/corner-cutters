@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -10,6 +10,7 @@ import '../../game/texts.dart';
 import '../common.dart';
 import '../widgets/atoms.dart';
 
+import '../../core/texto.dart';
 /// Bienvenido de nuevo: progreso sin conexión (tope de 8 h, solo cuadrillas).
 class OfflineScreen extends ConsumerWidget {
   final OfflineReport report;

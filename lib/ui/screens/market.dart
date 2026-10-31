@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -16,6 +16,7 @@ import '../widgets/overlays.dart';
 import 'buy.dart';
 import 'property.dart';
 
+import '../../core/texto.dart';
 /// Mercado: resumen, ciclo de cinco fases, gráfica, multiplicadores y titular.
 class MarketScreen extends ConsumerWidget {
   const MarketScreen({super.key});

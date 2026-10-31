@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -18,6 +18,7 @@ import 'obra.dart';
 import 'property.dart';
 
 
+import '../../core/texto.dart';
 /// Comprar: hoja con las ruinas a la venta y subastas con descuento.
 class BuyScreen extends ConsumerStatefulWidget {
   const BuyScreen({super.key});

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -10,6 +10,7 @@ import '../widgets/atoms.dart';
 import '../widgets/overlays.dart';
 import 'admin.dart';
 
+import '../../core/texto.dart';
 /// Compra con aviso de resultado.
 Future<void> buyProduct(BuildContext context, String product) async {
   final err = await Tienda.comprar(product);

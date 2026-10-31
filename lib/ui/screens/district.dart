@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -15,6 +15,7 @@ import '../widgets/overlays.dart';
 import 'company.dart';
 import 'property.dart';
 
+import '../../core/texto.dart';
 /// Barrio: efecto barrio, servicios y lotes.
 class DistrictScreen extends ConsumerWidget {
   final int districtId;

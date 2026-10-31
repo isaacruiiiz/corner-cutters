@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -27,6 +27,7 @@ import '../widgets/overlays.dart';
 import 'map_view.dart';
 import 'sprites.dart';
 
+import '../../core/texto.dart';
 /// Pantalla del mapa: el mapa ocupa todo; encima, fecha/velocidad, raíl y la píldora de la selección.
 /// El ticker y la barra los pone el Shell.
 class MapScreen extends ConsumerStatefulWidget {

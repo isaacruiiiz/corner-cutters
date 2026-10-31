@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,6 +19,8 @@ import '../widgets/overlays.dart';
 import 'company.dart';
 import 'obra.dart';
 
+import '../../core/texto.dart';
+import '../../core/i18n.dart';
 /// Perfil cuyo óptimo se parece más a unos niveles (para plantillas sin vivienda).
 Sector nearestSector(Map<Trade, int> lv) {
   Sector best = Sector.fam;
@@ -200,7 +202,7 @@ class _SelectorScreenState extends ConsumerState<SelectorScreen> {
                 controller: _name,
                 style: Ht.bodyB,
                 decoration: InputDecoration(
-                  hintText: 'Nombre de la plantilla',
+                  hintText: tr('Nombre de la plantilla'),
                   hintStyle: Ht.body.copyWith(color: Hc.dim),
                   filled: true,
                   fillColor: Hc.panelIn,

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,6 +26,7 @@ import '../widgets/atoms.dart';
 import '../widgets/overlays.dart';
 import 'property.dart';
 
+import '../../core/texto.dart';
 /// Pantalla de obra: pestañas por fase, tablero del minijuego, energía, combo y críticos.
 class ObraScreen extends ConsumerStatefulWidget {
   final int propId;

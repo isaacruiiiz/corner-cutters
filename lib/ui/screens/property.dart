@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -21,6 +21,8 @@ import 'obra.dart';
 import 'sale.dart';
 import 'selector.dart';
 
+import '../../core/texto.dart';
+import '../../core/i18n.dart';
 /// Ficha de vivienda: hoja flotante sobre el mapa con el edificio a la vista. Cambia según su estado.
 class PropertyScreen extends ConsumerWidget {
   final int propId;
@@ -741,7 +743,7 @@ class CurvePainter extends CustomPainter {
       final tp = TextPainter(textDirection: TextDirection.ltr);
       final pos = [0.0, (1.0 - min) / (max - min) * w, w];
       for (var i = 0; i < 3; i++) {
-        tp.text = TextSpan(text: labels[i], style: const TextStyle(fontFamily: Hf.body, fontSize: 10, color: Hc.mut, fontWeight: FontWeight.w600));
+        tp.text = TextSpan(text: tr(labels[i]), style: const TextStyle(fontFamily: Hf.body, fontSize: 10, color: Hc.mut, fontWeight: FontWeight.w600));
         tp.layout();
         final dx = (pos[i] - (i == 0 ? 0 : (i == 2 ? tp.width : tp.width / 2))).clamp(0.0, w - tp.width);
         tp.paint(canvas, Offset(dx, h + 3));

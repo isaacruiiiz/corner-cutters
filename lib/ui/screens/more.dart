@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/app.dart';
@@ -27,6 +27,8 @@ import 'pending.dart';
 import 'portfolio.dart';
 import 'title_screen.dart';
 
+import '../../core/texto.dart';
+import '../../core/i18n.dart';
 /// Pestaña "Más": rejilla de accesos (progreso, metajuego, cuenta y ajustes).
 class MoreScreen extends ConsumerWidget {
   const MoreScreen({super.key});
@@ -635,6 +637,8 @@ class SettingsScreen extends ConsumerWidget {
         const BackHeader('Ajustes'),
         Expanded(
           child: Body([
+            const SectionHead('Idioma'),
+            const _IdiomaPicker(),
             const SectionHead('Gráficos'),
             Panel(
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -714,7 +718,6 @@ class SettingsScreen extends ConsumerWidget {
                 })),
               ]),
             ListBlock([
-                const Li(lead: IconBox(Icons.language_rounded), title: 'Idioma', sub: 'Español', trail: Tag('Más pronto', color: Hc.mut)),
                 const Li(lead: IconBox(Icons.attach_money_rounded), title: 'Moneda', sub: 'Dólares estadounidenses (\$)', trail: Tag('Fija', color: Hc.mut)),
                 Li(last: true, lead: const IconBox(Icons.notifications_none_rounded), title: 'Notificaciones', trail: const Icon(Icons.chevron_right_rounded, color: Hc.mut),
                     onTap: () => push(context, const NotificationsScreen())),
@@ -853,6 +856,32 @@ class _RankingScreenState extends ConsumerState<RankingScreen> {
           ]),
         ),
       ]),
+    );
+  }
+}
+
+/// Selector de idioma: automático (el del móvil) o uno fijo. Los nombres de idioma van
+/// siempre en su propia lengua.
+class _IdiomaPicker extends StatelessWidget {
+  const _IdiomaPicker();
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<String>(
+      valueListenable: I18n.actual,
+      builder: (context, _, __) {
+        final opciones = <(String, String)>[('', tr('Automático')), ...I18n.idiomas.entries.map((e) => (e.key, e.value))];
+        return ListBlock([
+          for (var i = 0; i < opciones.length; i++)
+            Li(
+              last: i == opciones.length - 1,
+              lead: IconBox(i == 0 ? Icons.smartphone_outlined : Icons.translate_rounded, color: Hc.info),
+              title: opciones[i].$2,
+              sub: i == 0 ? tr('Usa el idioma del móvil') : null,
+              trail: I18n.eleccion == opciones[i].$1 ? const Icon(Icons.check_rounded, color: Hc.acc) : null,
+              onTap: () => I18n.elegir(opciones[i].$1),
+            ),
+        ]);
+      },
     );
   }
 }

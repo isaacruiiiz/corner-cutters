@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter/services.dart';
 
 import '../../core/format.dart';
@@ -11,6 +11,7 @@ import '../../services/entitlements.dart';
 import '../screens/obra.dart';
 import 'atoms.dart';
 
+import '../../core/texto.dart';
 /// Impulsos opcionales (con anuncio o, el café, gratis con la versión premium).
 enum Boost { obra, rentas, ventas, cafe, energia }
 

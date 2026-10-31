@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 
 import '../../core/format.dart';
 import '../../core/theme.dart';
@@ -12,6 +12,7 @@ import '../widgets/atoms.dart';
 import '../widgets/overlays.dart';
 import 'property.dart';
 
+import '../../core/texto.dart';
 /// Fase desbloqueada.
 Future<void> showStageDialog(BuildContext context, Stage s) {
   final info = stageInfo[s]!;

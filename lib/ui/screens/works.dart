@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -19,6 +19,7 @@ import 'portfolio.dart';
 import 'property.dart';
 import 'selector.dart';
 
+import '../../core/texto.dart';
 /// Obras en curso.
 class WorksScreen extends ConsumerWidget {
   const WorksScreen({super.key});

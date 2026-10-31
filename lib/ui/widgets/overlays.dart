@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 
 import '../../core/gfx.dart';
 import '../../core/theme.dart';
 import '../../services/audio.dart';
 import 'atoms.dart';
 
+import '../../core/texto.dart';
 /// Hoja flotante (izq./der. 12, radio 20, fondo .95) sobre el mapa nítido.
 Future<T?> showHsSheet<T>(BuildContext context, {required WidgetBuilder builder, bool scroll = false}) {
   Sfx.play('hoja_abre');

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
@@ -25,6 +25,8 @@ import '../shell.dart';
 import '../widgets/atoms.dart';
 import '../widgets/overlays.dart';
 
+import '../../core/texto.dart';
+import '../../core/i18n.dart';
 /// Portada: continuar o empezar una partida nueva.
 class TitleScreen extends ConsumerStatefulWidget {
   final bool hasSave;
@@ -261,7 +263,7 @@ class _ChoiceTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: title,
+      label: tr(title),
       child: GestureDetector(
         onTap: () {
           Sfx.play('pestana');

@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,6 +16,8 @@ import 'common.dart';
 import 'screens/portfolio.dart';
 import 'widgets/atoms.dart';
 
+import '../core/texto.dart';
+import '../core/i18n.dart';
 /// Medidas de las capas fijas (referencia 390 × 844, respetando SafeArea).
 /// En horizontal (móvil tumbado) la barra pasa a ser un raíl vertical a la izquierda; en pantallas
 /// anchas (tablet) los paneles se centran con un ancho máximo y las hojas van a la derecha.
@@ -328,7 +330,7 @@ class GlassNav extends ConsumerWidget {
           child: Semantics(
             button: true,
             selected: i == index,
-            label: items[i].$2,
+            label: tr(items[i].$2),
             child: Center(
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 // Icono con el multiplicador (Mercado) o el contador pegados a su esquina.
