@@ -71,7 +71,9 @@ header{position:relative;z-index:2}
 
 /* Cinta de cotizaciones (el suelo del hero) */
 .cinta{position:relative;z-index:2;background:#050B0B;border-top:3px solid #1C1A16;border-bottom:2px solid var(--line);overflow:hidden;white-space:nowrap}
-.cinta-in{display:inline-flex;gap:44px;padding:12px 0;font-size:26px;animation:cinta 30s linear infinite;color:var(--ink)}
+.cinta{width:100%}
+.cinta-in{display:inline-flex;gap:44px;padding:12px 44px 12px 0;font-size:26px;animation:cinta 60s linear infinite;color:var(--ink)}
+.cinta-in>span{flex:none}
 .cinta .sube{color:var(--ok)}.cinta .baja{color:var(--bad)}.cinta .lbl{color:var(--acc)}
 
 /* Ficha */
@@ -109,6 +111,29 @@ header{position:relative;z-index:2}
 footer{background:var(--deep)}
 footer .wrap{padding-top:22px;padding-bottom:22px;display:flex;flex-wrap:wrap;gap:22px;font-size:13px;color:var(--mut)}
 
+
+/* Así se juega */
+.juega{padding-top:20px;padding-bottom:80px;display:flex;flex-direction:column;gap:36px}
+.sec-h{display:flex;flex-direction:column;gap:10px;max-width:760px}
+.sec-h h2{margin:0;font-size:64px;line-height:1}
+.pasos4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.p4{border:2px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 4px 0 var(--line);padding:22px;display:flex;flex-direction:column;gap:14px;animation:p4 8s infinite}
+.p4:nth-child(2){animation-delay:2s}.p4:nth-child(3){animation-delay:4s}.p4:nth-child(4){animation-delay:6s}
+.p4 .esc{height:240px;display:flex;align-items:flex-end;justify-content:center;background:#102726;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+.p4 .esc img{width:138px;height:252px;margin-bottom:-20px}
+.p4 h3{margin:0;font-size:34px;font-weight:400}
+.p4 p{margin:0;font-size:15px;line-height:1.5;color:var(--soft)}
+@keyframes p4{0%,20%{border-color:var(--acc);transform:translateY(-6px)}25%,100%{border-color:var(--line);transform:none}}
+
+/* Cada obra es tuya */
+.obras{padding-top:60px;padding-bottom:110px;display:flex;flex-wrap:wrap;gap:48px;align-items:center}
+.obras .txt{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.obras h2{margin:0;font-size:60px;line-height:1}
+.obras p{margin:0;font-size:17px;line-height:1.55;color:var(--soft)}
+.obras .mg{flex:2 1 640px;min-width:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.obras .mg img{width:100%;display:block;border:2px solid var(--line);border-radius:16px;box-shadow:0 4px 0 var(--line);animation:flotar 6s ease-in-out infinite}
+.obras .mg img:nth-child(2){animation-delay:.8s}.obras .mg img:nth-child(3){animation-delay:1.6s}
+
 @keyframes flotar{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 @keyframes trazo{0%{stroke-dashoffset:1400}60%,100%{stroke-dashoffset:0}}
 @keyframes punta{0%,55%{opacity:0;transform:scale(.4)}65%,100%{opacity:1;transform:scale(1)}}
@@ -128,6 +153,10 @@ footer .wrap{padding-top:22px;padding-bottom:22px;display:flex;flex-wrap:wrap;ga
   .paso{font-size:22px}
   .grafica{height:300px;bottom:auto;top:0}
   .ficha{grid-template-columns:1fr;padding-top:64px;padding-bottom:64px}
+  .sec-h h2,.obras h2{font-size:46px}
+  .pasos4{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .p4{padding:14px}.p4 .esc{height:170px}.p4 .esc img{width:92px;height:168px;margin-bottom:-14px}.p4 h3{font-size:26px}.p4 p{font-size:13px}
+  .obras .mg{grid-template-columns:1fr;gap:12px}
   .ciudad h2{font-size:48px}
   .ciudad .vis{height:400px}
   .ciudad .mapa{width:520px;top:80px}
@@ -185,6 +214,8 @@ footer .wrap{padding-top:22px;padding-bottom:22px;display:flex;flex-wrap:wrap;ga
     <div class="cinta-in jersey">
       <span class="lbl">MERCADO DE ALBA NOVA</span><span>CENTRO <span class="sube">▲ 4,2 %</span></span><span>UNIVERSITARIA <span class="sube">▲ 7,9 %</span></span><span>PUERTO <span class="baja">▼ 2,1 %</span></span><span>ENSANCHE <span class="sube">▲ 1,3 %</span></span><span>CASCO ANTIGUO <span class="baja">▼ 0,8 %</span></span><span>HIPOTECAS <span class="baja">▲ 0,5 pts</span></span>
       <span class="lbl" aria-hidden="true">MERCADO DE ALBA NOVA</span><span aria-hidden="true">CENTRO <span class="sube">▲ 4,2 %</span></span><span aria-hidden="true">UNIVERSITARIA <span class="sube">▲ 7,9 %</span></span><span aria-hidden="true">PUERTO <span class="baja">▼ 2,1 %</span></span><span aria-hidden="true">ENSANCHE <span class="sube">▲ 1,3 %</span></span><span aria-hidden="true">CASCO ANTIGUO <span class="baja">▼ 0,8 %</span></span><span aria-hidden="true">HIPOTECAS <span class="baja">▲ 0,5 pts</span></span>
+      <span class="lbl" aria-hidden="true">MERCADO DE ALBA NOVA</span><span aria-hidden="true">CENTRO <span class="sube">▲ 4,2 %</span></span><span aria-hidden="true">UNIVERSITARIA <span class="sube">▲ 7,9 %</span></span><span aria-hidden="true">PUERTO <span class="baja">▼ 2,1 %</span></span><span aria-hidden="true">ENSANCHE <span class="sube">▲ 1,3 %</span></span><span aria-hidden="true">CASCO ANTIGUO <span class="baja">▼ 0,8 %</span></span><span aria-hidden="true">HIPOTECAS <span class="baja">▲ 0,5 pts</span></span>
+      <span class="lbl" aria-hidden="true">MERCADO DE ALBA NOVA</span><span aria-hidden="true">CENTRO <span class="sube">▲ 4,2 %</span></span><span aria-hidden="true">UNIVERSITARIA <span class="sube">▲ 7,9 %</span></span><span aria-hidden="true">PUERTO <span class="baja">▼ 2,1 %</span></span><span aria-hidden="true">ENSANCHE <span class="sube">▲ 1,3 %</span></span><span aria-hidden="true">CASCO ANTIGUO <span class="baja">▼ 0,8 %</span></span><span aria-hidden="true">HIPOTECAS <span class="baja">▲ 0,5 pts</span></span>
     </div>
   </div>
 </section>
@@ -205,6 +236,48 @@ footer .wrap{padding-top:22px;padding-bottom:22px;display:flex;flex-wrap:wrap;ga
       <div class="big jersey" style="color:var(--ok)">6</div>
       <h3 class="jersey">épocas para especular</h3>
       <p>De 1888 a 2050. El crack de 1929 viene gratis; el resto, en el pack.</p>
+    </div>
+  </section>
+
+  <section class="wrap juega">
+    <div class="sec-h">
+      <div class="cap">Así se juega</div>
+      <h2 class="jersey">De ruina a negocio en cuatro pasos</h2>
+    </div>
+    <div class="pasos4">
+      <div class="p4">
+        <div class="esc"><img class="px" src="/img/bloque_ruina.png" alt="Edificio en ruinas" loading="lazy"></div>
+        <h3 class="jersey" style="color:var(--bad)">1 · Compra</h3>
+        <p>Encuentra pisos en ruinas a precio de saldo. Cuanto peor están, más margen.</p>
+      </div>
+      <div class="p4">
+        <div class="esc"><img class="px" src="/img/bloque_obra.png" alt="Edificio en obras" loading="lazy"></div>
+        <h3 class="jersey" style="color:var(--acc)">2 · Reforma</h3>
+        <p>Pon tú las manos: albañilería, fontanería, electricidad, carpintería y decoración.</p>
+      </div>
+      <div class="p4">
+        <div class="esc"><img class="px" src="/img/bloque_reformada.png" alt="Edificio reformado" loading="lazy"></div>
+        <h3 class="jersey" style="color:var(--info)">3 · Alquila o vende</h3>
+        <p>Elige a quién: estudiantes, familias, ejecutivos. O véndelo cuando el mercado suba.</p>
+      </div>
+      <div class="p4">
+        <div class="esc"><img class="px" src="/img/bloque_alquilada.png" alt="Edificio alquilado" loading="lazy"></div>
+        <h3 class="jersey" style="color:var(--ok)">4 · Repite a lo grande</h3>
+        <p>Contrata cuadrillas, monta tu empresa y compra calles enteras.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap obras">
+    <div class="txt">
+      <div class="cap">Cada obra es tuya</div>
+      <h2 class="jersey">Monta, empapela, pinta</h2>
+      <p>Muebles que salen al azar, papeles y colores que cambian en cada piso, tuberías y cables en 3D. Ninguna reforma se repite.</p>
+    </div>
+    <div class="mg">
+      <img src="/img/mg_montar.png" alt="Minijuego de carpintería: montar un aparador" loading="lazy">
+      <img src="/img/mg_empapelar.png" alt="Minijuego de empapelar" loading="lazy">
+      <img src="/img/mg_pintar.png" alt="Minijuego de pintar" loading="lazy">
     </div>
   </section>
 
