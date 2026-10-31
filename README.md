@@ -22,11 +22,14 @@ Sin claves, el juego funciona entero en local (guardado en el móvil). Con clave
 
 ## Web (Cloudflare Pages)
 
-Proyecto `corner-cutters` → https://corner-cutters.pages.dev. Sirve el juego en web, el panel admin (`/admin/`), la política de privacidad (`/privacidad/`) y la página para borrar la cuenta (`/borrar-cuenta/`).
+Proyecto `corner-cutters` → https://corner-cutters.pages.dev. La web NO sirve el juego: es la página de descarga (`site/index.html`), el panel admin (`/admin/`), la política de privacidad (`/privacidad/`) y la página para borrar la cuenta (`/borrar-cuenta/`).
 
 - Framework preset: *None*
-- Build command: `git clone https://github.com/flutter/flutter.git -b stable --depth 1 /tmp/flutter && /tmp/flutter/bin/flutter build web --release`
-- Build output directory: `build/web`
+- Build command: *(vacío)*
+- Build output directory: `site`
+
+`site/config.json` es una copia de `assets/config.json` (lo leen el panel admin y la página de borrar cuenta): si cambias las claves, cambia los dos.
+Enlaces de las tiendas: constante `TIENDAS` al final de `site/index.html` (el de App Store vacío sale como «Próximamente»).
 
 ## Google Play
 

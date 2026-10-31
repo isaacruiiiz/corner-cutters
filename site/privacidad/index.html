@@ -60,7 +60,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}td,th{text-align:left;p
 </div>
 </main>
 <script>
-fetch('../assets/assets/config.json').then(r => r.json()).then(c => {
+fetch('/config.json').then(r => r.json()).then(c => {
   const m = (c.contacto || '').trim();
   const a = document.getElementById('mail');
   if (m) { a.href = 'mailto:' + m; a.textContent = m; }

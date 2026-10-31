@@ -50,7 +50,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-of
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const $ = (id) => document.getElementById(id);
-const cfg = await fetch('../assets/assets/config.json').then((r) => r.json()).catch(() => ({}));
+const cfg = await fetch('/config.json').then((r) => r.json()).catch(() => ({}));
 const m = (cfg.contacto || '').trim();
 if (m) { $('mail').href = 'mailto:' + m; $('mail').textContent = m; }
 const db = createClient((cfg.supabaseUrl || '').replace(/\/rest\/v1\/?$/, '').replace(/\/$/, ''), cfg.supabaseKey || 'x');

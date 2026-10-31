@@ -109,7 +109,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const cfg = await fetch('../assets/assets/config.json').then((r) => r.json()).catch(() => ({}));
+const cfg = await fetch('/config.json').then((r) => r.json()).catch(() => ({}));
 if (!cfg.supabaseUrl) { document.body.innerHTML = '<p class="wrap err">Falta assets/config.json con las claves de Supabase.</p>'; throw 0; }
 const db = createClient(cfg.supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, ''), cfg.supabaseKey);
 const ROLES = { usuario: 'Normal', pro: 'Pro', admin: 'Admin' };

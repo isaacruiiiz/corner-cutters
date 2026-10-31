@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corner Cutters · Compra ruinas, refórmalas y quédate el barrio</title>
+<meta name="description" content="Juego de móvil: compra pisos en ruinas, refórmalos con tus manos, alquila o vende cuando sube el mercado y hazte con la ciudad. Gratis.">
+<meta name="theme-color" content="#0E2221">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/icono-32.png">
+<link rel="apple-touch-icon" href="/img/icono-180.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Corner Cutters">
+<meta property="og:description" content="Lo compras en ruinas. Lo vendes como nuevo. Descárgalo gratis.">
+<meta property="og:image" content="https://corner-cutters.pages.dev/img/og.png">
+<meta property="og:url" content="https://corner-cutters.pages.dev/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+15&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="/img/bloque_obra.png">
+<link rel="preload" as="image" href="/img/bloque_reformada.png">
+<link rel="preload" as="image" href="/img/bloque_alquilada.png">
+<style>
+:root{--bg:#0E2221;--deep:#0A1A19;--panel:#17302F;--line:#050B0B;--ink:#ECE4D0;--soft:#B9CEC7;--mut:#8FB0A8;--acc:#E3A93B;--acchi:#F2C25F;--ok:#4FC08D;--bad:#E2675B;--info:#5AA6D6}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--deep);color:var(--ink);font-family:Manrope,system-ui,sans-serif}
+a{color:var(--acc)}a:hover{color:var(--acchi)}
+img{max-width:100%}
+.px{image-rendering:pixelated}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+.cap{font-size:12px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--mut)}
+.jersey{font-family:'Jersey 15',monospace;font-weight:400}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--line);border-radius:14px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;text-decoration:none;transition:filter .15s,transform .15s}
+.btn:hover{filter:brightness(1.07)}.btn:active{transform:translateY(2px)}
+.btn:focus-visible{outline:3px solid var(--acchi);outline-offset:3px}
+.btn-sec{height:44px;padding:0 18px;font-size:12px;background:var(--panel);color:var(--ink);box-shadow:0 3px 0 var(--line)}
+.btn-sec:hover{color:var(--ink)}
+.btn-pri{height:56px;padding:0 24px;font-size:14px;background:linear-gradient(#F2C25F,#E3A93B);color:#1A1304;box-shadow:0 4px 0 #6D4D0C}
+.btn-pri:hover{color:#1A1304}
+.btn-store{height:56px;padding:0 20px;font-size:13px;background:#050B0B;color:var(--ink);box-shadow:0 4px 0 #000}
+.btn-store:hover{color:var(--ink)}
+.btn-store small{display:block;font-size:10px;letter-spacing:1px;color:var(--mut);font-weight:700}
+.btn-store[aria-disabled=true]{opacity:.55;pointer-events:none}
+
+/* Cabecera */
+header{position:relative;z-index:2}
+.top{display:flex;align-items:center;gap:12px;padding-top:22px}
+.top .logo{width:48px;height:48px;border-radius:12px;border:2px solid var(--line);box-shadow:0 3px 0 var(--line)}
+.top .sp{flex:1}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 72%,#1F4A45 0%,#0E2221 55%,#0A1A19 100%)}
+.hero-txt{padding-top:64px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
+.hero h1{margin:0;font-size:clamp(52px,8.4vw,108px);line-height:.9;max-width:1000px}
+.tag{transition:color .3s}
+.escena{position:relative;height:560px;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:24px}
+.pasos{align-self:center;justify-self:start;display:flex;flex-direction:column;gap:10px;margin-bottom:40px}
+.paso{display:flex;align-items:center;gap:10px;font-size:30px;opacity:.3;transition:opacity .4s}
+.paso i{width:14px;height:14px;border:2px solid var(--line);display:block}
+.paso.on{opacity:1}
+.edificio{position:relative;display:flex;justify-content:center;animation:latido 2s ease-in-out infinite;z-index:1}
+.edificio img{width:276px;height:504px;display:block}
+.valor{align-self:center;justify-self:end;display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-bottom:40px}
+.valor .num{font-size:clamp(56px,6vw,80px);line-height:1;transition:color .3s}
+.grafica{position:absolute;left:0;right:0;bottom:60px;width:100%;height:440px;pointer-events:none}
+.grafica polyline{stroke-dasharray:1400;animation:trazo 8s ease-out infinite}
+.grafica polygon{transform-origin:1150px 50px;animation:punta 8s infinite}
+.polvo{position:absolute;width:10px;height:10px;background:var(--mut);animation:polvo 2s infinite}
+.estrella{position:absolute;width:4px;height:4px;background:var(--acchi);animation:estrella 2.6s infinite}
+
+/* Cinta de cotizaciones (el suelo del hero) */
+.cinta{position:relative;z-index:2;background:#050B0B;border-top:3px solid #1C1A16;border-bottom:2px solid var(--line);overflow:hidden;white-space:nowrap}
+.cinta-in{display:inline-flex;gap:44px;padding:12px 0;font-size:26px;animation:cinta 30s linear infinite;color:var(--ink)}
+.cinta .sube{color:var(--ok)}.cinta .baja{color:var(--bad)}.cinta .lbl{color:var(--acc)}
+
+/* Ficha */
+.ficha{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding-top:100px;padding-bottom:100px}
+.card{border:2px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 4px 0 var(--line);padding:30px;display:flex;flex-direction:column;gap:10px}
+.card .big{font-size:96px;line-height:.9}
+.card h3{margin:0;font-size:32px}
+.card p{margin:0;font-size:15px;line-height:1.5;color:var(--soft)}
+
+/* Ciudad */
+.ciudad{position:relative;overflow:hidden;border-top:2px solid var(--line);border-bottom:2px solid var(--line);background:var(--bg)}
+.ciudad .wrap{padding-top:100px;padding-bottom:100px;display:flex;flex-wrap:wrap;align-items:center;gap:40px}
+.ciudad .txt{flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.ciudad h2{margin:0;font-size:64px;line-height:1}
+.ciudad p{margin:0;font-size:17px;line-height:1.55;color:var(--soft)}
+.ciudad .vis{flex:1 1 620px;min-width:0;position:relative;height:460px}
+.ciudad .mapa{position:absolute;left:0;top:40px;width:726px;max-width:none;animation:flotar 8s ease-in-out infinite}
+.movil{position:absolute;right:0;top:0;width:220px;height:452px;border-radius:34px;background:var(--line);padding:8px;box-shadow:0 24px 50px rgba(0,0,0,.55)}
+.movil img{width:204px;height:436px;object-fit:cover;border-radius:26px;display:block}
+
+/* Cierre */
+.cierre{padding-top:120px;padding-bottom:140px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px}
+.cierre img{width:132px;height:132px;border-radius:30px;border:2px solid var(--line);box-shadow:0 6px 0 var(--line)}
+.cierre h2{margin:0;font-size:clamp(48px,6vw,76px);line-height:1}
+.tiendas{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+
+/* Barra fija */
+.barra{position:sticky;bottom:0;z-index:5;border-top:2px solid var(--line);background:rgba(14,34,33,.96);backdrop-filter:blur(6px)}
+.barra .wrap{padding-top:12px;padding-bottom:12px;display:flex;align-items:center;gap:14px}
+.barra img{width:48px;height:48px;border-radius:12px;border:2px solid var(--line)}
+.barra .nom{display:flex;flex-direction:column}
+.barra .nom b{font-family:'Jersey 15',monospace;font-weight:400;font-size:28px;line-height:1}
+.barra .nom span{font-size:13px;color:var(--mut)}
+.barra .sp{flex:1}
+footer{background:var(--deep)}
+footer .wrap{padding-top:22px;padding-bottom:22px;display:flex;flex-wrap:wrap;gap:22px;font-size:13px;color:var(--mut)}
+
+@keyframes flotar{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes trazo{0%{stroke-dashoffset:1400}60%,100%{stroke-dashoffset:0}}
+@keyframes punta{0%,55%{opacity:0;transform:scale(.4)}65%,100%{opacity:1;transform:scale(1)}}
+@keyframes polvo{0%{opacity:0;transform:translateY(0)}20%{opacity:.8}100%{opacity:0;transform:translateY(-60px)}}
+@keyframes latido{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@keyframes estrella{0%,100%{opacity:.2}50%{opacity:1}}
+@keyframes cinta{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+@media (max-width:860px){
+  .wrap{padding-left:20px;padding-right:20px}
+  .top{padding-top:16px}
+  .hero-txt{padding-top:40px}
+  .escena{height:auto;grid-template-columns:1fr 1fr;grid-template-areas:"pa va" "ed ed";padding-top:24px;gap:12px}
+  .edificio{grid-area:ed}.pasos{grid-area:pa;margin:0;gap:6px}.valor{grid-area:va;margin:0;align-self:start}
+  .valor .num{font-size:44px}
+  .edificio img{width:184px;height:336px}
+  .paso{font-size:22px}
+  .grafica{height:300px;bottom:auto;top:0}
+  .ficha{grid-template-columns:1fr;padding-top:64px;padding-bottom:64px}
+  .ciudad h2{font-size:48px}
+  .ciudad .vis{height:400px}
+  .ciudad .mapa{width:520px;top:80px}
+  .movil{width:180px;height:372px}.movil img{width:164px;height:356px}
+  .barra .nom span{display:none}
+  .barra .nom b{font-size:22px}
+  .barra .btn-pri{padding:0 16px;font-size:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .grafica polyline{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <header class="wrap top">
+    <img class="logo" src="/img/icono-192.png" alt="Corner Cutters">
+    <div class="sp"></div>
+    <a class="btn btn-sec js-descarga" href="#descargar">Descargar gratis</a>
+  </header>
+  <span class="estrella" style="left:12%;top:18%" aria-hidden="true"></span>
+  <span class="estrella" style="left:82%;top:26%;animation-duration:3.4s;animation-delay:.6s" aria-hidden="true"></span>
+  <span class="estrella" style="left:70%;top:12%;animation-duration:2.2s;animation-delay:1.2s" aria-hidden="true"></span>
+
+  <div class="wrap hero-txt">
+    <div class="cap tag" id="tag">Paso 1 · Compras la ruina</div>
+    <h1 class="jersey">Lo compras en ruinas.<br>Lo vendes como nuevo.</h1>
+  </div>
+
+  <div class="wrap escena">
+    <svg class="grafica" viewBox="0 0 1200 520" preserveAspectRatio="none" aria-hidden="true">
+      <polyline points="20,470 180,430 300,450 420,360 520,390 640,280 760,300 880,170 1000,200 1150,50" fill="none" stroke="#E3A93B" stroke-width="14" stroke-linejoin="miter" opacity=".9"></polyline>
+      <polygon points="1150,50 1110,48 1142,82" fill="#F2C25F"></polygon>
+    </svg>
+    <div class="pasos jersey" id="pasos" aria-hidden="true">
+      <div class="paso on" style="color:#E2675B"><i style="background:#E2675B"></i>Ruina</div>
+      <div class="paso" style="color:#E3A93B"><i style="background:#E3A93B"></i>En obras</div>
+      <div class="paso" style="color:#5AA6D6"><i style="background:#5AA6D6"></i>Reformado</div>
+      <div class="paso" style="color:#4FC08D"><i style="background:#4FC08D"></i>Alquilado</div>
+    </div>
+    <div class="edificio">
+      <img class="px" id="edificio" src="/img/bloque_ruina.png" alt="Un edificio que pasa de ruina a reformado y alquilado">
+      <span class="polvo" style="bottom:120px;left:30px" aria-hidden="true"></span>
+      <span class="polvo" style="bottom:140px;right:40px;width:8px;height:8px;animation-delay:.7s" aria-hidden="true"></span>
+    </div>
+    <div class="valor">
+      <div class="cap">Valor del piso</div>
+      <div class="num jersey" id="valor" style="color:#E2675B">$12.400</div>
+    </div>
+  </div>
+
+  <div class="cinta" aria-label="Cotizaciones de los barrios en una partida de ejemplo">
+    <div class="cinta-in jersey">
+      <span class="lbl">MERCADO DE ALBA NOVA</span><span>CENTRO <span class="sube">▲ 4,2 %</span></span><span>UNIVERSITARIA <span class="sube">▲ 7,9 %</span></span><span>PUERTO <span class="baja">▼ 2,1 %</span></span><span>ENSANCHE <span class="sube">▲ 1,3 %</span></span><span>CASCO ANTIGUO <span class="baja">▼ 0,8 %</span></span><span>HIPOTECAS <span class="baja">▲ 0,5 pts</span></span>
+      <span class="lbl" aria-hidden="true">MERCADO DE ALBA NOVA</span><span aria-hidden="true">CENTRO <span class="sube">▲ 4,2 %</span></span><span aria-hidden="true">UNIVERSITARIA <span class="sube">▲ 7,9 %</span></span><span aria-hidden="true">PUERTO <span class="baja">▼ 2,1 %</span></span><span aria-hidden="true">ENSANCHE <span class="sube">▲ 1,3 %</span></span><span aria-hidden="true">CASCO ANTIGUO <span class="baja">▼ 0,8 %</span></span><span aria-hidden="true">HIPOTECAS <span class="baja">▲ 0,5 pts</span></span>
+    </div>
+  </div>
+</section>
+
+<main>
+  <section class="wrap ficha">
+    <div class="card">
+      <div class="big jersey" style="color:var(--acc)">5</div>
+      <h3 class="jersey">oficios que haces tú</h3>
+      <p>Albañilería, fontanería, electricidad, carpintería y decoración. Tocando la pantalla.</p>
+    </div>
+    <div class="card">
+      <div class="big jersey" style="color:var(--info)">1</div>
+      <h3 class="jersey">ciudad nueva por partida</h3>
+      <p>Calles, barrios, defectos ocultos y mercado cambian con cada semilla.</p>
+    </div>
+    <div class="card">
+      <div class="big jersey" style="color:var(--ok)">6</div>
+      <h3 class="jersey">épocas para especular</h3>
+      <p>De 1888 a 2050. El crack de 1929 viene gratis; el resto, en el pack.</p>
+    </div>
+  </section>
+
+  <section class="ciudad">
+    <div class="wrap">
+      <div class="txt">
+        <div class="cap">Ciudad viva</div>
+        <h2 class="jersey">El mercado no espera</h2>
+        <p>Burbujas, crisis y titulares que mueven los precios. Compra cuando todos venden, contrata cuadrillas y deja que trabajen mientras tú buscas la siguiente ganga.</p>
+      </div>
+      <div class="vis">
+        <img class="px mapa" src="/img/ciudad_b.png" alt="Una ciudad del juego" loading="lazy">
+        <div class="movil"><img src="/img/mapa.jpg" alt="Pantalla del mapa en el juego" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap cierre" id="descargar">
+    <img src="/img/icono.png" alt="Icono de Corner Cutters" loading="lazy">
+    <h2 class="jersey">Empieza con un piso.<br>Acaba con el barrio.</h2>
+    <div class="tiendas">
+      <a class="btn btn-store js-play" href="#"><span><small>Disponible en</small>Google Play</span></a>
+      <a class="btn btn-store js-ios" href="#"><span><small>Descárgalo en el</small>App Store</span></a>
+    </div>
+  </section>
+</main>
+
+<div class="barra">
+  <div class="wrap">
+    <img src="/img/icono-192.png" alt="">
+    <div class="nom"><b>Corner Cutters</b><span>Gratis · Compras opcionales</span></div>
+    <div class="sp"></div>
+    <a class="btn btn-pri js-descarga" href="#descargar">Descargar gratis</a>
+  </div>
+</div>
+<footer>
+  <div class="wrap">
+    <span>Corner Cutters</span>
+    <a href="/privacidad/">Privacidad</a><a href="/borrar-cuenta/">Borrar cuenta</a><a href="mailto:isaacruiiiz04@gmail.com">Contacto</a>
+  </div>
+</footer>
+
+<script>
+// Enlaces de las tiendas. App Store vacío = todavía no publicado (sale como «Próximamente»).
+const TIENDAS = {
+  play: 'https://play.google.com/store/apps/details?id=com.isaacruiiiz.cornercutters',
+  ios: ''
+};
+const ua = navigator.userAgent || '';
+const esIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const esAndroid = /Android/.test(ua);
+document.querySelectorAll('.js-play').forEach((a) => { a.href = TIENDAS.play; a.rel = 'noopener'; });
+document.querySelectorAll('.js-ios').forEach((a) => {
+  if (TIENDAS.ios) { a.href = TIENDAS.ios; a.rel = 'noopener'; }
+  else { a.setAttribute('aria-disabled', 'true'); a.removeAttribute('href'); a.querySelector('small').textContent = 'Próximamente en'; }
+});
+// «Descargar gratis» va directo a la tienda del móvil; en ordenador baja a los dos botones.
+const directo = esAndroid ? TIENDAS.play : (esIOS && TIENDAS.ios) ? TIENDAS.ios : '';
+if (directo) document.querySelectorAll('.js-descarga').forEach((a) => { a.href = directo; a.rel = 'noopener'; });
+
+// El edificio pasa de ruina a alquilado.
+const S = [
+  { img: '/img/bloque_ruina.png', tag: 'Paso 1 · Compras la ruina', precio: '$12.400', color: '#E2675B' },
+  { img: '/img/bloque_obra.png', tag: 'Paso 2 · Lo reformas tú', precio: '$31.900', color: '#E3A93B' },
+  { img: '/img/bloque_reformada.png', tag: 'Paso 3 · Queda como nuevo', precio: '$68.500', color: '#5AA6D6' },
+  { img: '/img/bloque_alquilada.png', tag: 'Paso 4 · Alquilas o vendes', precio: '$86.200', color: '#4FC08D' }
+];
+const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ed = document.getElementById('edificio'), tag = document.getElementById('tag'), val = document.getElementById('valor');
+const pasos = [...document.querySelectorAll('#pasos .paso')];
+let n = 0;
+function pinta(i) {
+  const s = S[i];
+  ed.src = s.img; tag.textContent = s.tag; tag.style.color = s.color;
+  val.textContent = s.precio; val.style.color = s.color;
+  pasos.forEach((p, k) => p.classList.toggle('on', k <= i));
+}
+pinta(0);
+if (!quieto) setInterval(() => { n = (n + 1) % S.length; pinta(n); }, 2000);
+</script>
+</body>
+</html>
