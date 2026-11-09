@@ -52,6 +52,8 @@ android {
     buildTypes {
         release {
             signingConfig = if (keyFile.exists()) signingConfigs.getByName("upload") else signingConfigs.getByName("debug")
+            // R8 borraba la base de datos de WorkManager (la usa el SDK de anuncios) y la app se cerraba al abrir.
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }
