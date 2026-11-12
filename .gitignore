@@ -27,3 +27,7 @@ tool/capturas/hecho
 ios/Flutter/ephemeral/
 ios/Flutter/Generated.xcconfig
 ios/Flutter/flutter_export_environment.sh
+
+# Material de la tienda: las capturas originales y las enmarcadas se generan en local
+tienda/capturas/
+tienda/ficha/
