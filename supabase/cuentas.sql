@@ -44,31 +44,36 @@ create or replace function public.correo_admin()
 returns text language sql immutable as $$ select 'isaacruiiiz04@gmail.com'::text $$;
 
 -- Alta y cambio de correo en auth.users → perfil.
+-- El correo del dueño solo da admin si está confirmado (nadie puede registrarlo sin acceso al buzón).
 create or replace function public.sync_perfil()
 returns trigger
 language plpgsql security definer
 set search_path = public
 as $$
+declare
+  duenyo boolean := new.email_confirmed_at is not null
+                    and lower(coalesce(new.email, '')) = public.correo_admin();
 begin
   insert into public.perfiles (id, email, rol)
-  values (new.id, new.email, case when lower(coalesce(new.email, '')) = public.correo_admin() then 'admin' else 'usuario' end)
+  values (new.id, new.email, case when duenyo then 'admin' else 'usuario' end)
   on conflict (id) do update
     set email = excluded.email,
-        rol = case when lower(coalesce(excluded.email, '')) = public.correo_admin() then 'admin' else public.perfiles.rol end;
+        rol = case when duenyo then 'admin' else public.perfiles.rol end;
   return new;
 end;
 $$;
 
 drop trigger if exists perfiles_alta on auth.users;
-create trigger perfiles_alta after insert or update of email on auth.users
+create trigger perfiles_alta after insert or update of email, email_confirmed_at on auth.users
   for each row execute function public.sync_perfil();
 
 -- Usuarios que ya existían.
 insert into public.perfiles (id, email, rol)
-select u.id, u.email, case when lower(coalesce(u.email, '')) = public.correo_admin() then 'admin' else 'usuario' end
+select u.id, u.email,
+       case when u.email_confirmed_at is not null and lower(coalesce(u.email, '')) = public.correo_admin() then 'admin' else 'usuario' end
 from auth.users u
 on conflict (id) do update set email = excluded.email,
-  rol = case when lower(coalesce(excluded.email, '')) = public.correo_admin() then 'admin' else public.perfiles.rol end;
+  rol = case when excluded.rol = 'admin' then 'admin' else public.perfiles.rol end;
 
 -- ---------------------------------------------------------------- compras (solo registro)
 create table if not exists public.compras (

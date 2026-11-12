@@ -51,8 +51,17 @@ create policy "partidas_epoca: borrar la propia" on public.partidas_epoca
 -- 3. Ranking
 -- =====================================================================
 -- Palabras que no pueden salir en un alias. Se comparan sin acentos, sin espacios y con las
--- cifras cambiadas por letras (p. ej. «1d10ta» = «idiota»). Para añadir más:
---   insert into public.alias_vetados (patron) values
+-- cifras cambiadas por letras (p. ej. «h1tl3r»). Para añadir más:
+--   insert into public.alias_vetados (patron) values ('palabra');
+create table if not exists public.alias_vetados (
+  patron text primary key check (patron ~ '^[a-zñç]{3,30}$')
+);
+alter table public.alias_vetados enable row level security;
+drop policy if exists "alias_vetados: admin todo" on public.alias_vetados;
+create policy "alias_vetados: admin todo" on public.alias_vetados
+  for all using (public.es_admin()) with check (public.es_admin());
+
+insert into public.alias_vetados (patron) values
   -- suplantación
   ('admin'), ('moderador'), ('moderator'), ('soporte'), ('support'), ('oficial'), ('official'), ('cornercutters'),
   -- español y catalán
@@ -62,7 +71,7 @@ create policy "partidas_epoca: borrar la propia" on public.partidas_epoca
   ('hijodeputa'), ('joputa'), ('malparit'),
   -- inglés
   ('fuck'), ('shit'), ('bitch'), ('cunt'), ('nigger'), ('nigga'), ('faggot'), ('retard'), ('whore'),
-  ('slut'), ('rapist'), ('pussy'), ('asshole'), ('tranny'),
+  ('slut'), ('pussy'), ('asshole'), ('tranny'), ('motherfuck'),
   -- alemán
   ('arschloch'), ('fotze'), ('schwuchtel'), ('wichser'), ('scheisse'), ('neger')
 on conflict do nothing;
@@ -75,15 +84,27 @@ as $$
 declare
   s text;
   n text;
+  junto text;
 begin
   s := regexp_replace(coalesce(a, ''), '[[:cntrl:]]', '', 'g');
   s := btrim(regexp_replace(s, '\s+', ' ', 'g'));
   s := left(s, 24);
   if char_length(s) < 2 then return 'Promotor anónimo'; end if;
+  -- Para comparar: minúsculas, sin acentos y con las cifras cambiadas por letras.
   n := lower(s);
   n := translate(n, 'áàäâéèëêíìïîóòöôúùüû0134578@$', 'aaaaeeeeiiiioooouuuuoieastbas');
-  n := regexp_replace(n, '[^a-zñç]', '', 'g');
-  if exists (select 1 from public.alias_vetados v where n like '%' || v.patron || '%') then
+  junto := regexp_replace(n, '[^a-zñç]', '', 'g');
+  if exists (
+    select 1 from public.alias_vetados v
+    where
+      -- Palabras largas: en cualquier parte, aunque vayan pegadas o con signos por medio.
+      (char_length(v.patron) >= 5 and junto like '%' || v.patron || '%')
+      -- Palabras cortas: solo al principio de una palabra o si son el alias entero
+      -- (así «Diputado» o «Reputación» no caen por llevar cuatro letras dentro).
+      or (char_length(v.patron) < 5 and (
+            junto = v.patron
+            or exists (select 1 from regexp_split_to_table(n, '[^a-zñç]+') w where w like v.patron || '%')))
+  ) then
     return 'Promotor anónimo';
   end if;
   return s;
@@ -309,6 +330,11 @@ begin
   select count(*) into n from ins;
 
   update public.telemetria_cuota c set eventos = c.eventos + n where c.user_id = uid and c.dia = current_date;
+  -- Limpieza de vez en cuando: los datos de uso no se guardan más de 120 días.
+  if random() < 0.01 then
+    delete from public.eventos where creado < now() - interval '120 days';
+    delete from public.telemetria_cuota where dia < current_date - 7;
+  end if;
   return n;
 end;
 $$;
