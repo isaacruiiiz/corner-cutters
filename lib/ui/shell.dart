@@ -138,6 +138,7 @@ class _ShellState extends ConsumerState<Shell> {
     final g = ref.watch(gameProvider);
     final tab = ref.watch(tabProvider);
     Motion.reduced = g.settings.reduceMotion;
+    Telemetria.activa = g.settings.telemetry;
     Money.scale = g.eraCfg?.priceLevel ?? 1;
     if (g.notices.isNotEmpty && !_showing) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _drain(g));

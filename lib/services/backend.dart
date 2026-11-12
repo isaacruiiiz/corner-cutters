@@ -197,9 +197,14 @@ class Backend {
   /// El servidor ya tiene `guardar_partida` (supabase/seguridad.sql). Si no, se usa el camino antiguo.
   static bool _sinFuncionGuardar = false;
 
-  /// Alias con el que la cuenta sale de verdad en el ranking (lo decide el servidor) y si es de invitado.
+  /// El servidor ha respondido alguna vez a `guardar_partida` en esta sesión.
+  static bool _rankingDelServidor = false;
+
+  /// Alias con el que la cuenta sale de verdad en el ranking (lo decide el servidor).
   static String? aliasPublico;
-  static bool aliasDeInvitado = false;
+
+  /// Los invitados salen como «Promotor anónimo» cuando el ranking lo escribe el servidor.
+  static bool get aliasDeInvitado => _rankingDelServidor && isAnonymous;
 
   static bool _faltaFuncion(Object e) {
     final s = e is PostgrestException ? '${e.code} ${e.message}' : '$e';
@@ -225,9 +230,9 @@ class Backend {
           'p_epocas': eras == null || eras.isEmpty ? null : eras,
         });
         final j = r is Map ? Map<String, dynamic>.from(r) : const <String, dynamic>{};
+        _rankingDelServidor = true;
         if (j['ok'] != true) return false; // demasiado seguido: se sube en el siguiente intento
         aliasPublico = j['alias'] as String?;
-        aliasDeInvitado = j['invitado'] == true;
         lastPush = DateTime.now();
         return true;
       } catch (e) {
