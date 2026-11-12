@@ -1048,7 +1048,8 @@ Future<void> showEraEndDialog(BuildContext context, WidgetRef ref, {bool record 
         Center(
           child: HsButton('Compartir', kind: BtnKind.ghost, size: BtnSize.sm, icon: Icons.ios_share_rounded, onTap: () {
             Telemetria.evento('compartir', {'que': 'epoca'});
-            Social.compartir('${tr('Medalla de ${medalNames[medal].toLowerCase()} en la época ${e.id} de Corner Cutters.')} ${AppConfig.current.webUrl}'.trim());
+            Social.compartir('${tr('Medalla de ${medalNames[medal].toLowerCase()} en la época ${e.id} de Corner Cutters.')} ${AppConfig.current.webUrl}'.trim(),
+                origen: origenDe(ctx));
           }),
         ),
       ],

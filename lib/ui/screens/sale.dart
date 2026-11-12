@@ -111,7 +111,8 @@ class SaleClosedScreen extends ConsumerWidget {
             HsButton('Compartir', kind: BtnKind.ghost, size: BtnSize.sm, icon: Icons.ios_share_rounded, onTap: () {
               Telemetria.evento('compartir', {'que': 'venta'});
               Social.compartir(
-                  '${tr('He vendido ${d['address']} por ${money(amount)} en Corner Cutters: ${money(profit)} de beneficio.')} ${AppConfig.current.webUrl}'.trim());
+                  '${tr('He vendido ${d['address']} por ${money(amount)} en Corner Cutters: ${money(profit)} de beneficio.')} ${AppConfig.current.webUrl}'.trim(),
+                  origen: origenDe(context));
             }),
           ],
         ]),

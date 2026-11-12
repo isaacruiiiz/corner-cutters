@@ -1,3 +1,5 @@
+import 'dart:ui' show Rect;
+
 import 'package:flutter/foundation.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:share_plus/share_plus.dart';
@@ -11,9 +13,10 @@ class Social {
 
   static bool get puedeCompartir => true;
 
-  static Future<void> compartir(String texto) async {
+  /// [origen]: de dónde sale el menú en pantalla. En iPad es obligatorio (sin él, el menú no se abre).
+  static Future<void> compartir(String texto, {Rect? origen}) async {
     try {
-      await SharePlus.instance.share(ShareParams(text: texto));
+      await SharePlus.instance.share(ShareParams(text: texto, sharePositionOrigin: origen));
     } catch (e) {
       debugPrint('compartir: $e');
     }
