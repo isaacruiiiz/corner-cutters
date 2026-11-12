@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../services/telemetria.dart';
 import '../../app/providers.dart';
 import '../../core/format.dart';
 import '../../core/gfx.dart';
@@ -376,6 +377,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> with SingleTicker
     _seed = (DateTime.now().microsecondsSinceEpoch ^ math.Random().nextInt(1 << 30)) & 0x7FFFFFFF;
     Future.microtask(() {
       ref.read(gameProvider).newGame(_seed);
+      Telemetria.evento('partida_nueva');
       if (mounted) setState(() => _started = true);
     });
     _t = Timer.periodic(const Duration(milliseconds: 520), (t) {

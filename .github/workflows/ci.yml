@@ -22,7 +22,8 @@ jobs:
           cache: true
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter analyze
+      # Los avisos informativos (APIs que el Flutter más nuevo marca como antiguas) no paran la comprobación.
+      - run: flutter analyze --no-fatal-infos
       - run: flutter test
 
   android:

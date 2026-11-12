@@ -34,7 +34,7 @@ class Tx {
     }
     if (over.isNotEmpty) return '«Calidad por encima de lo que se paga. Generoso. Poco rentable»';
     if ((levels[Trade.ele] ?? 0) == 1) return '«Instalación en regla: no arde. Es el listón mínimo y lo cumple»';
-    if (q >= 0.99) return '«Ajustado al público. Ni un euro de más, ni uno de menos»';
+    if (q >= 0.99) return '«Ajustado al público. Ni un dólar de más, ni uno de menos»';
     if (levels.values.every((l) => l <= 1)) return '«Reformado con mimo»';
     return '«Reformado con mimo. Y con presupuesto»';
   }

@@ -9,3 +9,10 @@
 -keep class com.google.android.ump.** { *; }
 -keep class com.android.billingclient.** { *; }
 -dontwarn com.google.android.play.core.**
+
+# Notificaciones locales (usa Gson para guardar lo programado)
+-keep class com.dexterous.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.google.gson.reflect.TypeToken { *; }
+-keep class * extends com.google.gson.reflect.TypeToken

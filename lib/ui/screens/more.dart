@@ -7,6 +7,8 @@ import '../../core/format.dart';
 import '../../core/gfx.dart';
 import '../../core/theme.dart';
 import '../../services/audio.dart';
+import '../../services/avisos.dart';
+import '../../services/telemetria.dart';
 import '../widgets/boosts.dart';
 import '../../game/data.dart';
 import '../../game/engine.dart';
@@ -283,7 +285,7 @@ const _cosmetics = [
   _Cosmetic('noche', 'Noche', 'tema', 'Logro «Fundador» o pase nivel 19', [Color(0xFF2B4A3A), Color(0xFF183A50), Color(0xFFFFD86B)]),
   _Cosmetic('clasica', 'Clásica', 'fachada', 'Incluida', [Color(0xFFDDB896), Color(0xFF8E9BA8), Color(0xFFE9DDBA)]),
   _Cosmetic('ladrillo', 'Ladrillo visto', 'fachada', 'Logro «Ojo de halcón» o pase nivel 7', [Color(0xFFB0573F), Color(0xFFA14E39), Color(0xFFC0694D)]),
-  _Cosmetic('pastel', 'Pastel', 'fachada', 'Logro «Ni un euro de más» o pase nivel 11', [Color(0xFFE9B9C4), Color(0xFFB9D7E9), Color(0xFFCDE9B9)]),
+  _Cosmetic('pastel', 'Pastel', 'fachada', 'Logro «Ni un dólar de más» o pase nivel 11', [Color(0xFFE9B9C4), Color(0xFFB9D7E9), Color(0xFFCDE9B9)]),
   _Cosmetic('modernista', 'Modernista', 'fachada', 'Logro «Millonario» o pase nivel 15', [Color(0xFFE2C38A), Color(0xFF9FB89A), Color(0xFFB7A6D6)]),
 ];
 
@@ -407,7 +409,7 @@ class PassScreen extends ConsumerWidget {
               child: Column(children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
-                  child: Row(children: const [SizedBox(width: 40), Expanded(child: Cap('Gratis')), Expanded(child: Cap('Con pase'))]),
+                  child: Row(children: const [SizedBox(width: 40), Expanded(child: Cap('Recompensa'))]),
                 ),
                 for (var t = 1; t <= 20; t++)
                   Container(
@@ -429,18 +431,11 @@ class PassScreen extends ConsumerWidget {
                               ])
                             : Text('—', style: Ht.small),
                       ),
-                      Expanded(
-                        child: Row(children: [
-                          const Icon(Icons.lock_outline, size: 14, color: Hc.dim),
-                          const SizedBox(width: 4),
-                          Expanded(child: Text(t % 2 == 0 ? 'Fachada de temporada' : 'Marco de mapa', style: Ht.small.copyWith(color: Hc.dim, fontSize: 11))),
-                        ]),
-                      ),
                     ]),
                   ),
               ]),
             ),
-            const Note('El pase de pago llegará con la tienda de la app. Nunca da dinero del juego.', icon: Icons.info_outline),
+            const Note('El pase es gratis: se sube jugando y sus recompensas son cosméticas o de comodidad.', icon: Icons.info_outline),
           ]),
         ),
       ]),
@@ -719,6 +714,11 @@ class SettingsScreen extends ConsumerWidget {
               ]),
             ListBlock([
                 const Li(lead: IconBox(Icons.attach_money_rounded), title: 'Moneda', sub: 'Dólares estadounidenses (\$)', trail: Tag('Fija', color: Hc.mut)),
+                Li(lead: const IconBox(Icons.insights_outlined), title: 'Datos de uso', sub: 'Pasos del juego y errores, para mejorarlo. Sin terceros', trail: HsToggle(s.telemetry, (v) {
+                  s.telemetry = v;
+                  Telemetria.activa = v;
+                  g.touch();
+                })),
                 Li(last: true, lead: const IconBox(Icons.notifications_none_rounded), title: 'Notificaciones', trail: const Icon(Icons.chevron_right_rounded, color: Hc.mut),
                     onTap: () => push(context, const NotificationsScreen())),
               ]),
@@ -781,6 +781,7 @@ class NotificationsScreen extends ConsumerWidget {
         const BackHeader('Notificaciones', sub: 'Solo avisos útiles'),
         Expanded(
           child: Body([
+            const _AvisosSistema(),
             Panel(
               padding: EdgeInsets.zero,
               child: Column(children: [
@@ -797,10 +798,62 @@ class NotificationsScreen extends ConsumerWidget {
                 row('noche', 'Silencio nocturno', 'Nada entre las 23:00 y las 8:00', Icons.bedtime_outlined, last: true),
               ]),
             ),
-            const Note('Por ahora los avisos se muestran dentro del juego. Las notificaciones del sistema llegarán en una próxima versión.', icon: Icons.info_outline),
+            const Note('Se programan al cerrar el juego con lo que va a pasar en tu ciudad y se cancelan al volver. Como mucho, unas pocas al día.', icon: Icons.info_outline),
           ]),
         ),
       ]),
+    );
+  }
+}
+
+/// Estado del permiso de notificaciones del sistema y botón para activarlo.
+class _AvisosSistema extends StatefulWidget {
+  const _AvisosSistema();
+  @override
+  State<_AvisosSistema> createState() => _AvisosSistemaState();
+}
+
+class _AvisosSistemaState extends State<_AvisosSistema> {
+  bool? _ok;
+
+  @override
+  void initState() {
+    super.initState();
+    _mirar();
+  }
+
+  Future<void> _mirar() async {
+    final ok = await Avisos.permitido();
+    if (mounted) setState(() => _ok = ok);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!Avisos.disponible) {
+      return const Note('En este dispositivo los avisos solo se ven dentro del juego.', icon: Icons.info_outline);
+    }
+    final ok = _ok;
+    return Panel(
+      padding: EdgeInsets.zero,
+      child: Li(
+        last: true,
+        lead: IconBox(ok == true ? Icons.notifications_active_outlined : Icons.notifications_off_outlined, color: ok == true ? Hc.ok : Hc.warn),
+        title: 'Avisos del sistema',
+        sub: ok == null
+            ? 'Comprobando…'
+            : ok
+                ? 'Activados: te enteras con el juego cerrado'
+                : 'Desactivados: solo verás los avisos con el juego abierto',
+        trail: ok == false
+            ? HsButton('Activar', size: BtnSize.xs, onTap: () async {
+                final r = await Avisos.pedirPermiso();
+                Telemetria.evento('permiso_avisos', {'ok': r});
+                if (!context.mounted) return;
+                if (!r) toast(context, 'Actívalos en los ajustes del móvil', error: true);
+                setState(() => _ok = r);
+              })
+            : null,
+      ),
     );
   }
 }
@@ -826,20 +879,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen> {
     if (mounted) setState(() => _rows = r);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final rows = _rows;
-    return Screen(
-      child: Column(children: [
-        const BackHeader('Ranking', sub: 'Por reputación y patrimonio'),
-        Expanded(
-          child: Body([
-            if (!Backend.ready)
-              const Note('El ranking necesita conexión con Supabase.', icon: Icons.cloud_off_outlined, kind: NoteKind.warn)
-            else if (rows == null)
-              const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator(color: Hc.acc)))
-            else
-              ListBlock([
+  Widget _lista(List<RankRow> rows) => ListBlock([
                   if (rows.isEmpty) const Padding(padding: EdgeInsets.all(16), child: Text('Aún no hay nadie. Serás el primero.', style: TextStyle(color: Hc.mut))),
                   for (var i = 0; i < rows.length; i++)
                     Container(
@@ -852,7 +892,27 @@ class _RankingScreenState extends ConsumerState<RankingScreen> {
                         trail: Text(money(rows[i].netWorth, compact: true), style: Ht.numS.copyWith(color: Hc.acc)),
                       ),
                     ),
-                ]),
+                ]);
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = _rows;
+    return Screen(
+      child: Column(children: [
+        const BackHeader('Ranking', sub: 'Por reputación y patrimonio'),
+        Expanded(
+          child: Body([
+            if (!Backend.ready)
+              const Note('El ranking necesita conexión con Supabase.', icon: Icons.cloud_off_outlined, kind: NoteKind.warn)
+            else if (rows == null)
+              const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator(color: Hc.acc)))
+            else if (Backend.aliasDeInvitado) ...[
+              const Note('Como invitado sales como «Promotor anónimo». Crea una cuenta en Más → Cuenta para aparecer con tu alias.',
+                  icon: Icons.person_outline_rounded),
+              _lista(rows),
+            ]
+            else
+              _lista(rows),
           ]),
         ),
       ]),

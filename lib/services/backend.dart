@@ -194,10 +194,50 @@ class Backend {
     }
   }
 
+  /// El servidor ya tiene `guardar_partida` (supabase/seguridad.sql). Si no, se usa el camino antiguo.
+  static bool _sinFuncionGuardar = false;
+
+  /// Alias con el que la cuenta sale de verdad en el ranking (lo decide el servidor) y si es de invitado.
+  static String? aliasPublico;
+  static bool aliasDeInvitado = false;
+
+  static bool _faltaFuncion(Object e) {
+    final s = e is PostgrestException ? '${e.code} ${e.message}' : '$e';
+    return s.contains('PGRST202') || s.contains('Could not find the function') || s.contains('does not exist');
+  }
+
   /// Sube la partida y la fila del ranking. Devuelve true si llegó al servidor.
-  static Future<bool> pushSave(Map<String, dynamic> save, {required String alias, required double netWorth, required int reputation, required String city}) async {
+  ///
+  /// El ranking lo escribe el servidor (`guardar_partida`): recorta cifras imposibles, filtra el
+  /// alias y deja a los invitados como «Promotor anónimo».
+  static Future<bool> pushSave(Map<String, dynamic> save,
+      {required String alias, required double netWorth, required int reputation, required String city, Map<String, dynamic>? eras}) async {
     final u = user;
     if (u == null || hold) return false;
+    if (!_sinFuncionGuardar) {
+      try {
+        final r = await _db.rpc('guardar_partida', params: {
+          'p_datos': jsonEncode(save),
+          'p_alias': alias,
+          'p_patrimonio': netWorth.isFinite ? netWorth : 0,
+          'p_reputacion': reputation,
+          'p_ciudad': city,
+          'p_epocas': eras == null || eras.isEmpty ? null : eras,
+        });
+        final j = r is Map ? Map<String, dynamic>.from(r) : const <String, dynamic>{};
+        if (j['ok'] != true) return false; // demasiado seguido: se sube en el siguiente intento
+        aliasPublico = j['alias'] as String?;
+        aliasDeInvitado = j['invitado'] == true;
+        lastPush = DateTime.now();
+        return true;
+      } catch (e) {
+        if (!_faltaFuncion(e)) {
+          debugPrint('guardar_partida: $e');
+          return false;
+        }
+        _sinFuncionGuardar = true;
+      }
+    }
     try {
       await _db.from('partidas').upsert({
         'user_id': u.id,
@@ -220,6 +260,113 @@ class Backend {
     } catch (e) {
       debugPrint('pushSave: $e');
       return false;
+    }
+  }
+
+  // ------------------------------------------------------------------ épocas en la nube
+
+  /// Sube la partida de una época a su ranura.
+  static Future<bool> pushEra(String id, Map<String, dynamic> save) async {
+    final u = user;
+    if (u == null || hold) return false;
+    try {
+      await _db.from('partidas_epoca').upsert({
+        'user_id': u.id,
+        'epoca': id,
+        'datos': jsonEncode(save),
+        'actualizado': DateTime.now().toUtc().toIso8601String(),
+      });
+      return true;
+    } catch (e) {
+      debugPrint('pushEra: $e');
+      return false;
+    }
+  }
+
+  /// Partidas de época guardadas en la cuenta (id de época → partida).
+  static Future<Map<String, Map<String, dynamic>>> pullEras() async {
+    final u = user;
+    if (u == null) return {};
+    try {
+      final rows = await _db.from('partidas_epoca').select('epoca, datos').eq('user_id', u.id);
+      final out = <String, Map<String, dynamic>>{};
+      for (final r in rows) {
+        try {
+          out[r['epoca'] as String] = jsonDecode(r['datos'] as String) as Map<String, dynamic>;
+        } catch (_) {}
+      }
+      return out;
+    } catch (e) {
+      debugPrint('pullEras: $e');
+      return {};
+    }
+  }
+
+  /// Borra la ranura de una época (al reiniciarla o terminarla).
+  static Future<void> deleteEra(String id) async {
+    final u = user;
+    if (u == null) return;
+    try {
+      await _db.from('partidas_epoca').delete().eq('user_id', u.id).eq('epoca', id);
+    } catch (e) {
+      debugPrint('deleteEra: $e');
+    }
+  }
+
+  /// Medallas y mejores marcas de las épocas guardadas en la cuenta.
+  static Future<Map<String, dynamic>?> pullEraProgress() async {
+    final u = user;
+    if (u == null) return null;
+    try {
+      final row = await _db.from('partidas').select('epocas').eq('user_id', u.id).maybeSingle();
+      final e = row?['epocas'];
+      return e is Map ? Map<String, dynamic>.from(e) : null;
+    } catch (e) {
+      debugPrint('pullEraProgress: $e');
+      return null;
+    }
+  }
+
+  /// Guarda las medallas en la cuenta sin esperar a la siguiente subida de la partida.
+  static Future<void> pushEraProgress(Map<String, dynamic> eras) async {
+    final u = user;
+    if (u == null || hold || eras.isEmpty) return;
+    try {
+      await _db.from('partidas').update({'epocas': eras}).eq('user_id', u.id);
+    } catch (e) {
+      debugPrint('pushEraProgress: $e');
+    }
+  }
+
+  // ------------------------------------------------------------------ datos de uso y errores
+
+  /// Envía un lote de eventos. true: guardado; false: fallo de red (reintentar); null: el servidor no tiene la función.
+  static Future<bool?> registrarEventos(List<Map<String, dynamic>> lote, {String? version, String? plataforma, String? idioma}) async {
+    if (!ready || user == null) return false;
+    try {
+      await _db.rpc('registrar_eventos', params: {
+        'lote': lote,
+        'p_version': version,
+        'p_plataforma': plataforma,
+        'p_idioma': idioma,
+      }).timeout(const Duration(seconds: 10));
+      return true;
+    } catch (e) {
+      return _faltaFuncion(e) ? null : false;
+    }
+  }
+
+  static Future<void> registrarError(String mensaje, String pila, {String? version, String? plataforma}) async {
+    if (!ready || user == null) return;
+    try {
+      await _db.rpc('registrar_error', params: {
+        'p_mensaje': mensaje,
+        'p_pila': pila,
+        'p_version': version,
+        'p_plataforma': plataforma,
+      }).timeout(const Duration(seconds: 10));
+    } catch (_) {
+      // Sin red o sin la función: se pierde ese error, no pasa nada.
     }
   }
 

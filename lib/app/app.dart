@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +10,7 @@ import '../core/gfx.dart';
 import '../core/theme.dart';
 import '../services/audio.dart';
 import '../services/storage.dart';
+import '../services/telemetria.dart';
 import '../ui/screens/title_screen.dart';
 import '../ui/shell.dart';
 import 'providers.dart';
@@ -89,6 +92,8 @@ class _BootState extends ConsumerState<Boot> {
     Sfx.volume = g.settings.sfx;
     Music.enabled = g.settings.sound;
     Music.volume = g.settings.music;
+    if (_hasSave) Telemetria.activa = g.settings.telemetry;
+    unawaited(Telemetria.enviar());
     final a = await Storage.getString('alias');
     if (a != null && a.isNotEmpty) ref.read(aliasProvider.notifier).state = a;
     if (mounted) setState(() => _ready = true);
