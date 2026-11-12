@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../guia.dart';
 import '../../app/providers.dart';
 import '../../core/format.dart';
 import '../../core/theme.dart';
@@ -253,20 +254,23 @@ class PropertyScreen extends ConsumerWidget {
           Expanded(child: HsButton('Vender', icon: Icons.lock_outline, block: true, size: BtnSize.sm)),
           const SizedBox(width: 8),
           Expanded(
-              child: HsButton('Reformar', block: true, size: BtnSize.sm, onTap: () => push(context, SelectorScreen(propId: p.id)))),
+              child: GuiaMarca(GuiaPunto.reformar,
+                  child: HsButton('Reformar', block: true, size: BtnSize.sm, onTap: () => push(context, SelectorScreen(propId: p.id))))),
         ]);
       case PState.obra:
         return two(
           HsButton('Cerrar a medias', kind: BtnKind.sec, block: true, size: BtnSize.sm, onTap: () => showClosePartial(context, g, p)),
-          HsButton('Seguir obra', block: true, size: BtnSize.sm, onTap: () => push(context, ObraScreen(propId: p.id))),
+          GuiaMarca(GuiaPunto.seguirObra,
+              child: HsButton('Seguir obra', block: true, size: BtnSize.sm, onTap: () => push(context, ObraScreen(propId: p.id)))),
         );
       case PState.lista:
         final sellBetter = g.m >= 1.05;
         return two(
           HsButton('Reformar más', kind: BtnKind.sec, block: true, size: BtnSize.sm, onTap: () => push(context, SelectorScreen(propId: p.id))),
-          sellBetter
-              ? HsButton('Vender', block: true, size: BtnSize.sm, onTap: g.canBuy ? () => push(context, SellScreen(propId: p.id)) : null)
-              : HsButton('Alquilar', block: true, size: BtnSize.sm, onTap: g.canBuy ? () => push(context, RentScreen(propId: p.id)) : null),
+          GuiaMarca(GuiaPunto.decidirFicha,
+              child: sellBetter
+                  ? HsButton('Vender', block: true, size: BtnSize.sm, onTap: g.canBuy ? () => push(context, SellScreen(propId: p.id)) : null)
+                  : HsButton('Alquilar', block: true, size: BtnSize.sm, onTap: g.canBuy ? () => push(context, RentScreen(propId: p.id)) : null)),
         );
       case PState.buscando:
         return two(
@@ -525,7 +529,7 @@ class _RentScreenState extends ConsumerState<RentScreen> {
     final wait = g.vacancyMean(p, x);
     void upd(double v) => setState(() => _x = (v * 100).round() / 100);
     return Screen(
-      dock: HsButton(p.state == PState.alquilada ? 'Actualizar renta' : 'Publicar alquiler',
+      dock: GuiaMarca(GuiaPunto.publicarAlquiler, child: HsButton(p.state == PState.alquilada ? 'Actualizar renta' : 'Publicar alquiler',
           block: true, size: BtnSize.lg, kind: BtnKind.ok, icon: Icons.key_outlined, onTap: () {
         final e = g.listForRent(p, x);
         if (e != null) {
@@ -534,7 +538,7 @@ class _RentScreenState extends ConsumerState<RentScreen> {
           Navigator.pop(context);
           toast(context, p.state == PState.alquilada ? 'Renta actualizada' : 'Publicado: ${money(ref0 * x)}/mes');
         }
-      }),
+      })),
       child: Column(children: [
         BackHeader('Alquilar', sub: g.addressOf(p)),
         Expanded(
@@ -619,7 +623,7 @@ class _SellScreenState extends ConsumerState<SellScreen> {
     final offer = g.saleOfferProb(p, y);
     void upd(double n) => setState(() => _y = (n * 100).round() / 100);
     return Screen(
-      dock: HsButton(p.state == PState.venta ? 'Actualizar precio' : 'Publicar venta',
+      dock: GuiaMarca(GuiaPunto.publicarVenta, child: HsButton(p.state == PState.venta ? 'Actualizar precio' : 'Publicar venta',
           block: true, size: BtnSize.lg, icon: Icons.sell_outlined, onTap: () {
         final e = g.listForSale(p, y);
         if (e != null) {
@@ -628,7 +632,7 @@ class _SellScreenState extends ConsumerState<SellScreen> {
           Navigator.pop(context);
           toast(context, 'En venta por ${money(v * y)}');
         }
-      }),
+      })),
       child: Column(children: [
         BackHeader('Vender', sub: g.addressOf(p)),
         Expanded(

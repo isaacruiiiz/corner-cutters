@@ -2528,6 +2528,8 @@ class Game extends ChangeNotifier {
     lastTick = j['lastTick'] as int;
     stage = Stage.values.firstWhere((s) => s.name == j['stage'], orElse: () => Stage.manitas);
     meta = Meta.fromJson(Map<String, dynamic>.from(j['meta'] as Map));
+    // Partidas de antes de la guía: quien ya había reformado algo no la necesita.
+    if ((j['meta'] as Map)['guide'] == null && ((j['renosDone'] as num?)?.toInt() ?? 0) > 0) meta.guideDone = true;
     settings = Settings.fromJson(Map<String, dynamic>.from(j['settings'] as Map));
     gestoria = Gestoria.fromJson(Map<String, dynamic>.from(j['gestoria'] as Map));
     services.clear();

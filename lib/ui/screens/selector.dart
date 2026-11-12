@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' hide Text;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../guia.dart';
 import '../../app/providers.dart';
 import '../../core/format.dart';
 import '../../core/theme.dart';
@@ -144,7 +145,7 @@ class _SelectorScreenState extends ConsumerState<SelectorScreen> {
               const SizedBox(height: 10),
               Row(children: [
                 Expanded(
-                  child: HsButton(n > 1 ? 'Lanzar $n obras' : 'Lanzar obra', size: BtnSize.lg, block: true, onTap: err != null || p == null
+                  child: GuiaMarca(GuiaPunto.lanzarObra, child: HsButton(n > 1 ? 'Lanzar $n obras' : 'Lanzar obra', size: BtnSize.lg, block: true, onTap: err != null || p == null
                       ? null
                       : () async {
                           if (n > 1) {
@@ -182,7 +183,7 @@ class _SelectorScreenState extends ConsumerState<SelectorScreen> {
                           HapticFeedback.mediumImpact();
                           if (!context.mounted) return;
                           Navigator.of(context).pushReplacement(glassRoute(ObraScreen(propId: p.id)));
-                        }),
+                        })),
                 ),
                 const SizedBox(width: 10),
                 SqButton(Icons.bookmarks_outlined, size: 56, tooltip: 'Plantillas', onTap: () => _templates(context, g, p)),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../guia.dart';
 import '../../app/app.dart';
 import '../../app/providers.dart';
 import '../../core/format.dart';
@@ -734,6 +735,17 @@ class SettingsScreen extends ConsumerWidget {
                     if (context.mounted) toast(context, 'Partida guardada');
                   },
                 ),
+                if (g.eraCfg == null)
+                  Li(
+                    lead: const IconBox(Icons.engineering_outlined),
+                    title: 'Repetir la guía',
+                    sub: 'El capataz vuelve desde el paso en que esté tu ciudad',
+                    onTap: () {
+                      Guia.repetir(g);
+                      ref.read(tabProvider.notifier).state = 0;
+                      Navigator.of(context).popUntil((r) => r.isFirst);
+                    },
+                  ),
                 Li(
                   last: true,
                   lead: const IconBox(Icons.delete_forever_outlined, color: Hc.bad),

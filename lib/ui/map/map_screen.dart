@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../guia.dart';
 import '../../app/providers.dart';
 import '../../core/format.dart';
 import '../../core/theme.dart';
@@ -44,7 +45,19 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   bool _drawer = true;
 
   @override
+  void initState() {
+    super.initState();
+    // «Llévame» del capataz: centra y selecciona la vivienda de la que habla.
+    Guia.alEnfocar = (id) {
+      if (!mounted) return;
+      final lots = ref.read(gameProvider).city.lots;
+      if (id >= 0 && id < lots.length) _focusLot(lots[id]);
+    };
+  }
+
+  @override
   void dispose() {
+    Guia.alEnfocar = null;
     _ctrl.dispose();
     super.dispose();
   }
@@ -78,13 +91,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     final sel = g.selectedLot;
     return Stack(children: [
       Positioned.fill(
-        child: MapView(
+        child: GuiaMarca(GuiaPunto.mapa, child: MapView(
           key: _mapKey,
           controller: _ctrl,
           onLot: _focusLot,
           onStreet: _street,
           onEmpty: () => setState(() => _drawer = false),
-        ),
+        )),
       ),
       if (widget.active) ...[
         // Fecha y velocidad.
@@ -202,13 +215,16 @@ class _Pill extends ConsumerWidget {
       case PState.obra:
         final cur = r!.current;
         info = cur == null ? 'Lista para cerrar' : 'Fase ${r.phasesDone + 1}/${r.phasesTotal} · ${ti(cur).phase}';
-        action = HsButton('Seguir obra', size: BtnSize.sm, onTap: () => push(context, ObraScreen(propId: p.id)));
+        action = GuiaMarca(GuiaPunto.seguirObra,
+            child: HsButton('Seguir obra', size: BtnSize.sm, onTap: () => push(context, ObraScreen(propId: p.id))));
       case PState.ruina:
         info = Tx2.ruin(p.id);
-        action = HsButton('Reformar', size: BtnSize.sm, onTap: () => push(context, SelectorScreen(propId: p.id)));
+        action = GuiaMarca(GuiaPunto.reformar,
+            child: HsButton('Reformar', size: BtnSize.sm, onTap: () => push(context, SelectorScreen(propId: p.id))));
       case PState.lista:
         info = 'Calidad ${dec(p.quality, 2)} · ${money(g.valueOf(p))}';
-        action = HsButton('Decidir', size: BtnSize.sm, onTap: () => push(context, PropertyScreen(propId: p.id)));
+        action = GuiaMarca(GuiaPunto.decidir,
+            child: HsButton('Decidir', size: BtnSize.sm, onTap: () => push(context, PropertyScreen(propId: p.id))));
       case PState.alquilada:
         info = '${p.tenant?.name ?? ''} · satisf. ${(p.tenant?.sat ?? 0).round()} · ${money(g.rentOf(p))}/mes';
         action = HsButton('Ficha', size: BtnSize.sm, onTap: () => push(context, PropertyScreen(propId: p.id)));
@@ -227,7 +243,8 @@ class _Pill extends ConsumerWidget {
       info: info,
       action: action,
       onTap: () => push(context, PropertyScreen(propId: p.id)),
-      extra: (!g.tutorialDone && p.state != PState.obra && g.renosDone == 0)
+      // La nota sigue para quien se ha saltado la guía del capataz.
+      extra: (g.meta.guideDone && !g.tutorialDone && p.state != PState.obra && g.renosDone == 0)
           ? const Note('Empieza por reformar. La electricidad es obligatoria para vender o alquilar.',
               bold: 'Primera obra.', icon: Icons.lightbulb_outline, kind: NoteKind.warn)
           : null,
