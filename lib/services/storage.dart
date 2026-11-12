@@ -78,6 +78,21 @@ class Storage {
     await (await _prefs).setString(_eraProgress, jsonEncode(all));
   }
 
+  /// Junta el progreso de épocas de la cuenta con el de este móvil: se queda la mejor medalla y la mejor marca.
+  static Future<void> mergeEraProgress(Map<String, dynamic> cloud) async {
+    final all = await eraProgress();
+    cloud.forEach((id, v) {
+      if (v is! Map) return;
+      final c = <String, num>{for (final e in v.entries) if (e.value is num) '${e.key}': e.value as num};
+      final cur = all[id] ?? {};
+      num mayor(String k) => (c[k] ?? 0) > (cur[k] ?? 0) ? (c[k] ?? 0) : (cur[k] ?? 0);
+      all[id] = {'medal': mayor('medal'), 'best': mayor('best'), 'played': mayor('played')};
+    });
+    await (await _prefs).setString(_eraProgress, jsonEncode(all));
+  }
+
+  static Future<bool> hasEra(String id) async => (await _prefs).containsKey(_eraKey(id));
+
   /// Correos con los que se ha entrado en este dispositivo (solo el correo, nunca la contraseña).
   static Future<List<String>> knownAccounts() async {
     final raw = (await _prefs).getString('cuentas');

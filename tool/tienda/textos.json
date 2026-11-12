@@ -1,0 +1,8 @@
+{
+  "_nota": "Rótulos de las capturas de la tienda, por idioma. El orden es el de las capturas: 1 mapa, 2 obra (minijuego), 3 venta o alquiler, 4 empresa, 5 épocas.",
+  "es": ["Compra ruinas. Con suerte, solo lo parecen", "Reforma tocando la pantalla", "Alquila o vende. El mercado opina", "Monta tu empresa de reformas", "Seis épocas, seis formas de arruinarte"],
+  "ca": ["Compra ruïnes. Amb sort, només ho semblen", "Reforma tocant la pantalla", "Lloga o ven. El mercat hi diu la seva", "Munta la teva empresa de reformes", "Sis èpoques, sis maneres d’arruïnar-te"],
+  "en": ["Buy ruins. With luck, they only look like it", "Renovate with your own taps", "Rent or sell. The market has opinions", "Build your renovation company", "Six eras, six ways to go broke"],
+  "de": ["Kauf Ruinen. Mit Glück sehen sie nur so aus", "Renoviere per Fingertipp", "Vermieten oder verkaufen. Der Markt redet mit", "Gründe deine Sanierungsfirma", "Sechs Epochen, sechs Wege in die Pleite"],
+  "zh": ["买下危房——运气好的话，只是看着像", "点击屏幕，亲手翻新", "出租还是出售？市场说了算", "创办你的装修公司", "六个年代，六种破产方式"]
+}

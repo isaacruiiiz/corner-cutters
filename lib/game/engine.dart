@@ -66,6 +66,21 @@ class OfflineReport {
   });
 }
 
+/// Algo que pasará con el juego cerrado (para las notificaciones del sistema).
+class Forecast {
+  /// Tipo de aviso: obra, inquilino, venta, mercado, eventos (los mismos de Ajustes → Notificaciones) o tope.
+  final String kind;
+
+  /// Tiempo real desde ahora.
+  final Duration at;
+  final String title;
+  final String body;
+  const Forecast(this.kind, this.at, this.title, this.body);
+
+  @override
+  String toString() => '$kind +${at.inMinutes} min · $title · $body';
+}
+
 class Achievement {
   final String id;
   final String name;
@@ -78,7 +93,7 @@ const achievementsList = [
   Achievement('primera_obra', 'Manos a la obra', 'Termina tu primera reforma'),
   Achievement('primera_venta', 'Vendido', 'Vende tu primera vivienda'),
   Achievement('primer_alquiler', 'Casero', 'Firma tu primer contrato de alquiler'),
-  Achievement('ajustado', 'Ni un euro de más', 'Termina una reforma con calidad 1,00 sin pasarte en ningún oficio', 'pastel'),
+  Achievement('ajustado', 'Ni un dólar de más', 'Termina una reforma con calidad 1,00 sin pasarte en ningún oficio', 'pastel'),
   Achievement('combo', 'Ritmo de obra', 'Llega a combo ×2,0'),
   Achievement('critico', 'Ojo de halcón', 'Acierta 25 críticos', 'ladrillo'),
   Achievement('crisis', 'Comprar en rojo', 'Compra una ruina durante una crisis', 'atardecer'),
@@ -2331,6 +2346,78 @@ class Game extends ChangeNotifier {
         n.kind == NoticeKind.defects);
     if (cash.isNaN) cash = cashBefore;
     notifyListeners();
+  }
+
+  /// Horas reales que cuentan las cuadrillas y las rentas con el juego cerrado.
+  static const offlineCapHours = 8;
+
+  /// Previsión de lo que ocurrirá con el juego cerrado. Repite sobre una copia el mismo cálculo
+  /// que [catchUp] hará al volver y apunta cuándo cae cada cosa. No toca esta partida.
+  List<Forecast> forecast() {
+    if (!loaded || eraCfg != null) return const [];
+    final Game g;
+    try {
+      g = Game()..loadJson(toJson());
+    } catch (_) {
+      return const [];
+    }
+    g.notices.clear();
+    final out = <Forecast>[];
+    final acc = _Acc();
+    final rate = Eco.offlineRate;
+    final gameCap = (offlineCapHours * 3600 * 1000 * rate).round();
+    const stepMs = 10000;
+    var t = 0;
+    while (t < gameCap) {
+      t += stepMs;
+      final searching = [for (final p in g.props) if (p.state == PState.buscando) p.id];
+      final offersBefore = acc.offers;
+      final phaseBefore = g.phase;
+      g._step(stepMs / 1000, acc: acc);
+      final at = Duration(milliseconds: (t / rate).round());
+      for (final n in g.notices) {
+        switch (n.kind) {
+          case NoticeKind.renoDone:
+            final p = n.propId == null ? null : g.prop(n.propId!);
+            if (p != null && !p.isClient) {
+              out.add(Forecast('obra', at, 'Obra terminada', '${g.addressOf(p)} está lista para alquilar o vender.'));
+            }
+          case NoticeKind.saleClosed:
+            out.add(Forecast('venta', at, 'Venta cerrada',
+                '${n.data['address']} se ha vendido por ${_money((n.data['amount'] as num).toDouble())}.'));
+          case NoticeKind.event:
+            out.add(Forecast('eventos', at, 'Algo pendiente', n.text));
+          default:
+            break;
+        }
+      }
+      g.notices.clear();
+      for (final id in searching) {
+        final p = g.prop(id);
+        if (p != null && p.state == PState.alquilada) {
+          out.add(Forecast('inquilino', at, 'Inquilino nuevo', 'Contrato firmado en ${g.addressOf(p)}.'));
+        }
+      }
+      if (acc.offers > offersBefore && g.offers.isNotEmpty) {
+        final p = g.prop(g.offers.last.propId);
+        if (p != null) {
+          out.add(Forecast('venta', at, 'Tienes una oferta', 'Alguien quiere ${g.addressOf(p)}. Caduca en 24 horas.'));
+        }
+      }
+      if (g.phase != phaseBefore) {
+        out.add(Forecast('mercado', at, 'El mercado se mueve', '${g.city.name} entra en ${mph(g.phase).name.toLowerCase()}.'));
+      }
+    }
+    // A las 8 horas se paran cuadrillas y rentas: es el mejor momento para volver.
+    final working = g.crews.any((c) => c.propId != null && g.prop(c.propId!)?.reno != null);
+    final cap = Duration(hours: offlineCapHours);
+    if (working) {
+      out.add(Forecast('tope', cap, 'Las cuadrillas han parado',
+          acc.rent >= 1 ? 'Llevan 8 horas sin ti. Rentas cobradas: ${_money(acc.rent)}.' : 'Llevan 8 horas sin ti. Sin jefe no hay obra.'));
+    } else if (acc.rent >= 1) {
+      out.add(Forecast('tope', cap, 'Rentas cobradas', 'Has ingresado ${_money(acc.rent)} mientras no estabas.'));
+    }
+    return out;
   }
 
   // ======================================================================

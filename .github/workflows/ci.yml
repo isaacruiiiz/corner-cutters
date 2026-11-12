@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main, prelanzamiento]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  comprobar:
+    name: Analizar y probar
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter --version
+      - run: flutter pub get
+      # Los avisos informativos (APIs que el Flutter más nuevo marca como antiguas) no paran la comprobación.
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+
+  android:
+    name: Compilar Android
+    needs: comprobar
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      # Sin android/key.properties se firma con la clave de depuración: vale para comprobar que compila.
+      - run: flutter build apk --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: corner-cutters-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7

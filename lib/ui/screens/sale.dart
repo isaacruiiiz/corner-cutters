@@ -13,6 +13,10 @@ import '../widgets/atoms.dart';
 import '../widgets/overlays.dart';
 import 'buy.dart';
 
+import '../../core/i18n.dart';
+import '../../services/config.dart';
+import '../../services/social.dart';
+import '../../services/telemetria.dart';
 import '../../core/texto.dart';
 /// Tarjeta de oferta con aceptar/rechazar (offer_row).
 class OfferCard extends ConsumerWidget {
@@ -100,7 +104,18 @@ class SaleClosedScreen extends ConsumerWidget {
           Navigator.of(context).pushReplacement(glassRoute(const BuyScreen()));
         }),
         const SizedBox(height: 8),
-        HsButton('Volver al mapa', kind: BtnKind.ghost, size: BtnSize.sm, onTap: () => Navigator.pop(context)),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          HsButton('Volver al mapa', kind: BtnKind.ghost, size: BtnSize.sm, onTap: () => Navigator.pop(context)),
+          if (profit > 0 && Social.puedeCompartir) ...[
+            const SizedBox(width: 8),
+            HsButton('Compartir', kind: BtnKind.ghost, size: BtnSize.sm, icon: Icons.ios_share_rounded, onTap: () {
+              Telemetria.evento('compartir', {'que': 'venta'});
+              Social.compartir(
+                  '${tr('He vendido ${d['address']} por ${money(amount)} en Corner Cutters: ${money(profit)} de beneficio.')} ${AppConfig.current.webUrl}'.trim(),
+                  origen: origenDe(context));
+            }),
+          ],
+        ]),
       ]),
       child: ListView(padding: const EdgeInsets.fromLTRB(16, 8, 16, 16), children: [
         ClipRRect(

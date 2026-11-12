@@ -19,6 +19,9 @@ flutter run
 Sin claves, el juego funciona entero en local (guardado en el móvil). Con claves: cuenta anónima, guardado en la nube, vincular email y ranking.
 
 4. Ejecuta después `supabase/cuentas.sql` (tipos de usuario, pack regalado, compras, panel admin y borrar cuenta).
+5. Ejecuta por último `supabase/seguridad.sql`: el ranking pasa a escribirlo el servidor (topes, filtro de alias, invitados como «Promotor anónimo»), tope de tamaño de la partida, compras acotadas, partidas y medallas de época en la nube y telemetría propia (eventos de uso y errores, visibles en el panel admin → Uso y Errores). Se puede volver a ejecutar. La app funciona también sin él: usa el camino antiguo hasta que exista `guardar_partida`.
+
+En Supabase → Authentication conviene tener activados «Confirm email», la protección de contraseñas filtradas y el captcha para las altas anónimas.
 
 ## Web (Cloudflare Pages)
 
@@ -36,6 +39,16 @@ Enlaces de las tiendas: constante `TIENDAS` al final de `site/index.html` (el de
 - Paquete: `com.isaacruiiiz.cornercutters`.
 - Firma de subida: `tool/crear_firma.command` (una vez). Crea `android/key.properties`, que nunca se sube al repo.
 - `.aab`: `tool/play.command` → `build/app/outputs/bundle/release/app-release.aab`.
+
+## Comprobación automática (GitHub Actions)
+
+`.github/workflows/ci.yml` analiza, pasa los tests y compila el APK en cada subida a `main` o `prelanzamiento` y en cada pull request. El APK queda como artefacto de la ejecución (firmado con la clave de depuración).
+
+## Notificaciones, datos de uso y valoración
+
+- `lib/services/avisos*.dart`: notificaciones locales. Al cerrar el juego, `Game.forecast()` repite sobre una copia lo que hará `catchUp` y `planAvisos` decide cuáles se programan (interruptores de Ajustes → Notificaciones, silencio nocturno, una por tipo). Se cancelan al volver. El permiso se ofrece tras la primera obra.
+- `lib/services/telemetria.dart`: eventos de uso y errores a Supabase (`registrar_eventos`, `registrar_error`). Interruptor en Ajustes → Datos de uso.
+- `lib/services/social.dart`: valoración en la tienda (tras una venta con beneficio o una medalla; nunca el primer día) y compartir.
 
 ## Estructura
 

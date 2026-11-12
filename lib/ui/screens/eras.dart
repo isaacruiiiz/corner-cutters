@@ -10,7 +10,12 @@ import '../../core/theme.dart';
 import '../../game/data.dart';
 import '../../game/engine.dart';
 import '../../game/era.dart';
+import '../../core/i18n.dart';
+import '../../services/backend.dart';
+import '../../services/config.dart';
+import '../../services/social.dart';
 import '../../services/storage.dart';
+import '../../services/telemetria.dart';
 import '../common.dart';
 import '../widgets/atoms.dart';
 import '../widgets/overlays.dart';
@@ -961,7 +966,12 @@ Future<void> showEraEndDialog(BuildContext context, WidgetRef ref, {bool record 
   if (e == null) return;
   final medal = g.eraMedal;
   final nw = g.eraScore;
-  if (record) await Storage.recordEra(e.id, medal, nw);
+  if (record) {
+    await Storage.recordEra(e.id, medal, nw);
+    Telemetria.evento('epoca_fin', {'id': e.id, 'medalla': medal});
+    // Las medallas van a la cuenta: no se pierden al cambiar de móvil.
+    Backend.pushEraProgress(await Storage.eraProgress());
+  }
   if (!context.mounted) return;
   final top = e.medals.last;
   await showHsDialog(context, dismissible: false, builder: (ctx) {
@@ -1033,8 +1043,20 @@ Future<void> showEraEndDialog(BuildContext context, WidgetRef ref, {bool record 
           }),
         ),
       ]),
+      if (medal > 0 && Social.puedeCompartir) ...[
+        const SizedBox(height: 6),
+        Center(
+          child: HsButton('Compartir', kind: BtnKind.ghost, size: BtnSize.sm, icon: Icons.ios_share_rounded, onTap: () {
+            Telemetria.evento('compartir', {'que': 'epoca'});
+            Social.compartir('${tr('Medalla de ${medalNames[medal].toLowerCase()} en la época ${e.id} de Corner Cutters.')} ${AppConfig.current.webUrl}'.trim(),
+                origen: origenDe(ctx));
+          }),
+        ),
+      ],
     ]);
   });
+  // Una medalla de plata u oro es un buen momento para pedir la valoración.
+  if (record && medal >= 2) Social.pedirValoracion();
 }
 
 /// Sale de la época y, si la ciudad principal avanzó mientras tanto, enseña el informe.

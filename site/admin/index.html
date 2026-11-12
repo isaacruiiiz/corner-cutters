@@ -78,6 +78,8 @@ td:last-child{border-right:2px solid var(--line);border-radius:0 10px 10px 0}
     <button role="tab" aria-selected="true" data-tab="users" type="button">Usuarios</button>
     <button role="tab" aria-selected="false" data-tab="buys" type="button">Compras</button>
     <button role="tab" aria-selected="false" data-tab="news" type="button">Titulares</button>
+    <button role="tab" aria-selected="false" data-tab="funnel" type="button">Uso</button>
+    <button role="tab" aria-selected="false" data-tab="errors" type="button">Errores</button>
   </div>
 
   <section id="tab-users" class="panel">
@@ -101,6 +103,22 @@ td:last-child{border-right:2px solid var(--line);border-radius:0 10px 10px 0}
     </form>
     <table><thead><tr><th>Titular</th><th>Activo</th><th></th></tr></thead><tbody id="news"></tbody></table>
   </section>
+
+  <section id="tab-funnel" class="panel hidden">
+    <div class="row" style="margin-bottom:8px;align-items:center">
+      <span class="small" style="flex:1">Jugadores distintos que han llegado a cada paso. Solo cuentan quienes tienen «Datos de uso» activado.</span>
+      <select id="dias" aria-label="Periodo"><option value="7">7 días</option><option value="14" selected>14 días</option><option value="30">30 días</option><option value="90">90 días</option></select>
+    </div>
+    <table><thead><tr><th>Paso</th><th>Jugadores</th><th class="hide-m">Veces</th><th>De los que abren</th></tr></thead><tbody id="funnel"></tbody></table>
+    <h2 style="font-family:'Jersey 15',monospace;font-weight:400;font-size:26px;margin:20px 0 4px">Retención</h2>
+    <p class="small">De quienes abrieron el juego por primera vez cada día, cuántos volvieron al día siguiente y a la semana.</p>
+    <table><thead><tr><th>Primer día</th><th>Nuevos</th><th>Día 1</th><th>Día 7</th></tr></thead><tbody id="retention"></tbody></table>
+  </section>
+
+  <section id="tab-errors" class="panel hidden">
+    <p class="small">Errores de la app agrupados por mensaje y versión. No llevan datos del jugador.</p>
+    <table><thead><tr><th>Error</th><th>Versión</th><th>Veces</th><th class="hide-m">Último</th><th></th></tr></thead><tbody id="errors"></tbody></table>
+  </section>
 </div>
 <div id="toast" class="toast hidden" role="status"></div>
 
@@ -118,7 +136,7 @@ let soloCorreo = true, offset = 0, myId = null;
 
 function toast(t, bad) { const el = $('toast'); el.textContent = t; el.style.color = bad ? 'var(--bad)' : 'var(--ink)'; el.classList.remove('hidden'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.add('hidden'), 2600); }
 function ago(t) { if (!t) return '—'; const m = (Date.now() - new Date(t)) / 60000; if (m < 2) return 'ahora'; if (m < 60) return `hace ${Math.round(m)} min`; if (m < 1440) return `hace ${Math.round(m / 60)} h`; return `hace ${Math.round(m / 1440)} d`; }
-function errText(e) { const m = e?.message || String(e); if (m.includes('Solo para administradores')) return 'Tu cuenta no es admin'; if (m.includes('quitarte el admin')) return 'No puedes quitarte el admin a ti mismo'; if (m.includes('Could not find the function')) return 'Falta ejecutar supabase/cuentas.sql'; return m; }
+function errText(e) { const m = e?.message || String(e); if (m.includes('Solo para administradores')) return 'Tu cuenta no es admin'; if (m.includes('quitarte el admin')) return 'No puedes quitarte el admin a ti mismo'; if (m.includes('admin_embudo') || m.includes('admin_retencion') || m.includes('admin_errores')) return 'Falta ejecutar supabase/seguridad.sql'; if (m.includes('Could not find the function')) return 'Falta ejecutar supabase/cuentas.sql'; return m; }
 
 async function show() {
   const { data: { session } } = await db.auth.getSession();
@@ -130,6 +148,7 @@ async function show() {
   $('notAdmin').classList.toggle('hidden', me?.rol === 'admin');
   if (me?.rol !== 'admin') return;
   await Promise.all([summary(), users(true)]);
+  db.rpc('admin_limpiar_telemetria').then(() => {}, () => {});
 }
 
 async function summary() {
@@ -216,11 +235,52 @@ $('newsForm').addEventListener('submit', async (ev) => {
   $('newsText').value = ''; news();
 });
 
+// Nombres legibles de los pasos, en el orden natural del juego.
+const PASOS = [
+  ['abrir', 'Abre el juego'], ['partida_nueva', 'Empieza una ciudad'], ['obra_terminada', 'Termina una obra'],
+  ['permiso_avisos', 'Responde al permiso de avisos'], ['inquilino', 'Firma un alquiler'], ['venta', 'Cierra una venta'],
+  ['fase', 'Sube de fase'], ['logro', 'Consigue un logro'], ['epoca_empezar', 'Empieza una época'],
+  ['epoca_fin', 'Termina una época'], ['compartir', 'Comparte'], ['compra', 'Compra en la tienda'], ['sesion', 'Cierra una sesión'],
+];
+async function funnel() {
+  const dias = Number($('dias').value);
+  const [f, r] = await Promise.all([db.rpc('admin_embudo', { dias }), db.rpc('admin_retencion', { dias })]);
+  if (f.error) return toast(errText(f.error), true);
+  const by = Object.fromEntries(f.data.map((x) => [x.nombre, x]));
+  const base = by.abrir?.usuarios || 0;
+  const orden = [...PASOS.map(([k]) => k).filter((k) => by[k]), ...f.data.map((x) => x.nombre).filter((k) => !PASOS.some(([p]) => p === k))];
+  const nombre = (k) => PASOS.find(([p]) => p === k)?.[1] || k;
+  $('funnel').innerHTML = orden.map((k) => { const x = by[k]; const pc = base ? Math.round(100 * x.usuarios / base) : 0;
+    return `<tr><td><div style="font-weight:700">${esc(nombre(k))}</div><div class="small">${esc(k)}</div></td><td>${x.usuarios}</td><td class="hide-m small">${x.veces}</td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;max-width:160px;height:8px;border-radius:4px;background:#0B1B1A;overflow:hidden"><div style="width:${Math.min(100, pc)}%;height:100%;background:var(--acc)"></div></div><span class="small">${base ? pc + ' %' : '—'}</span></div></td></tr>`; }).join('')
+    || '<tr><td colspan="4" class="small">Todavía no hay datos de uso</td></tr>';
+  if (r.error) return toast(errText(r.error), true);
+  const pct = (a, n) => n ? `${a} <span class="small">(${Math.round(100 * a / n)} %)</span>` : '—';
+  const hace = (d) => Math.floor((Date.now() - new Date(d + 'T00:00:00Z')) / 86400000);
+  $('retention').innerHTML = r.data.map((x) => `<tr><td class="small">${new Date(x.dia + 'T00:00:00Z').toLocaleDateString('es-ES', { timeZone: 'UTC' })}</td><td>${x.nuevos}</td><td>${hace(x.dia) >= 1 ? pct(x.d1, x.nuevos) : '<span class="small">pronto</span>'}</td><td>${hace(x.dia) >= 7 ? pct(x.d7, x.nuevos) : '<span class="small">pronto</span>'}</td></tr>`).join('')
+    || '<tr><td colspan="4" class="small">Todavía no hay datos</td></tr>';
+}
+$('dias').addEventListener('change', funnel);
+
+async function errors() {
+  const { data, error } = await db.rpc('admin_errores', { limite: 100 });
+  if (error) return toast(errText(error), true);
+  $('errors').innerHTML = data.map((e) => `<tr data-id="${e.id}"><td><details><summary style="cursor:pointer;font-weight:700;overflow-wrap:anywhere">${esc(e.mensaje)}</summary><pre class="small" style="white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 0">${esc(e.pila || 'Sin pila')}</pre></details></td><td class="small">${esc(e.version || '—')}<br>${esc(e.plataforma || '')}</td><td>${e.veces}</td><td class="hide-m small">${ago(e.ultimo)}</td><td><button class="ghost" data-act="del" type="button">Quitar</button></td></tr>`).join('')
+    || '<tr><td colspan="5" class="small">Sin errores registrados</td></tr>';
+}
+$('errors').addEventListener('click', async (ev) => {
+  const b = ev.target.closest('button[data-act=del]'); if (!b) return;
+  const { error } = await db.rpc('admin_borrar_error', { error_id: Number(b.closest('tr').dataset.id) });
+  if (error) return toast(errText(error), true);
+  errors();
+});
+
 document.querySelectorAll('[role=tab]').forEach((t) => t.addEventListener('click', () => {
   document.querySelectorAll('[role=tab]').forEach((x) => x.setAttribute('aria-selected', String(x === t)));
-  for (const k of ['users', 'buys', 'news']) $('tab-' + k).classList.toggle('hidden', k !== t.dataset.tab);
+  for (const k of ['users', 'buys', 'news', 'funnel', 'errors']) $('tab-' + k).classList.toggle('hidden', k !== t.dataset.tab);
   if (t.dataset.tab === 'buys') buys();
   if (t.dataset.tab === 'news') news();
+  if (t.dataset.tab === 'funnel') funnel();
+  if (t.dataset.tab === 'errors') errors();
 }));
 let qt; $('q').addEventListener('input', () => { clearTimeout(qt); qt = setTimeout(() => users(true), 350); });
 $('soloCorreo').addEventListener('click', (ev) => { soloCorreo = !soloCorreo; ev.currentTarget.setAttribute('aria-checked', String(soloCorreo)); users(true); });

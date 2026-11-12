@@ -6,6 +6,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../backend.dart';
 import '../entitlements.dart';
+import '../telemetria.dart';
 
 /// Google Play / App Store. Productos no consumibles: `cc_epocas` (pack) y `cc_pro` (sin anuncios).
 /// La tienda del móvil es la que dice qué se ha comprado; el servidor solo lo anota para el panel.
@@ -41,6 +42,7 @@ class Tienda {
       switch (p.status) {
         case PurchaseStatus.purchased:
         case PurchaseStatus.restored:
+          if (p.status == PurchaseStatus.purchased) Telemetria.evento('compra', {'producto': p.productID});
           Entitlements.instance.owns(p.productID);
           unawaited(Backend.registrarCompra(p.productID, plataforma: Platform.operatingSystem, compraId: p.purchaseID));
           _fin(null);

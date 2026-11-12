@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show PlatformDispatcher;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,8 @@ import 'core/gfx.dart';
 import 'services/audio.dart';
 import 'services/backend.dart';
 import 'services/anuncios.dart';
+import 'services/avisos.dart';
+import 'services/telemetria.dart';
 import 'services/config.dart';
 import 'services/entitlements.dart';
 import 'services/tienda.dart';
@@ -17,6 +20,17 @@ import 'package:supabase_flutter/supabase_flutter.dart' show AuthChangeEvent;
 import 'core/i18n.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Errores de la app: se siguen viendo en consola y, además, se anotan (agrupados y sin datos personales).
+  final porDefecto = FlutterError.onError;
+  FlutterError.onError = (d) {
+    porDefecto?.call(d);
+    Telemetria.error(d.exception, d.stack);
+  };
+  PlatformDispatcher.instance.onError = (e, st) {
+    debugPrint('Error sin capturar: $e\n$st');
+    Telemetria.error(e, st);
+    return true;
+  };
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,
@@ -39,5 +53,7 @@ Future<void> main() async {
   if (!Entitlements.instance.sinAnuncios) unawaited(Anuncios.init());
   Gfx.apply('auto');
   unawaited(Sfx.init());
+  unawaited(Avisos.init().then((_) => Avisos.cancelar()));
+  Telemetria.evento('abrir');
   runApp(const ProviderScope(child: CornerCuttersApp()));
 }

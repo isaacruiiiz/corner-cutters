@@ -72,6 +72,8 @@ Future<void> afterLogin(BuildContext context, WidgetRef ref, {required bool wasG
         await Storage.clear();
         g.loaded = false;
     }
+    // Medallas y partidas de época de la cuenta (móvil nuevo o reinstalación).
+    await pullErasFromCloud();
   } finally {
     Backend.hold = false;
   }

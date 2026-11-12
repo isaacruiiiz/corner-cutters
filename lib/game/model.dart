@@ -776,6 +776,8 @@ class Settings {
   /// Música y efectos (0..1).
   double music;
   double sfx;
+  /// Enviar datos de uso y errores (propios, sin terceros) para mejorar el juego.
+  bool telemetry;
   Settings({
     this.sound = true,
     this.haptics = true,
@@ -785,6 +787,7 @@ class Settings {
     this.quality = 'auto',
     this.music = 0.6,
     this.sfx = 0.8,
+    this.telemetry = true,
   }) : notif = notif ?? {'obra': true, 'inquilino': true, 'venta': true, 'mercado': true, 'eventos': true, 'noche': false};
   Map<String, dynamic> toJson() => {
         'sound': sound,
@@ -795,6 +798,7 @@ class Settings {
         'quality': quality,
         'music': music,
         'sfx': sfx,
+        'telemetry': telemetry,
       };
   factory Settings.fromJson(Map<String, dynamic> j) => Settings(
         sound: j['sound'] != false,
@@ -805,6 +809,7 @@ class Settings {
         quality: j['quality'] as String? ?? 'auto',
         music: (j['music'] as num?)?.toDouble() ?? 0.6,
         sfx: (j['sfx'] as num?)?.toDouble() ?? 0.8,
+        telemetry: j['telemetry'] != false,
       );
 }
 
