@@ -111,6 +111,23 @@ void main() {
       expect(DecoPick.forWork(key, '1929'), same(d));
     });
 
+    test('épocas del pack: su mueble sale el primero, y papeles y pinturas de la época', () {
+      const papers = {'1980': 'circulos', '2005': 'gotele', '2020': 'tropical', '2050': 'fibra'};
+      for (final era in ['1980', '2005', '2020', '2050']) {
+        expect(FurnitureBag.draw(1, era).id, kEraFurniture[era]!.first.id);
+        var own = false;
+        for (var i = 0; i < 300; i++) {
+          final d = DecoPick.draw(era);
+          if (d.paper && d.pattern!.id == papers[era]) own = true;
+        }
+        expect(own, isTrue);
+      }
+      // Al volver a la ciudad normal no salen muebles de época.
+      for (var i = 0; i < 20; i++) {
+        expect(kFurniture.map((f) => f.id), contains(FurnitureBag.draw(12).id));
+      }
+    });
+
     test('decoración: salen papel y pintura, y el papel encaja con la época', () {
       var paper = 0, paint = 0;
       for (var i = 0; i < 400; i++) {

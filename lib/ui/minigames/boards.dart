@@ -9,6 +9,7 @@ import '../../core/theme.dart';
 import '../../services/audio.dart';
 
 import '../../core/i18n.dart';
+import 'epocas.dart';
 /// Épocas antiguas (1888 y 1929): latón, tela y hierro galvanizado en los tableros.
 bool _oldEra(String? era) => era == '1929' || era == '1888';
 
@@ -19,9 +20,39 @@ typedef WorkFn = bool Function(Offset at);
 class BoardFrame extends StatelessWidget {
   final Widget child;
   final double? height;
-  const BoardFrame({super.key, required this.child, this.height = 290});
+  /// DLC de épocas: con [era] 1980, 2005, 2020 o 2050 el tablero cuelga de la pared de la época
+  /// con una balda de objetos debajo ([trade]: 'alb', 'fon', 'ele', 'car' o 'dec').
+  final String? era;
+  final String trade;
+  const BoardFrame({super.key, required this.child, this.height = 290, this.era, this.trade = 'alb'});
+
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) => eraScene(era) ? _scene() : _plain();
+
+  Widget _scene() => Container(
+        height: height == null ? null : height! + kEraShelf,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Hc.line, width: 4),
+          boxShadow: He.e2,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Stack(children: [
+            Positioned.fill(child: CustomPaint(painter: EraScenePainter(era!, trade))),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10 + kEraShelf),
+              child: Container(
+                foregroundDecoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: Hc.line, width: 2.5)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), boxShadow: const [BoxShadow(color: Color(0x66000000), offset: Offset(3, 5), blurRadius: 4)]),
+                child: ClipRRect(borderRadius: BorderRadius.circular(8), child: child),
+              ),
+            ),
+          ]),
+        ),
+      );
+
+  Widget _plain() => Container(
         height: height,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -78,7 +109,9 @@ void _label(Canvas c, String text, Offset at, {Color bg = const Color(0xCC0A1A19
 class BrickBoard extends StatefulWidget {
   final double progress;
   final WorkFn onWork;
-  const BrickBoard({super.key, required this.progress, required this.onWork});
+  /// DLC de épocas: material del muro (ladrillo hueco, termoarcilla, pladur, bloque de cáñamo).
+  final String? era;
+  const BrickBoard({super.key, required this.progress, required this.onWork, this.era});
   @override
   State<BrickBoard> createState() => _BrickBoardState();
 }
@@ -110,7 +143,7 @@ class _BrickBoardState extends State<BrickBoard> with SingleTickerProviderStateM
           return Transform.translate(
             offset: Offset(s, 0),
             child: CustomPaint(
-              painter: _BrickPainter(widget.progress, _hit, _shake.value),
+              painter: _BrickPainter(widget.progress, _hit, _shake.value, widget.era),
               child: const SizedBox.expand(),
             ),
           );
@@ -124,11 +157,67 @@ class _BrickPainter extends CustomPainter {
   final double p;
   final Offset? hit;
   final double t;
-  _BrickPainter(this.p, this.hit, this.t);
+  final String? era;
+  _BrickPainter(this.p, this.hit, this.t, [this.era]);
+
+  /// Detalle de la cara de cada pieza según la época.
+  void _face(Canvas c, Rect r, Color col, bool fresh, int seed) {
+    switch (era) {
+      case '1980': // ladrillo hueco: tres agujeros
+        final hw = (r.width - 22) / 3;
+        for (var i = 0; i < 3; i++) {
+          final h = Rect.fromLTWH(r.left + 8 + i * (hw + 3), r.top + r.height * 0.32, hw, r.height * 0.38);
+          c.drawRRect(RRect.fromRectAndRadius(h, const Radius.circular(3)), Paint()..color = Hc.line);
+          c.drawRRect(RRect.fromRectAndRadius(h.deflate(1.2), const Radius.circular(2)), Paint()..color = _sh(col, 0.42));
+        }
+      case '2005': // termoarcilla: estrías verticales
+        for (var x = r.left + 8; x < r.right - 6; x += (r.width - 14) / 7) {
+          c.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(x, r.top + 8, 3, r.height - 16), const Radius.circular(1.5)), Paint()..color = _sh(col, 0.62));
+        }
+      case '2020': // pladur: tornillos en los bordes y cinta en la junta
+        if (fresh) {
+          final sc = Paint()..color = const Color(0xFF8C979D);
+          for (var y = r.top + 14; y < r.bottom - 8; y += 30) {
+            c.drawCircle(Offset(r.left + 8, y), 2.2, sc);
+            c.drawCircle(Offset(r.right - 8, y), 2.2, sc);
+          }
+          c.drawRect(Rect.fromLTWH(r.right - 3, r.top, 3, r.height), Paint()..color = const Color(0xFFF4F2EA));
+        } else {
+          c.drawPath(
+              Path()
+                ..moveTo(r.left + r.width * 0.3, r.top + 6)
+                ..lineTo(r.left + r.width * 0.42, r.center.dy)
+                ..lineTo(r.left + r.width * 0.34, r.bottom - 8),
+              Paint()
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 1.5
+                ..color = _sh(col, 0.6));
+        }
+      case '2050': // bloque de cáñamo y cal: fibras
+        final rng = math.Random(seed);
+        final fib = Paint()
+          ..color = _sh(col, 0.72)
+          ..strokeWidth = 1.6
+          ..strokeCap = StrokeCap.round;
+        for (var i = 0; i < 12; i++) {
+          final q = Offset(r.left + 6 + rng.nextDouble() * (r.width - 16), r.top + 6 + rng.nextDouble() * (r.height - 12));
+          final a = (rng.nextDouble() - 0.5) * 1.4;
+          c.drawLine(q, q + Offset(math.cos(a) * 7, math.sin(a) * 7), fib);
+        }
+    }
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
     canvas.drawRect(Offset.zero & size, Paint()..color = const Color(0xFF1B3433));
-    const rows = 7, cols = 5;
+    final (rows, cols) = switch (era) { '2005' || '2050' => (4, 3), '2020' => (3, 2), _ => (7, 5) };
+    final (newCol, oldCol) = switch (era) {
+      '1980' => (const Color(0xFFC8654A), const Color(0xFF8A4A36)),
+      '2005' => (const Color(0xFFC99872), const Color(0xFF8E6A50)),
+      '2020' => (const Color(0xFFE4E2DA), const Color(0xFFA89E8A)),
+      '2050' => (const Color(0xFFCFC8A6), const Color(0xFF8E8870)),
+      _ => (const Color(0xFFD9785B), const Color(0xFF9C5A45)),
+    };
     final bw = size.width / cols, bh = size.height / rows;
     final total = rows * cols;
     // Primera mitad: demoler (los ladrillos viejos caen). Segunda: levantar (aparecen nuevos).
@@ -146,12 +235,21 @@ class _BrickPainter extends CustomPainter {
         final fresh = (total - 1 - order) < rebuilt;
         if (!old && !fresh) {
           canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(2)), Paint()..color = const Color(0xFF243F3E));
+          if (era == '2020') {
+            // hueco: se ven los montantes de la estructura metálica
+            for (final x in [rect.left + 4, rect.right - 14]) {
+              canvas.drawRect(Rect.fromLTWH(x, rect.top, 10, rect.height), Paint()..color = Hc.line);
+              canvas.drawRect(Rect.fromLTWH(x + 1, rect.top, 8, rect.height), Paint()..color = const Color(0xFFC9CED1));
+              canvas.drawRect(Rect.fromLTWH(x + 3, rect.top, 2, rect.height), Paint()..color = Colors.white.withValues(alpha: 0.6));
+            }
+          }
           continue;
         }
-        final col = fresh ? const Color(0xFFD9785B) : const Color(0xFF9C5A45);
+        final col = fresh ? newCol : oldCol;
         canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(2)), Paint()..color = Hc.line);
         canvas.drawRRect(RRect.fromRectAndRadius(rect.deflate(1.5), const Radius.circular(2)), Paint()..color = col);
         canvas.drawRect(Rect.fromLTWH(rect.left + 2, rect.top + 2, rect.width - 4, 3), Paint()..color = Colors.white.withValues(alpha: fresh ? 0.18 : 0.08));
+        _face(canvas, rect.deflate(1.5), col, fresh, idx);
         if (old && order < demolished + 6) {
           // grietas en los siguientes a caer
           final cp = Paint()
@@ -177,13 +275,13 @@ class _BrickPainter extends CustomPainter {
         final a = i * math.pi / 3 + 0.3;
         final d = 8 + 30 * t;
         canvas.drawRect(Rect.fromCenter(center: hit! + Offset(math.cos(a) * d, math.sin(a) * d + 20 * t * t), width: 4, height: 4),
-            Paint()..color = const Color(0xFFD9785B).withValues(alpha: 1 - t));
+            Paint()..color = newCol.withValues(alpha: 1 - t));
       }
     }
   }
 
   @override
-  bool shouldRepaint(_BrickPainter o) => o.p != p || o.t != t;
+  bool shouldRepaint(_BrickPainter o) => o.p != p || o.t != t || o.era != era;
 }
 
 // =====================================================================
@@ -413,7 +511,10 @@ class _PipePainter extends CustomPainter {
   final String? era;
   _PipePainter(this.p, this.route, this.active, this.seal, this.holding, this.t, this.banner, this.count, {this.era});
 
-  static const _r = 9.0; // radio del tubo
+  static const _r0 = 9.0; // radio del tubo actual
+
+  /// Radio del tubo según la época (el multicapa y el PEX son más finos).
+  double get _r => switch (era) { '2005' => 7.0, '2020' => 5.5, '2050' => 6.0, _ => _r0 };
 
   /// Tubo cilíndrico: sombra en la pared, contorno, cuerpo, banda de luz y brillo especular.
   void _tube(Canvas canvas, Path path, Color metal) {
@@ -447,9 +548,16 @@ class _PipePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Offset.zero & size, Paint()..color = const Color(0xFF1B3433));
+    final (wallC, groutC) = switch (era) {
+      '1980' => (const Color(0xFF2E2A22), const Color(0xFF3A342A)),
+      '2005' => (const Color(0xFF26302F), const Color(0xFF2E3A39)),
+      '2020' => (const Color(0xFF1E2A2C), const Color(0xFF263436)),
+      '2050' => (const Color(0xFF243028), const Color(0xFF2C3A30)),
+      _ => (const Color(0xFF1B3433), const Color(0xFF203B3A)),
+    };
+    canvas.drawRect(Offset.zero & size, Paint()..color = wallC);
     // Azulejo tenue para dar profundidad a la pared.
-    final grout = Paint()..color = const Color(0xFF203B3A);
+    final grout = Paint()..color = groutC;
     for (var x = 0.0; x < size.width; x += 28) {
       canvas.drawRect(Rect.fromLTWH(x, 0, 2, size.height), grout);
     }
@@ -460,14 +568,63 @@ class _PipePainter extends CustomPainter {
     final pts = route.pts.map(at).toList();
     // De cobre viejo (sin reparar) a cobre brillante según avanza la fase.
     // 1929: hierro galvanizado, de oxidado a gris plata.
-    final metal = _oldEra(era)
-        ? Color.lerp(const Color(0xFF7A6A5A), const Color(0xFFB8BEC0), p)!
-        : Color.lerp(const Color(0xFF8C6A55), const Color(0xFFD08A54), p)!;
+    final metal = switch (era) {
+      '1888' || '1929' => Color.lerp(const Color(0xFF7A6A5A), const Color(0xFFB8BEC0), p)!,
+      '2005' => Color.lerp(const Color(0xFFB8B0A0), const Color(0xFFF1F2F2), p)!, // multicapa
+      '2020' => Color.lerp(const Color(0xFF9A5A50), const Color(0xFFD8503F), p)!, // PEX de agua caliente
+      '2050' => Color.lerp(const Color(0xFFB8C4C8), const Color(0xFFDCEBF2), p)!, // red de agua potable
+      _ => Color.lerp(const Color(0xFF8C6A55), const Color(0xFFD08A54), p)!,
+    };
     final path = Path()..moveTo(pts.first.dx, pts.first.dy);
     for (final q in pts.skip(1)) {
       path.lineTo(q.dx, q.dy);
     }
+    if (era == '2005') {
+      // bajante de PVC al fondo
+      final x = size.width - 34;
+      final bj = Rect.fromLTWH(x, 0, 24, size.height);
+      canvas.drawRect(bj.shift(const Offset(4, 0)), Paint()..color = const Color(0x40000000));
+      canvas.drawRect(bj.inflate(2), Paint()..color = Hc.line);
+      canvas.drawRect(bj, Paint()..shader = const LinearGradient(colors: [Color(0xFFB4BCC0), Color(0xFF8E989E), Color(0xFF6E787E)]).createShader(bj));
+      canvas.drawRect(Rect.fromLTWH(x + 4, 0, 3, size.height), Paint()..color = Colors.white.withValues(alpha: 0.35));
+      for (final y in [size.height * 0.3, size.height * 0.75]) {
+        canvas.drawRect(Rect.fromLTWH(x - 3, y, 30, 10), Paint()..color = Hc.line);
+        canvas.drawRect(Rect.fromLTWH(x - 2, y + 1, 28, 8), Paint()..color = const Color(0xFF7D8A90));
+      }
+    }
+    if (era == '2020' || era == '2050') {
+      // segunda red en paralelo: agua fría (2020) o aguas grises recicladas (2050)
+      final twin = era == '2020' ? Color.lerp(const Color(0xFF5A6A8A), const Color(0xFF3F7FD8), p)! : Color.lerp(const Color(0xFF7A6A8A), const Color(0xFF9A6CC8), p)!;
+      _tube(canvas, path.shift(const Offset(-16, 16)), twin);
+    }
     _tube(canvas, path, metal);
+    if (era == '2020' && pts.length > 1) {
+      // colector de latón al final del recorrido
+      final e = pts.last - const Offset(28, 0);
+      final col = Rect.fromCenter(center: e + const Offset(0, 8), width: 18, height: 48);
+      canvas.drawRRect(RRect.fromRectAndRadius(col.shift(const Offset(3, 4)), const Radius.circular(4)), Paint()..color = const Color(0x55000000));
+      canvas.drawRRect(RRect.fromRectAndRadius(col.inflate(1.5), const Radius.circular(4)), Paint()..color = Hc.line);
+      canvas.drawRRect(RRect.fromRectAndRadius(col, const Radius.circular(4)),
+          Paint()..shader = const LinearGradient(colors: [Color(0xFFE6CF8A), Color(0xFFC9A24A), Color(0xFF8A6A20)]).createShader(col));
+      canvas.drawCircle(col.topRight + const Offset(6, 10), 5, Paint()..color = const Color(0xFFD8503F));
+      canvas.drawCircle(col.bottomRight + const Offset(6, -10), 5, Paint()..color = const Color(0xFF3F7FD8));
+    }
+    if (era == '1980' && pts.length > 2) {
+      // llave de escuadra con maneta roja en el primer tramo
+      final a = pts[0], b = pts[1];
+      final c = Offset(math.max(a.dx + 30, (a.dx + b.dx) / 2), a.dy);
+      if ((b.dx - a.dx) > 60) {
+        final body = Rect.fromCenter(center: c, width: 18, height: 22);
+        canvas.drawRRect(RRect.fromRectAndRadius(body.inflate(1.5), const Radius.circular(3)), Paint()..color = Hc.line);
+        canvas.drawRRect(RRect.fromRectAndRadius(body, const Radius.circular(3)),
+            Paint()..shader = const LinearGradient(colors: [Color(0xFFF1F2F2), Color(0xFFAEB7BC)]).createShader(body));
+        canvas.drawRect(Rect.fromCenter(center: c - const Offset(0, 18), width: 6, height: 16), Paint()..color = Hc.line);
+        final h = RRect.fromRectAndRadius(Rect.fromCenter(center: c - const Offset(0, 28), width: 30, height: 9), const Radius.circular(4));
+        canvas.drawRRect(h.inflate(1.5), Paint()..color = Hc.line);
+        canvas.drawRRect(h, Paint()..color = const Color(0xFFC8443A));
+        canvas.drawRect(Rect.fromLTWH(h.left + 3, h.top + 1.5, h.width - 6, 2), Paint()..color = Colors.white.withValues(alpha: 0.4));
+      }
+    }
     // Abrazaderas a la pared en los tramos horizontales.
     for (var i = 0; i < pts.length - 1; i++) {
       if (pts[i].dy != pts[i + 1].dy || (pts[i + 1].dx - pts[i].dx) < 70) continue;
@@ -480,14 +637,40 @@ class _PipePainter extends CustomPainter {
       final c = at(route.joints[i]);
       final isA = i == active;
       final sealed = i < active;
-      final nut = isA ? Hc.info : (sealed ? const Color(0xFF6FB98A) : const Color(0xFF9AA6AC));
-      canvas.drawPath(_hex(c + const Offset(2, 4), 15), Paint()..color = const Color(0x55000000));
-      canvas.drawPath(_hex(c + const Offset(0, 3), 15), Paint()..color = Hc.line);
-      canvas.drawPath(_hex(c + const Offset(0, 2), 13), Paint()..color = _sh(nut, 0.55));
-      canvas.drawPath(_hex(c, 13), Paint()
+      // Pendientes con el material de la época; activa en azul y selladas en verde (igual en todas).
+      final idle = switch (era) {
+        '1980' => const Color(0xFFB87444), // manguito de cobre soldado
+        '2005' => const Color(0xFFC9A24A), // racor de latón
+        '2020' => const Color(0xFFC9A24A), // casquillo de latón
+        '2050' => const Color(0xFFC9CED1), // junta de clic
+        _ => const Color(0xFF9AA6AC),
+      };
+      final nut = isA ? Hc.info : (sealed ? const Color(0xFF6FB98A) : idle);
+      // Forma: tuerca hexagonal (actual y 2005), manguito redondo (1980, 2020 y 2050).
+      final round = era == '1980' || era == '2020' || era == '2050';
+      final rad = era == '2020' ? 10.0 : 13.0;
+      Path shape(Offset o, double r) => round ? (Path()..addOval(Rect.fromCircle(center: o, radius: r))) : _hex(o, r);
+      canvas.drawPath(shape(c + const Offset(2, 4), rad + 2), Paint()..color = const Color(0x55000000));
+      canvas.drawPath(shape(c + const Offset(0, 3), rad + 2), Paint()..color = Hc.line);
+      canvas.drawPath(shape(c + const Offset(0, 2), rad), Paint()..color = _sh(nut, 0.55));
+      canvas.drawPath(shape(c, rad), Paint()
         ..shader = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [_sh(nut, 1.3), nut, _sh(nut, 0.75)])
-            .createShader(Rect.fromCircle(center: c, radius: 13)));
-      canvas.drawCircle(c, 5, Paint()..color = _sh(nut, 0.6));
+            .createShader(Rect.fromCircle(center: c, radius: rad)));
+      if (era == '1980') {
+        // cordón de estaño de la soldadura
+        canvas.drawCircle(c, rad - 2, Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..color = const Color(0xFFE6EBEE).withValues(alpha: 0.8));
+      }
+      if (era == '2050') {
+        canvas.drawCircle(c, rad * 0.55, Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..color = const Color(0xFF5D6B72));
+      } else {
+        canvas.drawCircle(c, rad * 0.38, Paint()..color = _sh(nut, 0.6));
+      }
       canvas.drawCircle(c - const Offset(1.5, 1.5), 2, Paint()..color = Colors.white.withValues(alpha: 0.6));
       if (!sealed && !isA) {
         // fuga pequeña en las pendientes
@@ -550,6 +733,19 @@ class _Spark {
 
 class _WireBoardState extends State<WireBoard> with SingleTickerProviderStateMixin {
   static const colors = [Color(0xFFE2675B), Color(0xFF5AA6D6), Color(0xFFE3A93B), Color(0xFF4FC08D), Color(0xFFB98AD6), Color(0xFFECE4D0)];
+
+  /// Colores de los cables de cada época (el número del borne sigue siendo la guía).
+  static const _eraColors = <String, List<Color>>{
+    '1980': [Color(0xFFC8443A), Color(0xFFA9AFAF), Color(0xFFD9B43A), Color(0xFFF1EAD6), Color(0xFFB07A4A), Color(0xFF4A7AB8)],
+    '2005': [Color(0xFF8A5A3C), Color(0xFF3C7DC4), Color(0xFF3A3F44), Color(0xFFD9D03A), Color(0xFFC8443A), Color(0xFFF4F4F4)],
+    '2020': [Color(0xFF8A5A3C), Color(0xFF3C7DC4), Color(0xFFD9D03A), Color(0xFFF08A3C), Color(0xFFA9AFAF), Color(0xFFEEF1F0)],
+    '2050': [Color(0xFFD8503F), Color(0xFF3C7DC4), Color(0xFF8A5A3C), Color(0xFFD9D03A), Color(0xFFF08A3C), Color(0xFF9A6CC8)],
+  };
+
+  /// Cable de tierra (amarillo y verde a rayas).
+  static const earth = Color(0xFFD9D03A);
+
+  List<Color> get cols => _eraColors[widget.era] ?? colors;
   final _rng = math.Random();
   late List<int> _l, _r;
   final Set<int> _ok = {};
@@ -772,6 +968,14 @@ class _WirePainter extends CustomPainter {
       }
       c.drawPath(path.shift(const Offset(-0.5, -2)), st(1.2, Colors.white.withValues(alpha: 0.22)));
     } else {
+      if (col == _WireBoardState.earth) {
+        // tierra: rayas verdes sobre el amarillo
+        for (final m in path.computeMetrics()) {
+          for (var d = 0.0; d < m.length; d += 16) {
+            c.drawPath(m.extractPath(d, math.min(d + 7, m.length)).shift(const Offset(0, -1)), st(5, const Color(0xFF3E9A4A))..strokeCap = StrokeCap.butt);
+          }
+        }
+      }
       c.drawPath(path.shift(const Offset(-0.5, -2)), st(1.6, Colors.white.withValues(alpha: 0.55)));
     }
     if (live && Gfx.pulse) {
@@ -781,7 +985,7 @@ class _WirePainter extends CustomPainter {
 
   void _screw(Canvas c, Offset o, {double r = 3.2}) {
     c.drawCircle(o + const Offset(0.8, 1), r, Paint()..color = const Color(0x66000000));
-    final brass = _oldEra(s.widget.era);
+    final brass = _oldEra(s.widget.era) || s.widget.era == '1980';
     c.drawCircle(o, r, Paint()
       ..shader = RadialGradient(
               colors: brass ? const [Color(0xFFF6D98A), Color(0xFF9A6A24)] : const [Color(0xFFE6EBEE), Color(0xFF8C979D)],
@@ -794,17 +998,24 @@ class _WirePainter extends CustomPainter {
 
   /// Borne de carril DIN: cuerpo gris con cara frontal, lateral de color, tornillo y número.
   void _terminal(Canvas c, Offset p, Color col, int n, {required bool left, bool done = false, bool active = false}) {
+    final era = s.widget.era;
     final body = Rect.fromCenter(center: p, width: 44, height: 22);
-    final rr = RRect.fromRectAndRadius(body, const Radius.circular(3));
+    final rr = RRect.fromRectAndRadius(body, Radius.circular(era == '2020' || era == '2050' ? 6 : 3));
+    final (faceTop, faceBot, numCol) = switch (era) {
+      '1888' || '1929' => (const Color(0xFFFFFCF2), const Color(0xFFD8CFBC), const Color(0xFF1C2523)), // porcelana
+      '1980' => (const Color(0xFF3A3230), const Color(0xFF1E1A18), const Color(0xFFF1EAD6)), // baquelita
+      '2005' => (const Color(0xFFFBFBFA), const Color(0xFFE0E4E6), const Color(0xFF1C2523)),
+      '2020' => (const Color(0xFFF2F4F3), const Color(0xFFC9CED1), const Color(0xFF3A4146)),
+      '2050' => (const Color(0xFFFBFBF7), const Color(0xFFE3E6DE), const Color(0xFF2B2B2B)),
+      _ => (const Color(0xFFE9ECEA), const Color(0xFFB9C0C0), const Color(0xFF1C2523)),
+    };
     c.drawRRect(rr.shift(const Offset(3, 4)), Paint()..color = const Color(0x66000000));
     c.drawRRect(rr.inflate(1.5), Paint()..color = Hc.line);
     c.drawRRect(rr, Paint()
       ..shader = LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: _oldEra(s.widget.era)
-                  ? const [Color(0xFFFFFCF2), Color(0xFFD8CFBC)] // porcelana
-                  : const [Color(0xFFE9ECEA), Color(0xFFB9C0C0)])
+              colors: [faceTop, faceBot])
           .createShader(body));
     // franja de color del circuito
     final band = Rect.fromLTWH(left ? body.left + 3 : body.right - 10, body.top + 3, 7, body.height - 6);
@@ -812,7 +1023,7 @@ class _WirePainter extends CustomPainter {
     c.drawRect(Rect.fromLTWH(band.left, band.top, band.width, 2), Paint()..color = _sh(col, 1.3));
     // número
     final tp = TextPainter(
-      text: TextSpan(text: '${n + 1}', style: const TextStyle(fontFamily: Hf.display, fontSize: 15, color: Color(0xFF1C2523))),
+      text: TextSpan(text: '${n + 1}', style: TextStyle(fontFamily: Hf.display, fontSize: 15, color: numCol)),
       textDirection: TextDirection.ltr,
     )..layout();
     // número centrado entre la franja y el tornillo
@@ -904,7 +1115,7 @@ class _WirePainter extends CustomPainter {
             .createShader(Rect.fromCircle(center: c0, radius: r)));
       // ventanilla del fusible: se enciende con el color del circuito al conectarlo
       canvas.drawCircle(c0, r * 0.45, Paint()..color = Hc.line);
-      canvas.drawCircle(c0, r * 0.36, Paint()..color = on ? _WireBoardState.colors[i] : const Color(0xFF8A7A5A));
+      canvas.drawCircle(c0, r * 0.36, Paint()..color = on ? s.cols[i] : const Color(0xFF8A7A5A));
       canvas.drawCircle(c0 - Offset(r * 0.12, r * 0.12), r * 0.12, Paint()..color = Colors.white.withValues(alpha: on ? 0.7 : 0.3));
     }
     // --- Tubos de cable negros con abrazaderas de latón.
@@ -921,11 +1132,163 @@ class _WirePainter extends CustomPainter {
     }
   }
 
+  /// Marco y placa de un cuadro de época: caja con bisel, placa con sombra interior y tornillos.
+  Rect _shell(Canvas canvas, Size size, List<Color> frame, Color plate, {double radius = 4}) {
+    final box = Offset.zero & size;
+    canvas.drawRect(box, Paint()..shader = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: frame).createShader(box));
+    final pl = _WireBoardState.plate(size);
+    canvas.drawRRect(RRect.fromRectAndRadius(pl.inflate(4), Radius.circular(radius + 2)), Paint()..color = _sh(frame.last, 0.7));
+    canvas.drawRRect(RRect.fromRectAndRadius(pl, Radius.circular(radius)), Paint()..color = plate);
+    canvas.drawRect(Rect.fromLTWH(pl.left, pl.top, pl.width, 10), Paint()
+      ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x66000000), Color(0x00000000)])
+          .createShader(Rect.fromLTWH(pl.left, pl.top, pl.width, 10)));
+    for (final o in [const Offset(6, 6), Offset(size.width - 6, 6), Offset(6, size.height - 6), Offset(size.width - 6, size.height - 6)]) {
+      _screw(canvas, o, r: 3);
+    }
+    return pl;
+  }
+
+  /// Canaletas laterales ranuradas del color de la época.
+  void _ducts(Canvas canvas, Size size, Color body, Color slot) {
+    final bay = _WireBoardState.bay(size);
+    for (final x in [bay.left + 2, bay.right - 14]) {
+      final duct = Rect.fromLTWH(x, bay.top, 12, bay.height);
+      canvas.drawRect(duct.shift(const Offset(2, 2)), Paint()..color = const Color(0x55000000));
+      canvas.drawRect(duct.inflate(1), Paint()..color = Hc.line);
+      canvas.drawRect(duct, Paint()..color = body);
+      for (var y = duct.top + 4; y < duct.bottom - 2; y += 7) {
+        canvas.drawRect(Rect.fromLTWH(duct.left + 2, y, 8, 3), Paint()..color = slot);
+      }
+    }
+  }
+
+  /// Fila de magnetotérmicos (general + uno por circuito) a partir de [x0].
+  void _breakers(Canvas canvas, Rect rail, double x0, int n) {
+    final bw = math.min(22.0, (rail.right - x0 - 22) / (n + 1.6));
+    _breaker(canvas, Rect.fromLTWH(x0, rail.top, bw * 1.6, rail.height), s._complete, s._complete ? const Color(0xFF4FC08D) : const Color(0xFF6B7076));
+    for (var i = 0; i < n; i++) {
+      final on = s._ok.contains(i);
+      _breaker(canvas, Rect.fromLTWH(x0 + 8 + bw * 1.6 + i * (bw + 3), rail.top, bw, rail.height), on, on ? s.cols[i] : const Color(0xFF6B7076));
+    }
+  }
+
+  void _text(Canvas c, String t, Offset left, double size, Color col, {bool display = true}) {
+    final tp = TextPainter(
+      text: TextSpan(text: tr(t), style: TextStyle(fontFamily: display ? Hf.display : Hf.body, fontWeight: display ? FontWeight.w400 : FontWeight.w800, fontSize: size, color: col)),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    tp.paint(c, left - Offset(0, tp.height / 2));
+  }
+
+  /// 1980: caja de baquelita crema, tablero de madera, tapones roscados de porcelana y placa de 220 V.
+  void _box1980(Canvas canvas, Size size, int n) {
+    final pl = _shell(canvas, size, const [Color(0xFFE8DCBC), Color(0xFFBFAF88)], const Color(0xFF5A3B2A), radius: 8);
+    final rail = Rect.fromLTWH(pl.left + 8, pl.top + 10, pl.width - 16, 36);
+    final rr = RRect.fromRectAndRadius(rail, const Radius.circular(6));
+    canvas.drawRRect(rr.shift(const Offset(2, 3)), Paint()..color = const Color(0x66000000));
+    canvas.drawRRect(rr.inflate(1.2), Paint()..color = Hc.line);
+    canvas.drawRRect(rr, Paint()..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFF6F1E2), Color(0xFFDDD4BC)]).createShader(rail));
+    // interruptor general de palanca negro
+    final g = Rect.fromLTWH(rail.left + 8, rail.top + 5, 22, rail.height - 10);
+    canvas.drawRRect(RRect.fromRectAndRadius(g.inflate(1.2), const Radius.circular(3)), Paint()..color = Hc.line);
+    canvas.drawRRect(RRect.fromRectAndRadius(g, const Radius.circular(3)), Paint()..color = const Color(0xFF2A2422));
+    final lever = Rect.fromLTWH(g.left + 6, s._complete ? g.top + 3 : g.center.dy, 10, g.height / 2 - 3);
+    canvas.drawRect(lever, Paint()..color = s._complete ? const Color(0xFFC8443A) : const Color(0xFF8A7A6A));
+    // tapones roscados: latón con ventanilla del color del circuito al conectarlo
+    final cell = math.min(30.0, (rail.width - 80) / n);
+    for (var i = 0; i < n; i++) {
+      final on = s._ok.contains(i);
+      final c0 = Offset(rail.left + 46 + cell * 0.5 + i * cell, rail.center.dy);
+      final r = math.min(11.0, cell * 0.4);
+      canvas.drawCircle(c0 + const Offset(1.2, 2), r, Paint()..color = const Color(0x55000000));
+      canvas.drawCircle(c0, r + 1.2, Paint()..color = Hc.line);
+      canvas.drawCircle(c0, r, Paint()
+        ..shader = const RadialGradient(center: Alignment(-0.4, -0.4), colors: [Color(0xFFF6D98A), Color(0xFFC9A24A), Color(0xFF7A5A1E)], stops: [0, 0.55, 1])
+            .createShader(Rect.fromCircle(center: c0, radius: r)));
+      canvas.drawCircle(c0, r * 0.45, Paint()..color = Hc.line);
+      canvas.drawCircle(c0, r * 0.36, Paint()..color = on ? s.cols[i] : const Color(0xFF6A5A3A));
+    }
+    // placa de tensión
+    final tag = Rect.fromLTWH(rail.right - 42, rail.top + 9, 36, rail.height - 18);
+    if (rail.left + 46 + n * cell < tag.left - 4) {
+      canvas.drawRRect(RRect.fromRectAndRadius(tag.inflate(1), const Radius.circular(2)), Paint()..color = Hc.line);
+      canvas.drawRRect(RRect.fromRectAndRadius(tag, const Radius.circular(2)), Paint()..color = const Color(0xFFC9A24A));
+      _text(canvas, '220 V', Offset(tag.left + 4, tag.center.dy), 12, const Color(0xFF3A2A10));
+    }
+    _ducts(canvas, size, const Color(0xFF6E6A62), const Color(0xFF4A4640));
+  }
+
+  /// 2005: caja de PVC blanca, carril DIN con magnetotérmicos y canaletas blancas.
+  void _box2005(Canvas canvas, Size size, int n) {
+    final pl = _shell(canvas, size, const [Color(0xFFFAFBFB), Color(0xFFD5DADD)], const Color(0xFFB4BEC4), radius: 6);
+    final rail = Rect.fromLTWH(pl.left + 8, pl.top + 12, pl.width - 16, 32);
+    canvas.drawRect(Rect.fromLTWH(rail.left, rail.center.dy - 4, rail.width, 8), Paint()..color = const Color(0xFF8C979D));
+    canvas.drawRect(Rect.fromLTWH(rail.left, rail.center.dy - 4, rail.width, 1.5), Paint()..color = const Color(0xFFE6EBEE));
+    _breakers(canvas, rail, rail.left + 6, n);
+    _ducts(canvas, size, const Color(0xFFEEF1F2), const Color(0xFFB4BEC4));
+  }
+
+  /// 2020: caja antracita con contador inteligente (consumo en kW y wifi) y magnetotérmicos.
+  void _box2020(Canvas canvas, Size size, int n) {
+    final pl = _shell(canvas, size, const [Color(0xFF4A5358), Color(0xFF2E3438)], const Color(0xFF161C20), radius: 8);
+    final rail = Rect.fromLTWH(pl.left + 8, pl.top + 12, pl.width - 16, 32);
+    final scr = Rect.fromLTWH(rail.left + 2, rail.top, 78, rail.height);
+    canvas.drawRRect(RRect.fromRectAndRadius(scr.inflate(1.5), const Radius.circular(6)), Paint()..color = Hc.line);
+    canvas.drawRRect(RRect.fromRectAndRadius(scr, const Radius.circular(6)), Paint()..color = const Color(0xFF0B1A14));
+    canvas.drawRRect(RRect.fromRectAndRadius(scr, const Radius.circular(6)), Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2
+      ..color = const Color(0xFF4FC08D));
+    final kw = 0.4 + 3.0 * s._ok.length / n;
+    _text(canvas, '${kw.toStringAsFixed(1).replaceAll('.', I18n.puntoMiles ? ',' : '.')} kW', Offset(scr.left + 7, scr.center.dy + 1), 15, const Color(0xFF4FC08D));
+    final wc = Offset(scr.right - 12, scr.center.dy + 6);
+    for (final r in [5.0, 9.0]) {
+      canvas.drawArc(Rect.fromCircle(center: wc, radius: r), -math.pi * 0.8, math.pi * 0.6, false, Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.6
+        ..strokeCap = StrokeCap.round
+        ..color = const Color(0xFF4FC08D));
+    }
+    canvas.drawCircle(wc, 1.6, Paint()..color = const Color(0xFF4FC08D));
+    canvas.drawRect(Rect.fromLTWH(scr.right + 8, rail.center.dy - 4, rail.right - scr.right - 8, 8), Paint()..color = const Color(0xFF5D6B72));
+    _breakers(canvas, rail, scr.right + 12, n);
+    _ducts(canvas, size, const Color(0xFF2A3034), const Color(0xFF3E474C));
+  }
+
+  /// 2050: cuadro de la instalación solar con batería (se carga al conectar) y magnetotérmicos.
+  void _box2050(Canvas canvas, Size size, int n) {
+    final pl = _shell(canvas, size, const [Color(0xFFF7F8F4), Color(0xFFD3D9CE)], const Color(0xFF9FAE9C), radius: 8);
+    final rail = Rect.fromLTWH(pl.left + 8, pl.top + 12, pl.width - 16, 32);
+    final bat = Rect.fromLTWH(rail.left + 2, rail.top, 100, rail.height);
+    canvas.drawRRect(RRect.fromRectAndRadius(bat.inflate(1.5), const Radius.circular(6)), Paint()..color = Hc.line);
+    canvas.drawRRect(RRect.fromRectAndRadius(bat, const Radius.circular(6)), Paint()..color = const Color(0xFFF7F8F4));
+    final cell = Rect.fromLTWH(bat.left + 7, bat.center.dy - 6, 24, 12);
+    final pct = (40 + 60 * s._ok.length / n).round();
+    canvas.drawRRect(RRect.fromRectAndRadius(cell, const Radius.circular(2)), Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.6
+      ..color = const Color(0xFF2B2B2B));
+    canvas.drawRect(Rect.fromLTWH(cell.right, cell.center.dy - 2.5, 2.5, 5), Paint()..color = const Color(0xFF2B2B2B));
+    canvas.drawRect(Rect.fromLTWH(cell.left + 2, cell.top + 2, (cell.width - 4) * pct / 100, cell.height - 4), Paint()..color = const Color(0xFF4E8A5E));
+    _text(canvas, '$pct %', Offset(cell.right + 9, bat.center.dy + 1), 15, const Color(0xFF2B2B2B));
+    canvas.drawRect(Rect.fromLTWH(bat.right + 8, rail.center.dy - 4, rail.right - bat.right - 8, 8), Paint()..color = const Color(0xFF7D8A7A));
+    _breakers(canvas, rail, bat.right + 12, n);
+    _ducts(canvas, size, const Color(0xFFE6EAE2), const Color(0xFFB4BEAE));
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
     final n = s._n;
     if (_oldEra(s.widget.era)) {
       _box1929(canvas, size, n);
+    } else if (s.widget.era == '1980') {
+      _box1980(canvas, size, n);
+    } else if (s.widget.era == '2005') {
+      _box2005(canvas, size, n);
+    } else if (s.widget.era == '2020') {
+      _box2020(canvas, size, n);
+    } else if (s.widget.era == '2050') {
+      _box2050(canvas, size, n);
     } else {
       // --- Caja metálica del cuadro (puerta abierta): marco con bisel y fondo de placa perforada.
       final box = Offset.zero & size;
@@ -959,7 +1322,7 @@ class _WirePainter extends CustomPainter {
       for (var i = 0; i < n; i++) {
         final on = s._ok.contains(i);
         _breaker(canvas, Rect.fromLTWH(rail.left + 14 + bw * 1.6 + i * (bw + 3), rail.top, bw, rail.height), on,
-            on ? _WireBoardState.colors[i] : const Color(0xFF6B7076));
+            on ? s.cols[i] : const Color(0xFF6B7076));
       }
       // --- Canaletas laterales ranuradas.
       final bay = _WireBoardState.bay(size);
@@ -978,7 +1341,7 @@ class _WirePainter extends CustomPainter {
       if (!s._ok.contains(ci)) continue;
       final j = s._r.indexOf(ci);
       final pts = _curve(s.term(size, 0, i), s.term(size, 1, j), 24);
-      final col = _WireBoardState.colors[ci];
+      final col = s.cols[ci];
       _cable(canvas, pts, col, live: true);
       if (s._flow == ci && t < 1) {
         // pulso de corriente: un punto brillante con estela que recorre el cable
@@ -997,14 +1360,14 @@ class _WirePainter extends CustomPainter {
         if (s._fromSide == side && s._fromSlot == i) continue;
         final p = s.term(size, side, i);
         final dx = side == 0 ? 24.0 : -24.0;
-        _cable(canvas, _curve(p, p + Offset(dx, 16), 3), _WireBoardState.colors[ci]);
+        _cable(canvas, _curve(p, p + Offset(dx, 16), 3), s.cols[ci]);
         final tip = p + Offset(dx, 16);
         canvas.drawRect(Rect.fromCenter(center: tip, width: 5, height: 4), Paint()..color = const Color(0xFFF0B986));
       }
     }
     if (s._fromSide != null && s._cur != null) {
       final a = s.term(size, s._fromSide!, s._fromSlot!);
-      final col = _WireBoardState.colors[s._color(s._fromSide!, s._fromSlot!)];
+      final col = s.cols[s._color(s._fromSide!, s._fromSlot!)];
       _cable(canvas, _curve(a, s._cur!, 26), col);
       canvas.drawRect(Rect.fromCenter(center: s._cur!, width: 6, height: 5), Paint()..color = const Color(0xFFF0B986));
     }
@@ -1012,7 +1375,7 @@ class _WirePainter extends CustomPainter {
     for (final side in [0, 1]) {
       for (var i = 0; i < n; i++) {
         final ci = s._color(side, i);
-        _terminal(canvas, s.term(size, side, i), _WireBoardState.colors[ci], ci,
+        _terminal(canvas, s.term(size, side, i), s.cols[ci], ci,
             left: side == 0, done: s._ok.contains(ci), active: (s._fromSide == side && s._fromSlot == i) || (s._fromSide == null && ci == s._nextNum && !s._complete));
       }
     }

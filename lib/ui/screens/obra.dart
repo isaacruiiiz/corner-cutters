@@ -184,7 +184,7 @@ class _ObraScreenState extends ConsumerState<ObraScreen> {
     bool work(Offset at) => !done && _work(g, p, trade, at);
     switch (trade) {
       case Trade.alb:
-        board = BrickBoard(progress: frac, onWork: work);
+        board = BrickBoard(progress: frac, onWork: work, era: g.eraCfg?.id);
       case Trade.fon:
         board = PipeBoard(progress: frac, onSeal: (f) => !done && _workTo(g, p, Trade.fon, f), routes: p.m2 >= 120 ? 4 : 3, era: g.eraCfg?.id);
       case Trade.ele:
@@ -198,7 +198,7 @@ class _ObraScreenState extends ConsumerState<ObraScreen> {
         );
       case Trade.car:
         // Un mueble al azar por obra (sin repetir hasta que salen todos los desbloqueados).
-        board = AssembleBoard(progress: frac, onWork: work, item: FurnitureBag.forWork(r, r.levels[Trade.car] ?? 1), era: g.eraCfg?.id);
+        board = AssembleBoard(progress: frac, onWork: work, item: FurnitureBag.forWork(r, r.levels[Trade.car] ?? 1, g.eraCfg?.id), era: g.eraCfg?.id);
       case Trade.dec:
         // A suerte: empapelar o pintar, con el papel o el color también al azar.
         final pick = DecoPick.forWork(r, g.eraCfg?.id);
@@ -263,7 +263,7 @@ class _ObraScreenState extends ConsumerState<ObraScreen> {
 
     // Tablero con críticos y números flotantes.
     Widget boardStack(double? height) => Stack(clipBehavior: Clip.none, children: [
-          BoardFrame(height: height, child: KeyedSubtree(key: _boardKey, child: board)),
+          BoardFrame(height: height, era: g.eraCfg?.id, trade: trade.name, child: KeyedSubtree(key: _boardKey, child: board)),
           if (done)
             Positioned.fill(
               child: Container(

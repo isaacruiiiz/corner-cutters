@@ -136,21 +136,86 @@ const kFurniture = <Furniture>[
   ]),
 ];
 
+/// Muebles propios de cada época del pack (se suman a los de siempre y salen los primeros).
+/// Tonos extra: 7 rojo, 8 amarillo, 9 barro, 10 fieltro.
+const kEraFurniture = <String, List<Furniture>>{
+  '1980': [
+    Furniture('mueble_tv', 'Mueble de la tele', 1, [
+      FPart('Cuerpo', 30, 96, 140, 38, 30, 1),
+      FPart('Vitrina', 36, 102, 64, 26, 0, 4, PartKind.glass),
+      FPart('Cajón', 106, 102, 58, 12, 0, 0, PartKind.drawer),
+      FPart('Cajón', 106, 116, 58, 12, 0, 0, PartKind.drawer),
+      FPart('Pata', 34, 134, 8, 6, 4, 2),
+      FPart('Pata', 158, 134, 8, 6, 4, 2),
+      FPart('Televisor', 64, 52, 68, 44, 26, 6, PartKind.screen),
+    ]),
+  ],
+  '2005': [
+    Furniture('cubos', 'Estantería de cubos', 1, [
+      FPart('Armazón', 50, 30, 100, 108, 22, 3),
+      FPart('Balda', 54, 64, 92, 4, 16, 3),
+      FPart('Balda', 54, 100, 92, 4, 16, 3),
+      FPart('Divisor', 83, 34, 4, 100, 16, 3),
+      FPart('Divisor', 115, 34, 4, 100, 16, 3),
+      FPart('Cesta', 57, 39, 23, 23, 0, 8, PartKind.drawer),
+      FPart('Cesta', 90, 75, 22, 23, 0, 7, PartKind.drawer),
+      FPart('Cesta', 122, 110, 22, 23, 0, 4, PartKind.drawer),
+    ]),
+  ],
+  '2020': [
+    Furniture('escritorio_nordico', 'Escritorio nórdico', 1, [
+      FPart('Pata', 42, 86, 5, 54, 4, 6),
+      FPart('Pata', 152, 86, 5, 54, 4, 6),
+      FPart('Tablero', 34, 78, 132, 8, 34, 0),
+      FPart('Cajonera', 110, 86, 38, 30, 24, 3),
+      FPart('Cajón', 114, 90, 30, 11, 0, 3, PartKind.drawer),
+      FPart('Cajón', 114, 103, 30, 11, 0, 3, PartKind.drawer),
+      FPart('Pantalla', 62, 48, 42, 28, 4, 6, PartKind.screen),
+      FPart('Maceta', 136, 60, 14, 18, 10, 9),
+    ]),
+  ],
+  '2050': [
+    Furniture('modulo', 'Módulo de contrachapado', 1, [
+      FPart('Cuerpo', 34, 70, 132, 62, 28, 0),
+      FPart('Puerta de fieltro', 40, 76, 58, 50, 0, 10, PartKind.door),
+      FPart('Balda', 104, 98, 56, 4, 14, 1),
+      FPart('Libros', 106, 78, 52, 20, 0, 4, PartKind.books),
+      FPart('Cesta', 106, 106, 26, 20, 0, 9, PartKind.drawer),
+      FPart('Pata', 40, 132, 8, 8, 4, 2),
+      FPart('Pata', 152, 132, 8, 8, 4, 2),
+      FPart('Maceta', 122, 50, 18, 20, 10, 9),
+    ]),
+  ],
+};
+
 /// Bolsa de encargos: no repite un mueble hasta haber sacado todos los desbloqueados.
 class FurnitureBag {
   FurnitureBag._();
   static final _left = <int>[];
   static final _rng = math.Random();
   static final _chosen = Expando<Furniture>('mueble');
+  static String? _bagEra;
 
   /// Mueble de una obra concreta ([key] = el objeto de la obra): se sortea una vez y se mantiene.
-  static Furniture forWork(Object key, int level) => _chosen[key] ??= draw(level);
+  static Furniture forWork(Object key, int level, [String? era]) => _chosen[key] ??= draw(level, era);
 
-  static Furniture draw(int level) {
-    final open = [for (var i = 0; i < kFurniture.length; i++) if (kFurniture[i].minLv <= level) i];
+  static Furniture draw(int level, [String? era]) {
+    if (era != _bagEra) {
+      _left.clear();
+      _bagEra = era;
+    }
+    final pool = [...kFurniture, ...?kEraFurniture[era]];
+    final open = [for (var i = 0; i < pool.length; i++) if (pool[i].minLv <= level) i];
     _left.removeWhere((i) => !open.contains(i));
-    if (_left.isEmpty) _left.addAll(open..shuffle(_rng));
-    return kFurniture[_left.removeLast()];
+    if (_left.isEmpty) {
+      _left.addAll(open..shuffle(_rng));
+      // El mueble de la época sale el primero de cada tanda.
+      final own = _left.where((i) => i >= kFurniture.length).toList();
+      _left
+        ..removeWhere((i) => i >= kFurniture.length)
+        ..addAll(own);
+    }
+    return pool[_left.removeLast()];
   }
 }
 
@@ -158,16 +223,23 @@ class FurnitureBag {
 List<Color> _woods(String? era) => switch (era) {
       '1888' => const [Color(0xFFB07A48), Color(0xFF8A5A34), Color(0xFF5E3A22)],
       '1929' => const [Color(0xFF9A5E3A), Color(0xFF6E3E24), Color(0xFF4A2818)],
-      '1980' => const [Color(0xFFD8C8A0), Color(0xFFB8A070), Color(0xFF8A7048)],
-      '2050' => const [Color(0xFFE2C89A), Color(0xFFC8A878), Color(0xFF9A7A50)],
+      '1980' => const [Color(0xFFA8704A), Color(0xFF7A4A2C), Color(0xFF5A3420)], // nogal oscuro
+      '2005' => const [Color(0xFFE8D2A8), Color(0xFFD2B888), Color(0xFFA88A60)], // haya
+      '2020' => const [Color(0xFFE2C8A0), Color(0xFFC9A878), Color(0xFF9A7A50)], // roble claro
+      '2050' => const [Color(0xFFE3C9A0), Color(0xFFCBAE80), Color(0xFF9A7A50)], // contrachapado
       _ => const [Color(0xFFC98F5A), Color(0xFFA8743F), Color(0xFF8A5A34)],
     };
 
 Color _toneColor(int t, String? era) => switch (t) {
       0 || 1 || 2 => _woods(era)[t],
-      3 => const Color(0xFFECE4D0),
+      3 => era == '2005' || era == '2020' ? const Color(0xFFF4F4F2) : const Color(0xFFECE4D0),
       4 => const Color(0xFF5AA6D6),
       5 => const Color(0xFFC8C8C0),
+      7 => const Color(0xFFC8443A),
+      8 => const Color(0xFFE3B23A),
+      9 => const Color(0xFFC98F6A),
+      10 => const Color(0xFF8FA88A),
+      6 when era == '2020' => const Color(0xFF2B2B2B),
       _ => const Color(0xFF2A2622),
     };
 
@@ -229,7 +301,13 @@ void _partFace(Canvas c, FPart p, Rect r, Color col, double k, String? era) {
     ..color = Hc.line
     ..style = PaintingStyle.stroke
     ..strokeWidth = 1.5;
-  final gold = era == '1980' ? const Color(0xFFC8C8C0) : (era == '2050' ? const Color(0xFF7FE0D8) : Hc.acc);
+  final gold = switch (era) {
+    '1980' => const Color(0xFFC8C8C0), // cromado
+    '2005' => const Color(0xFFAEB7BC),
+    '2020' => const Color(0xFF2B2B2B), // tirador negro
+    '2050' => const Color(0xFFB87B58), // tirador de cuero
+    _ => Hc.acc,
+  };
   switch (p.kind) {
     case PartKind.plain:
       // veta
@@ -283,10 +361,25 @@ void _partFace(Canvas c, FPart p, Rect r, Color col, double k, String? era) {
     case PartKind.metal:
       c.drawCircle(r.center, 1.2 * k, Paint()..color = Hc.line);
     case PartKind.screen:
-      c.drawRect(r.deflate(2.5 * k), Paint()..color = const Color(0xFF3E5A6A));
-      c.drawLine(Offset(r.left + 5 * k, r.top + 6 * k), Offset(r.left + 14 * k, r.top + 6 * k), Paint()
-        ..color = const Color(0xFF7FE0D8)
-        ..strokeWidth = 1.5);
+      if (era == '1980') {
+        // tele de tubo: pantalla abombada y dos mandos
+        final scr = Rect.fromLTRB(r.left + 4 * k, r.top + 4 * k, r.right - 16 * k, r.bottom - 4 * k);
+        c.drawRRect(RRect.fromRectAndRadius(scr, Radius.circular(6 * k)), Paint()..color = const Color(0xFF22302F));
+        c.drawRRect(RRect.fromRectAndRadius(scr, Radius.circular(6 * k)), ink..color = Hc.line);
+        c.drawLine(Offset(scr.left + 4 * k, scr.top + 6 * k), Offset(scr.left + 14 * k, scr.top + 4 * k), Paint()
+          ..color = const Color(0x55FFFFFF)
+          ..strokeWidth = 2 * k);
+        for (final f in [0.3, 0.6]) {
+          final kc = Offset(r.right - 8 * k, r.top + r.height * f);
+          c.drawCircle(kc, 3 * k, Paint()..color = const Color(0xFFC8C8C0));
+          c.drawCircle(kc, 3 * k, ink..color = Hc.line);
+        }
+      } else {
+        c.drawRect(r.deflate(2.5 * k), Paint()..color = const Color(0xFF3E5A6A));
+        c.drawLine(Offset(r.left + 5 * k, r.top + 6 * k), Offset(r.left + 14 * k, r.top + 6 * k), Paint()
+          ..color = era == '2050' ? const Color(0xFF8FA88A) : const Color(0xFF7FE0D8)
+          ..strokeWidth = 1.5);
+      }
   }
 }
 
@@ -583,6 +676,10 @@ const kPapers = <WallPaper>[
   WallPaper('setenta', 'Cuadros 70'),
   WallPaper('espiga', 'Espiga gris'),
   WallPaper('tulipan', 'Tulipán'),
+  WallPaper('circulos', 'Círculos mostaza'),
+  WallPaper('gotele', 'Gotelé con cenefa'),
+  WallPaper('tropical', 'Hojas tropicales'),
+  WallPaper('fibra', 'Fibra natural'),
 ];
 
 const kPaints = <(String, Color)>[
@@ -602,10 +699,18 @@ const kPaints = <(String, Color)>[
 const _eraPapers = <String, List<String>>{
   '1888': ['damasco', 'rayas', 'tulipan'],
   '1929': ['zigurat', 'rayas', 'espiga', 'damasco'],
-  '1980': ['setenta', 'vichy', 'hojas'],
-  '2005': ['rayas', 'espiga', 'vichy', 'hojas'],
-  '2020': ['hojas', 'espiga', 'vichy', 'rayas'],
-  '2050': ['hojas', 'espiga'],
+  '1980': ['circulos', 'setenta', 'vichy'],
+  '2005': ['gotele', 'rayas', 'espiga'],
+  '2020': ['tropical', 'espiga', 'rayas'],
+  '2050': ['fibra', 'hojas'],
+};
+
+/// Pinturas de cada época del pack (las demás épocas usan la carta general).
+const _eraPaints = <String, List<(String, Color)>>{
+  '1980': [('Mostaza', Color(0xFFC8922A)), ('Chocolate', Color(0xFF5A3420)), ('Naranja', Color(0xFFD9642A)), ('Crema', Color(0xFFEAD9B0))],
+  '2005': [('Crema', Color(0xFFEAD9A8)), ('Pistacho', Color(0xFFA8B878)), ('Burdeos', Color(0xFF7A2A2A)), ('Albaricoque', Color(0xFFE8A878))],
+  '2020': [('Salvia', Color(0xFFA8B8A0)), ('Rosa empolvado', Color(0xFFE3B8B0)), ('Azul petróleo', Color(0xFF2F5A66)), ('Blanco roto', Color(0xFFECE6D8))],
+  '2050': [('Arcilla', Color(0xFFC9886A)), ('Arena', Color(0xFFD9CDAE)), ('Oliva', Color(0xFF7F8F6A)), ('Cal', Color(0xFFF2EEE4))],
 };
 
 /// Encargo de decoración de una obra: papel o pintura, y cuál.
@@ -634,7 +739,8 @@ class DecoPick {
       final pool = ids == null ? kPapers : kPapers.where((p) => ids.contains(p.id)).toList();
       return DecoPick.paper(pool[_rng.nextInt(pool.length)]);
     }
-    return DecoPick.paint(kPaints[_rng.nextInt(kPaints.length)]);
+    final paints = _eraPaints[era] ?? kPaints;
+    return DecoPick.paint(paints[_rng.nextInt(paints.length)]);
   }
 }
 
@@ -760,6 +866,77 @@ void paintPattern(Canvas c, Rect r, String id, {double dy = 0}) {
           ..lineTo(o.dx + 18, o.dy + 23)
           ..close();
         c.drawPath(lv, f..color = const Color(0xFF6E8E5A));
+      }
+    case 'circulos': // 1980
+      fill(const Color(0xFFEAD9B0));
+      for (final o in tiles(30, 30)) {
+        c.drawCircle(o + const Offset(15, 15), 13, f..color = const Color(0xFFC8642A));
+        c.drawCircle(o + const Offset(15, 15), 8, f..color = const Color(0xFF7A3E1E));
+        c.drawCircle(o + const Offset(15, 15), 3.5, f..color = const Color(0xFFE8B04A));
+      }
+    case 'gotele': // 2005: gotelé con cenefa burdeos
+      fill(const Color(0xFFE6D8B8));
+      for (final o in tiles(22, 22)) {
+        c.drawCircle(o + const Offset(5, 6), 1.8, f..color = const Color(0xFFD0BF98));
+        c.drawCircle(o + const Offset(15, 4), 1.3, f..color = const Color(0xFFD0BF98));
+        c.drawCircle(o + const Offset(11, 15), 2.2, f..color = const Color(0xFFD0BF98));
+        c.drawCircle(o + const Offset(19, 18), 1.4, f..color = const Color(0xFFD0BF98));
+      }
+      final by = r.top + r.height * 0.58 + dy;
+      if (by < r.bottom && by + 26 > r.top) {
+        c.drawRect(Rect.fromLTWH(r.left, by, r.width, 26), f..color = const Color(0xFF7A2A2A));
+        c.drawRect(Rect.fromLTWH(r.left, by + 3, r.width, 1.5), f..color = const Color(0xFFE6D8B8));
+        c.drawRect(Rect.fromLTWH(r.left, by + 21.5, r.width, 1.5), f..color = const Color(0xFFE6D8B8));
+        for (var x = r.left - (r.left % 20) + 10; x < r.right + 10; x += 20) {
+          c.drawPath(
+              Path()
+                ..moveTo(x, by + 7)
+                ..lineTo(x + 5, by + 13)
+                ..lineTo(x, by + 19)
+                ..lineTo(x - 5, by + 13)
+                ..close(),
+              f..color = const Color(0xFFE6D8B8));
+        }
+      }
+    case 'tropical': // 2020: hojas grandes sobre verde salvia oscuro
+      fill(const Color(0xFF2F4A3C));
+      for (final o in tiles(30, 38)) {
+        void leaf(Offset at, double ang, Color col) {
+          c.save();
+          c.translate(at.dx, at.dy);
+          c.rotate(ang);
+          c.drawOval(Rect.fromCenter(center: Offset.zero, width: 10, height: 26), f..color = col);
+          c.drawLine(const Offset(0, -11), const Offset(0, 11), Paint()
+            ..color = const Color(0xFF2F4A3C)
+            ..strokeWidth = 1);
+          c.restore();
+        }
+        leaf(o + const Offset(10, 18), 0.5, const Color(0xFF6FA07A));
+        leaf(o + const Offset(22, 22), -0.6, const Color(0xFFA8C8A0));
+      }
+    case 'fibra': // 2050: papel de fibra natural con ramitas
+      fill(const Color(0xFFE4D8BE));
+      final ln = Paint()..color = const Color(0xFFD5C7A6);
+      for (final o in tiles(30, 7)) {
+        c.drawRect(Rect.fromLTWH(o.dx, o.dy + 5, 30, 1), ln);
+      }
+      final stem = Paint()
+        ..color = const Color(0xFF7F8F6A)
+        ..strokeWidth = 1.6
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round;
+      for (final o in tiles(30, 44)) {
+        final x = o.dx + 15, y = o.dy + 22;
+        c.drawPath(Path()
+          ..moveTo(x, y + 15)
+          ..cubicTo(x - 3, y + 4, x + 3, y - 6, x, y - 15), stem);
+        for (final (dx, ddy, a, col) in [(-5.0, 4.0, -0.7, const Color(0xFF7F8F6A)), (5.0, -3.0, 0.7, const Color(0xFF9AA884)), (-4.0, -10.0, -0.6, const Color(0xFF9AA884))]) {
+          c.save();
+          c.translate(x + dx, y + ddy);
+          c.rotate(a);
+          c.drawOval(Rect.fromCenter(center: Offset.zero, width: 6, height: 13), f..color = col);
+          c.restore();
+        }
       }
     default:
       fill(const Color(0xFFE9DFC6));
