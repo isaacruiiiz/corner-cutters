@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../guia.dart';
 import '../../app/providers.dart';
 import '../../core/format.dart';
 import '../../core/theme.dart';
@@ -38,8 +39,9 @@ class ObraFinScreen extends ConsumerWidget {
               if (g.canBuy)
                 Row(children: [
                   Expanded(
-                    child: HsButton('Alquilar', kind: BtnKind.ok, block: true, size: BtnSize.lg, icon: Icons.key_outlined,
-                        onTap: () => Navigator.of(context).pushReplacement(glassRoute(RentScreen(propId: p.id)))),
+                    child: GuiaMarca(GuiaPunto.alquilarFin,
+                        child: HsButton('Alquilar', kind: BtnKind.ok, block: true, size: BtnSize.lg, icon: Icons.key_outlined,
+                            onTap: () => Navigator.of(context).pushReplacement(glassRoute(RentScreen(propId: p.id))))),
                   ),
                   const SizedBox(width: 10),
                   Expanded(

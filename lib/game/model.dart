@@ -827,6 +827,8 @@ class Meta {
   Set<int> passClaimed;
   /// Ciudades anteriores (legado).
   List<LegacyCity> legacy;
+  /// La guía del capataz ya se ha terminado o saltado.
+  bool guideDone;
   Meta({
     this.reputation = 0,
     this.cities = 0,
@@ -839,6 +841,7 @@ class Meta {
     this.passPremium = false,
     Set<int>? passClaimed,
     List<LegacyCity>? legacy,
+    this.guideDone = false,
   })  : achievements = achievements ?? {},
         cosmetics = cosmetics ?? {'dia', 'clasica'},
         templates = templates ?? [],
@@ -862,6 +865,7 @@ class Meta {
         'passPremium': passPremium,
         'passClaimed': passClaimed.toList(),
         'legacy': legacy.map((e) => e.toJson()).toList(),
+        'guide': guideDone,
       };
   factory Meta.fromJson(Map<String, dynamic> j) => Meta(
         reputation: (j['reputation'] as num?)?.toInt() ?? 0,
@@ -877,5 +881,6 @@ class Meta {
         passPremium: j['passPremium'] == true,
         passClaimed: ((j['passClaimed'] as List?) ?? const []).map((e) => (e as num).toInt()).toSet(),
         legacy: ((j['legacy'] as List?) ?? const []).map((e) => LegacyCity.fromJson(Map<String, dynamic>.from(e as Map))).toList(),
+        guideDone: j['guide'] == true,
       );
 }

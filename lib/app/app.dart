@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../ui/guia.dart';
 import '../core/format.dart';
 import '../core/i18n.dart';
 import '../core/gfx.dart';
@@ -45,7 +46,11 @@ class CornerCuttersApp extends StatelessWidget {
           final scale = mq.textScaler.clamp(minScaleFactor: 0.9, maxScaleFactor: 1.3);
           return ColoredBox(
             color: Hc.bgDeep,
-            child: MediaQuery(data: mq.copyWith(textScaler: scale), child: child!),
+            child: MediaQuery(
+              data: mq.copyWith(textScaler: scale),
+              // El capataz va por encima de todas las pantallas y diálogos.
+              child: Stack(fit: StackFit.expand, children: [child!, const GuiaCapa()]),
+            ),
           );
         },
           ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart' hide Text;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../guia.dart';
 import '../../app/providers.dart';
 import '../../core/format.dart';
 import '../../core/theme.dart';
@@ -262,7 +263,7 @@ class _ObraScreenState extends ConsumerState<ObraScreen> {
     );
 
     // Tablero con críticos y números flotantes.
-    Widget boardStack(double? height) => Stack(clipBehavior: Clip.none, children: [
+    Widget boardStack(double? height) => GuiaMarca(GuiaPunto.tablero, child: Stack(clipBehavior: Clip.none, children: [
           BoardFrame(height: height, era: g.eraCfg?.id, trade: trade.name, child: KeyedSubtree(key: _boardKey, child: board)),
           if (done)
             Positioned.fill(
@@ -310,7 +311,7 @@ class _ObraScreenState extends ConsumerState<ObraScreen> {
                 }),
               ),
             ),
-        ]);
+        ]));
 
     final hint = switch (trade) {
       Trade.ele => 'Conecta los cables en orden: primero el 1, luego el 2… cada uno con el borne de su número',
