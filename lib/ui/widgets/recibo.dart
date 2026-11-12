@@ -61,8 +61,9 @@ class ReciboVenta extends StatelessWidget {
     final cap = Ht.cap.copyWith(color: Hc.paperMut, fontSize: 10);
     final web = Uri.tryParse(AppConfig.current.webUrl)?.host ?? '';
     Widget linea(String concepto, String cifra) => Row(children: [
-          Expanded(child: Text(concepto, style: fila)),
-          Text(cifra, style: num),
+          Expanded(child: Text(concepto, style: fila, maxLines: 1, overflow: TextOverflow.ellipsis)),
+          const SizedBox(width: 8),
+          Flexible(child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerRight, child: Text(cifra, style: num))),
         ]);
 
     return SizedBox(
@@ -70,7 +71,11 @@ class ReciboVenta extends StatelessWidget {
       height: _alto,
       child: ColoredBox(
         color: Hc.bg,
-        child: Center(
+        // Si algo no cabe (cifras enormes, direcciones largas), el papel entero se encoge.
+        child: Padding(
+          padding: const EdgeInsets.all(28),
+          child: FittedBox(
+          fit: BoxFit.scaleDown,
           child: Transform.rotate(
             angle: -3 * 3.14159265 / 180,
             child: Container(
@@ -98,7 +103,7 @@ class ReciboVenta extends StatelessWidget {
                 const SizedBox(height: 10),
                 const _Corte(),
                 const SizedBox(height: 10),
-                Text(v.direccion, style: Ht.h2.copyWith(color: Hc.onPaper, fontSize: 22, height: 1), maxLines: 2),
+                Text(v.direccion, style: Ht.h2.copyWith(color: Hc.onPaper, fontSize: 22, height: 1), maxLines: 2, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 10),
                 linea('Compra', money(-v.compra)),
                 const SizedBox(height: 4),
@@ -123,12 +128,13 @@ class ReciboVenta extends StatelessWidget {
                 const _Corte(),
                 const SizedBox(height: 8),
                 Row(children: [
-                  Expanded(child: Text('GRACIAS POR ESPECULAR', style: cap.copyWith(color: Hc.onPaper))),
+                  Expanded(child: Text('GRACIAS POR ESPECULAR', style: cap.copyWith(color: Hc.onPaper), maxLines: 1, overflow: TextOverflow.ellipsis)),
                   if (web.isNotEmpty) Text(web, style: Ht.mini.copyWith(color: Hc.onPaper, fontWeight: FontWeight.w700)),
                 ]),
               ]),
             ),
           ),
+        ),
         ),
       ),
     );
