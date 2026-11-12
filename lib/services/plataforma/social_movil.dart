@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:ui' show Rect;
 
 import 'package:flutter/foundation.dart';
@@ -20,6 +21,16 @@ class Social {
     } catch (e) {
       debugPrint('compartir: $e');
     }
+  }
+
+  /// Comparte una imagen (la tarjeta de una venta) con su texto.
+  static Future<void> compartirImagen(Uint8List png, String texto, {Rect? origen}) async {
+    await SharePlus.instance.share(ShareParams(
+      files: [XFile.fromData(png, mimeType: 'image/png', name: 'corner-cutters.png')],
+      fileNameOverrides: const ['corner-cutters.png'],
+      text: texto,
+      sharePositionOrigin: origen,
+    ));
   }
 
   /// Pide la valoración después de un buen momento (una venta con beneficio, una medalla).

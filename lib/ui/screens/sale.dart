@@ -11,12 +11,10 @@ import '../common.dart';
 import '../map/map_view.dart';
 import '../widgets/atoms.dart';
 import '../widgets/overlays.dart';
+import '../widgets/recibo.dart';
 import 'buy.dart';
 
-import '../../core/i18n.dart';
-import '../../services/config.dart';
 import '../../services/social.dart';
-import '../../services/telemetria.dart';
 import '../../core/texto.dart';
 /// Tarjeta de oferta con aceptar/rechazar (offer_row).
 class OfferCard extends ConsumerWidget {
@@ -109,10 +107,17 @@ class SaleClosedScreen extends ConsumerWidget {
           if (profit > 0 && Social.puedeCompartir) ...[
             const SizedBox(width: 8),
             HsButton('Compartir', kind: BtnKind.ghost, size: BtnSize.sm, icon: Icons.ios_share_rounded, onTap: () {
-              Telemetria.evento('compartir', {'que': 'venta'});
-              Social.compartir(
-                  '${tr('He vendido ${d['address']} por ${money(amount)} en Corner Cutters: ${money(profit)} de beneficio.')} ${AppConfig.current.webUrl}'.trim(),
-                  origen: origenDe(context));
+              compartirVenta(
+                  context,
+                  VentaRecibo(
+                    ciudad: g.city.name,
+                    fecha: g.dateLabel,
+                    direccion: d['address'] as String,
+                    compra: paid,
+                    obra: amount - paid - profit,
+                    venta: amount,
+                    beneficio: profit,
+                  ));
             }),
           ],
         ]),
