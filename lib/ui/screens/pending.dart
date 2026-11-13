@@ -52,7 +52,7 @@ class PendingScreen extends ConsumerWidget {
               last: true,
               lead: const IconBox(Icons.payments_outlined, color: Hc.ok, solid: true),
               title: 'Rentas del mes',
-              sub: 'En ${dur(g.nextRentIn)} · ${g.dateLabel}',
+              sub: 'Cobro en ${dur(g.nextRentIn)} · ${g.dateLabel}',
               trail: Text('+${money(g.monthlyRent)}', style: Ht.numS.copyWith(color: Hc.ok)),
             ),
             Text('Sesión tipo: cobrar, atender eventos, lanzar reformas y reinvertir. Patrimonio: ${money(g.netWorth)}.',

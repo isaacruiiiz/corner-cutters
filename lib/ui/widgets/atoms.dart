@@ -1050,7 +1050,8 @@ class Stat extends StatelessWidget {
   const Stat(this.label, this.value, {super.key, this.color = Hc.ink, this.style, this.extra});
   @override
   Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-        Cap(label),
+        // Las etiquetas largas (alemán) se encogen en vez de cortarse.
+        FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Cap(label)),
         const SizedBox(height: 2),
         FittedBox(
           fit: BoxFit.scaleDown,

@@ -144,7 +144,10 @@ class I18n {
       // Si el original va en minúscula, la traducción también (menos en alemán, por los sustantivos).
       final ini = s[0];
       final enMin = ini == ini.toLowerCase() && ini != ini.toUpperCase();
-      return _cache[s] = enMin && codigo != 'de' && min.isNotEmpty ? min[0].toLowerCase() + min.substring(1) : min;
+      if (min.isEmpty) return _cache[s] = min;
+      if (enMin) return _cache[s] = codigo == 'de' ? min : min[0].toLowerCase() + min.substring(1);
+      // Y si va con mayúscula inicial, la traducción también («Alquilada» → «Llogat»).
+      return _cache[s] = min[0].toUpperCase() + min.substring(1);
     }
     if (prof < 6) {
       for (final p in _plantillas) {

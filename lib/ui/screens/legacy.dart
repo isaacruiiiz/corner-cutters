@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../core/format.dart';
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../game/city.dart';
 import '../../game/model.dart';
@@ -132,7 +133,7 @@ class _LegacyCityScreenState extends ConsumerState<LegacyCityScreen> {
                     last: i == props.length - 1,
                     lead: IconBox(props[i].rented ? Icons.key_rounded : Icons.home_outlined, color: props[i].rented ? Hc.ok : Hc.mut),
                     title: props[i].address,
-                    sub: '${props[i].m2} m² · ${money(props[i].value, compact: true)}${props[i].rented ? ' · alquilada ${money(props[i].rent, compact: true)}/mes' : ''}',
+                    sub: '${props[i].m2} m² · ${money(props[i].value, compact: true)}${props[i].rented ? ' · ${tr('alquilada ${money(props[i].rent, compact: true)}/mes')}' : ''}',
                     trail: HsButton('Vender', size: BtnSize.xs, kind: BtnKind.sec, onTap: () async {
                       final p = props[i];
                       if (await confirm(context,

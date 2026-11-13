@@ -29,11 +29,12 @@ const _soloEspanol = {
   'edificios', 'vivienda', 'viviendas', 'dinero', 'efectivo', 'patrimonio', 'banco', 'cuadrilla', 'cuadrillas',
   'oficio', 'oficios', 'nivel', 'niveles', 'energía', 'calidad', 'electricidad', 'fontanería', 'albañilería',
   'carpintería', 'decoración', 'humedades', 'instalación', 'peor', 'mejor', 'esperado', 'toques', 'deja', 'ene',
-  'abr', 'ago', 'dic',
+  'abr', 'ago', 'dic', 'activa', 'activas', 'terminada', 'reservada', 'mirando', 'solo', 'administradores', 'dañada',
+  'dañadas', 'reparación', 'siguiente', 'lista', 'fundadas', 'misión', 'pasado',
 };
 
 /// Palabras que el catalán comparte con el español.
-const _catalan = {'obra', 'obres', 'banc', 'mes', 'renda', 'hipoteca', 'reforma', 'pisos', 'les', 'nova', 'nou', 'abr', 'nivell'};
+const _catalan = {'activa', 'cada', 'obra', 'obres', 'banc', 'mes', 'renda', 'hipoteca', 'reforma', 'pisos', 'les', 'nova', 'nou', 'abr', 'nivell'};
 
 /// Nombres propios que no se traducen (personas, clientes, rivales y ciudades).
 final Set<String> _nombres = {
@@ -177,6 +178,38 @@ void main() {
     expect(I18n.t('4 may 2005'), '4. Mai 2005');
     // Una fecha de una sola palabra no se confunde con una frase normal.
     expect(I18n.t('Casas frente al mar con vistas'), 'Casas frente al mar con vistas');
+  });
+
+  // Frases que las pantallas montan a trozos (cifra + palabra, ternarios…): no salen al jugar
+  // la partida automática, así que se comprueban aquí con ejemplos reales.
+  test('frases compuestas de las pantallas', () {
+    const muestras = [
+      '0 ACTIVAS', '1 ACTIVA', '3 activas',
+      'En tu ciudad han pasado 8 meses', 'En tu ciudad han pasado 1 mes', 'En tu ciudad han pasado 12 días',
+      'Calidad Q 1,25', 'Calidad 1,25 · \$120.000', 'alquilada \$800/mes',
+      'Decoración terminada', 'Fontanería terminada. Siguiente: Electricidad',
+      'Activa · alquila lo reformado', 'Activa · vende lo reformado',
+      'Lanzar 1 obra', 'LANZAR 3 OBRAS', 'ALQUILADA', 'Alquilada', 'LISTA',
+      'Centro · 4 × 50 m² · reservada', 'Centro · 50 m² · 3 mirando',
+      '2 embargos del banco a precio de saldo', '1 misión de crisis',
+      'Reputación total 120 · 3 ciudades fundadas', '1 vivienda dañada · reparación \$4.000',
+      'En gris, lo que ya tiene la vivienda: solo pagas y trabajas la diferencia. Por encima del nivel formado de cada oficio, primero hay que formarlo en Empresa.',
+      'En gris, lo que ya tiene la vivienda: solo pagas y trabajas la diferencia. En crisis la obra sale un 25 % más barata. Por encima del nivel formado de cada oficio, primero hay que formarlo en Empresa.',
+      'Solo para administradores',
+    ];
+    final fallos = <String>[];
+    for (final l in ['ca', 'en', 'de', 'zh']) {
+      I18n.usarTabla(l, _tabla(l));
+      for (final m in muestras) {
+        final r = I18n.t(m);
+        final resto = _resto(l, r);
+        if (resto != null) fallos.add('[$l] $m → $r  ($resto)');
+      }
+    }
+    expect(fallos, isEmpty, reason: fallos.join('\n'));
+    I18n.usarTabla('ca', _tabla('ca'));
+    expect(I18n.t('Alquilada'), 'Llogat');
+    expect(I18n.t('0 ACTIVAS'), '0 ACTIVES');
   });
 
   test('las tablas no tienen marcadores rotos', () {
