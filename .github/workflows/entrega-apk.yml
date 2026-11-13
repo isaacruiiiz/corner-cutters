@@ -8,25 +8,14 @@ permissions:
   contents: write
 
 jobs:
-  apk:
-    name: APK de release en borrador
+  limpiar:
+    name: Borrar el borrador temporal del APK
     runs-on: ubuntu-latest
-    timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
-      - run: flutter pub get
-      - run: flutter build apk --release
-      # Versión en borrador: solo la ve quien tiene acceso de escritura al repo; se borra tras descargarla.
-      - name: Subir a un borrador
+      - name: Borrar borradores apk-*
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "apk-${GITHUB_RUN_ID}" build/app/outputs/flutter-apk/app-release.apk --draft --target "$GITHUB_SHA" --title "APK (borrador temporal)" --notes "Temporal, para descargar el APK."
+          for t in $(gh release list -R "$GITHUB_REPOSITORY" --json tagName,isDraft --jq '.[]|select(.isDraft and (.tagName|startswith("apk-")))|.tagName'); do
+            gh release delete "$t" -R "$GITHUB_REPOSITORY" --yes
+          done
