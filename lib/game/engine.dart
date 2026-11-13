@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 
+import '../core/format.dart';
 import '../core/rng.dart';
 import 'city.dart';
 import 'data.dart';
@@ -1244,7 +1245,7 @@ class Game extends ChangeNotifier {
       offers.add(Offer(id: nextId++, propId: p.id, amount: amount, at: now, expires: now + 24 * 3600 * 1000));
       acc?.offers++;
       if (acc == null) {
-        _push(Notice(NoticeKind.toast, 'Oferta de \$${_fmt(amount)} por ${addressOf(p)}', propId: p.id));
+        _push(Notice(NoticeKind.toast, 'Oferta de ${_money(amount)} por ${addressOf(p)}', propId: p.id));
       }
     }
   }
@@ -1655,10 +1656,13 @@ class Game extends ChangeNotifier {
     p.state = PState.obra;
     _inc('renosStarted');
     if (!p.everRenovated && (p.humidity || p.badWiring)) {
-      final parts = <String>[];
-      if (p.humidity) parts.add('humedades (+30 % de toques en albañilería)');
-      if (p.badWiring) parts.add('instalación peor de lo esperado (+25 % en electricidad)');
-      _push(Notice(NoticeKind.defects, 'Defectos ocultos: ${parts.join(' y ')}', propId: p.id));
+      // Frases enteras (no trozos unidos): así se traducen completas en cada idioma.
+      final texto = p.humidity && p.badWiring
+          ? 'Defectos ocultos: humedades (+30 % de toques en albañilería) y una instalación peor de lo esperado (+25 % en electricidad)'
+          : p.humidity
+              ? 'Defectos ocultos: humedades (+30 % de toques en albañilería)'
+              : 'Defectos ocultos: una instalación peor de lo esperado (+25 % en electricidad)';
+      _push(Notice(NoticeKind.defects, texto, propId: p.id));
     }
     // Asigna cuadrillas automáticas libres.
     for (final c in crews) {
@@ -2842,17 +2846,11 @@ class Game extends ChangeNotifier {
   }
 
   // ---------- utilidades ----------
-  static String _fmt(double v) {
-    final s = v.round().abs().toString();
-    final b = StringBuffer();
-    for (var i = 0; i < s.length; i++) {
-      if (i > 0 && (s.length - i) % 3 == 0) b.write('.');
-      b.write(s[i]);
-    }
-    return b.toString();
-  }
 
-  static String _money(double v) => '\$${_fmt(v)}';
+
+  /// Dinero en los textos del motor: con los separadores del idioma y la escala de la época,
+  /// igual que en el resto de la interfaz.
+  static String _money(double v) => money(v);
 }
 
 /// Fila de «Quién la compraría».

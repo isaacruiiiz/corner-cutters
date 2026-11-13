@@ -44,7 +44,8 @@ void main() {
       'Precios ×{0} · ': 'Prices ×{0} · ',
       'Alquileres ×{0}': 'Rents ×{0}',
     });
-    expect(tr('C/ de la Plomada'), 'C/ de la Plomada');
+    // Las calles tienen su propio traductor: la plantilla '{0} de {1}' no las parte.
+    expect(tr('C/ de la Plomada'), 'Plumb Line St.');
     expect(tr('2 de 5'), '2 of 5');
     expect(tr('SIGUIENTE · EXPANSIÓN'), 'NEXT · EXPANSION');
     expect(tr('Precios ×1,35 · Alquileres ×1,18'), 'Prices ×1,35 · Rents ×1,18');

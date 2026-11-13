@@ -109,7 +109,7 @@ class ReciboVenta extends StatelessWidget {
                 const SizedBox(height: 4),
                 linea('Obra, a mano', money(-v.obra)),
                 const SizedBox(height: 4),
-                linea('Venta', money(v.venta)),
+                linea('Precio de venta', money(v.venta)),
                 const SizedBox(height: 10),
                 const _Corte(),
                 const SizedBox(height: 8),

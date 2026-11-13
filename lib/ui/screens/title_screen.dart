@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../services/version.dart';
 import '../../services/telemetria.dart';
 import '../../app/providers.dart';
 import '../../core/format.dart';
@@ -161,7 +162,7 @@ class _TitleScreenState extends ConsumerState<TitleScreen> with SingleTickerProv
                   const SizedBox(height: 8),
                   Center(
                     child: Text(
-                      Backend.isAnonymous ? 'Invitado · v0.1' : '${Backend.email} · v0.1',
+                      Backend.isAnonymous ? 'Invitado · v$appVersion' : '${Backend.email} · v$appVersion',
                       style: Ht.mini.copyWith(color: Hc.dim, fontSize: 10),
                     ),
                   ),

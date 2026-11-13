@@ -5,6 +5,8 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'calles.dart';
+
 /// Idiomas del juego. El texto original está en español dentro del código; el resto de
 /// idiomas son tablas `assets/i18n/<código>.json` con la frase española como clave.
 ///
@@ -125,18 +127,18 @@ class I18n {
   /// Traduce un texto en español. Si no hay traducción, lo devuelve igual.
   static String t(String s, [int prof = 0]) {
     if (codigo == 'es' || s.isEmpty || !_letra.hasMatch(s)) return s;
-    final exacta = _tabla[s];
-    if (exacta != null) return exacta;
     final c = _cache[s];
     if (c != null) return c;
+    // Calles y direcciones («C/ del Columpio 19, 2º 1ª»): nombre y formato de cada idioma.
+    if (s.startsWith('C/ ') || s.startsWith('Av. ')) {
+      final calle = traducirCalle(s, codigo);
+      if (calle != null) return _cache[s] = calle;
+    }
+    final exacta = _tabla[s];
+    if (exacta != null) return exacta;
     var r = s;
     final may = s == s.toUpperCase() ? _mayus[s] : null;
     if (may != null) return _cache[s] = may;
-    // Las avenidas se fabrican cambiando «C/» por «Av.» en el nombre de la calle.
-    if (s.startsWith('Av. ')) {
-      final calle = _tabla['C/ ${s.substring(4)}'];
-      if (calle != null) return _cache[s] = calle;
-    }
     final min = _minus[s.toLowerCase()];
     if (min != null) {
       // Si el original va en minúscula, la traducción también (menos en alemán, por los sustantivos).
@@ -152,11 +154,13 @@ class I18n {
           break;
         }
       }
-      // Texto con saltos de línea o hecho de trozos unidos con ' · ': se traduce por trozos.
+      // Texto con saltos de línea o hecho de trozos unidos con ' · ' o ' → ': se traduce por trozos.
       if (identical(r, s) && s.contains('\n')) {
         r = s.split('\n').map((l) => t(l, prof + 1)).join('\n');
       } else if (identical(r, s) && s.contains(' · ')) {
         r = s.split(' · ').map((l) => t(l, prof + 1)).join(' · ');
+      } else if (identical(r, s) && s.contains(' → ')) {
+        r = s.split(' → ').map((l) => t(l, prof + 1)).join(' → ');
       }
     }
     if (_cache.length > 3000) _cache.clear();
@@ -190,6 +194,9 @@ class _Plantilla {
     if (palabras.isEmpty) return null;
     // Solo con 'de', 'en'…: vale para '3 en Rocaserena', no para nombres de calle.
     final soloEnlaces = palabras.every(_enlaces.contains);
+    // Una sola palabra corta ('{0} mar {1}', fechas): solo si el texto empieza por cifra,
+    // para que «vistas al mar y …» no se tome por una fecha.
+    final corta = RegExp(r'^\{0\} [A-Za-zÀ-ÿ]{2,4} \{1\}$').hasMatch(es);
     if (es.contains(RegExp(r'\}\{'))) return null;
     final b = StringBuffer('^');
     var i = 0;
@@ -201,7 +208,7 @@ class _Plantilla {
     b.write(RegExp.escape(es.substring(i)));
     b.write(r'$');
     final trozo = partes.reduce((a, b) => a.length >= b.length ? a : b);
-    return _Plantilla(RegExp(b.toString(), dotAll: true), otro, [trozo], fijo, soloEnlaces && es.startsWith('{0}'));
+    return _Plantilla(RegExp(b.toString(), dotAll: true), otro, [trozo], fijo, (soloEnlaces || corta) && es.startsWith('{0}'));
   }
 
   String? aplicar(String s, int prof) {

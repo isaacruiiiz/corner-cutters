@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../services/version.dart';
 import '../guia.dart';
 import '../../app/app.dart';
 import '../../app/providers.dart';
@@ -174,7 +175,7 @@ class MoreScreen extends ConsumerWidget {
                 Meter(g.passTier / 20, color: Hc.acc),
               ]),
             ),
-            Text('Corner Cutters 0.1 · ${g.city.name} · semilla ${g.seed}', style: Ht.mini, textAlign: TextAlign.center),
+            Text('Corner Cutters $appVersion · ${g.city.name} · semilla ${g.seed}', style: Ht.mini, textAlign: TextAlign.center),
           ]),
         ),
       ]),
@@ -638,7 +639,7 @@ class SettingsScreen extends ConsumerWidget {
             const SectionHead('Gráficos'),
             Panel(
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                const Cap('Calidad'),
+                const Cap('Calidad gráfica'),
                 const SizedBox(height: 8),
                 Seg3<String>(
                   values: const ['auto', 'baja', 'media', 'alta'],
