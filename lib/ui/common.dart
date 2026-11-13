@@ -321,7 +321,7 @@ class _BuildingRowState extends State<BuildingRow> {
     final reformable = us.where((p) => p.state != PState.obra).toList();
     final obra = us.where((p) => p.state == PState.obra).toList();
     final sub = [
-      for (final e in counts.entries) '${e.value} ${shortStateLabel(e.key).toLowerCase()}',
+      for (final e in counts.entries) '${e.value} ${_etiquetaCorta(e.key)}',
     ].join(' · ');
     return Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Li(
@@ -375,6 +375,12 @@ class _BuildingRowState extends State<BuildingRow> {
 }
 
 /// Etiqueta corta de estado para tags en filas.
+/// Estado en minúscula para contar («2 llog. · 1 ruïna»); en alemán los sustantivos van con mayúscula.
+String _etiquetaCorta(PState s) {
+  final t = tr(shortStateLabel(s));
+  return I18n.codigo == 'de' ? t : t.toLowerCase();
+}
+
 String shortStateLabel(PState s) => switch (s) {
       PState.ruina => 'Ruina',
       PState.obra => 'Obra',

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../core/format.dart';
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../game/data.dart';
 import '../../game/engine.dart';
@@ -56,7 +57,7 @@ class _BuyScreenState extends ConsumerState<BuyScreen> {
       child: SheetBody([
         Row(children: [
           Expanded(child: Text('En venta', style: Ht.h2)),
-          Tag('${ph.name} ${mult(g.m)}', color: ph.color),
+          Tag('${tr(ph.name)} ${mult(g.m)}', color: ph.color),
           const SizedBox(width: 6),
           SqButton(Icons.close_rounded, size: 32, tooltip: 'Cerrar', onTap: () => Navigator.of(context).maybePop()),
         ]),
@@ -128,7 +129,7 @@ class JobRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lot = g.city.lots[j.lotId];
-    final ups = Trade.values.where((t) => j.target[t]! > j.base[t]!).map((t) => '${ti(t).code} ${j.base[t]}→${j.target[t]}').join(' · ');
+    final ups = Trade.values.where((t) => j.target[t]! > j.base[t]!).map((t) => '${tr(ti(t).code)} ${j.base[t]}→${j.target[t]}').join(' · ');
     return Li(
       last: last,
       lead: const IconBox(Icons.handshake_outlined, color: Hc.acc),

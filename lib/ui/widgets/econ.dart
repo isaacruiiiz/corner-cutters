@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide Text;
 
 import '../../core/format.dart';
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../game/city.dart';
 import '../../game/data.dart';
@@ -157,7 +158,7 @@ class ShareBar extends StatelessWidget {
           Row(mainAxisSize: MainAxisSize.min, children: [
             Dot(colors[s]!),
             const SizedBox(width: 4),
-            Text('${si(s).name} ${pct(shares[s]!)}', style: Ht.mini),
+            Text('${tr(si(s).name)} ${pct(shares[s]!)}', style: Ht.mini),
           ]),
       ]),
     ]);

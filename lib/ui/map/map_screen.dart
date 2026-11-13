@@ -190,7 +190,10 @@ class _Pill extends ConsumerWidget {
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
               Row(children: [
-                Flexible(child: Text(title, style: Ht.card, maxLines: 1, overflow: TextOverflow.ellipsis)),
+                Flexible(
+                  // Direcciones largas («Mandarinenstraße 103, 2. OG links»): se encogen antes que cortarse.
+                  child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(title, style: Ht.card, maxLines: 1)),
+                ),
                 if (tag != null) ...[const SizedBox(width: 8), tag],
               ]),
               const SizedBox(height: 1),

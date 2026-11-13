@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../core/format.dart';
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../game/data.dart';
 import '../../game/economy.dart';
@@ -471,7 +472,7 @@ class TemplatesScreen extends ConsumerWidget {
                   const SizedBox(height: 8),
                   Row(children: [
                     for (final t in Trade.values)
-                      Expanded(child: Text('${ti(t).code} ${ts[i].levels[t] ?? 0}', style: Ht.cap.copyWith(fontSize: 10), textAlign: TextAlign.center)),
+                      Expanded(child: Text('${tr(ti(t).code)} ${ts[i].levels[t] ?? 0}', style: Ht.cap.copyWith(fontSize: 10), textAlign: TextAlign.center)),
                   ]),
                   const SizedBox(height: 10),
                   Row(children: [

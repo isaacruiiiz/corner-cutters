@@ -350,7 +350,7 @@ class _SelectorScreenState extends ConsumerState<SelectorScreen> {
                 last: i == g.meta.templates.length - 1,
                 lead: IconBox(si(nearestSector(g.meta.templates[i].levels)).icon),
                 title: g.meta.templates[i].name,
-                sub: Trade.values.map((t) => '${ti(t).code} ${g.meta.templates[i].levels[t] ?? 0}').join(' · '),
+                sub: Trade.values.map((t) => '${tr(ti(t).code)} ${g.meta.templates[i].levels[t] ?? 0}').join(' · '),
                 trail: HsButton('Aplicar', size: BtnSize.xs, onTap: () {
                   final t = g.meta.templates[i];
                   setState(() {
