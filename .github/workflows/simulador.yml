@@ -1,0 +1,25 @@
+name: Simulador iOS
+
+on:
+  push:
+    branches: [simulador]
+  workflow_dispatch:
+
+jobs:
+  simulador:
+    name: Compilar para el simulador de iOS
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build ios --simulator --debug
+      - run: ditto -c -k --sequesterRsrc --keepParent build/ios/iphonesimulator/Runner.app CornerCutters-simulador.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: corner-cutters-simulador
+          path: CornerCutters-simulador.zip
